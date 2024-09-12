@@ -67,7 +67,7 @@ public class ErrorHandlingControllerAdvice {
             ValidationException e
     ) {
         log.error("ValidationException: {}", e.getMessage());
-        final ValidationViolation validationViolation = new ValidationViolation( e.getClass().getSimpleName(), e.getMessage());
+        final ValidationViolation validationViolation = new ValidationViolation(e.getClass().getSimpleName(), e.getMessage());
 
         return new ValidationErrorResponse(Collections.singletonList(validationViolation));
     }
