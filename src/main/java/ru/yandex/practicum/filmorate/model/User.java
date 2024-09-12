@@ -18,7 +18,7 @@ public class User {
     @Email(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "некорретный email адрес")
     private String email;
 
-    @NotEmpty
+    @Pattern(regexp = "^\\S+$")
     private String login;
 
     private String name;

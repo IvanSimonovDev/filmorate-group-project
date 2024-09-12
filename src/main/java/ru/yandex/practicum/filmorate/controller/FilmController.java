@@ -26,29 +26,31 @@ public class FilmController {
 
     @PostMapping
     public Film saveFilm(@Valid @RequestBody Film film) {
-        log.info("POST / Films --> Create Film: {} - started", film);
+        log.info("POST /films --> Create Film: {} - started", film);
         repository.save(film);
-        log.info("POST / Films <-- Create Film: {} - ended", film);
+        log.info("POST /films <-- Create Film: {} - ended", film);
 
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@Valid @Validated(OnUpdate.class) @RequestBody Film film) {
-        log.info("PUT / Films --> Update Film: {} - started", film);
+        log.info("PUT /films --> Update Film: {} - started", film);
         Film updatedFilm = repository.update(film);
-        log.info("PUT / Films <-- Update Film: {} - ended", film);
+        log.info("PUT /films <-- Update Film: {} - ended", film);
 
         return updatedFilm;
     }
 
     @GetMapping
     public List<Film> getAllFilms() {
+        log.info("GET /films --> Get all films");
         return repository.getAllFilms();
     }
 
     @GetMapping("{id}")
     public Film getFilmById(@PathVariable("id") @Positive Long id) {
+        log.info("GET /films/id --> Get film by id");
         return repository.getFilm(id);
     }
 
