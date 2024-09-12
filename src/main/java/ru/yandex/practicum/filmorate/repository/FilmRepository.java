@@ -17,13 +17,13 @@ public class FilmRepository {
     Long filmId = 0L;
 
 
-    private long generateFilmId () {
+    private long generateFilmId() {
         return ++filmId;
     }
 
     public Film getFilm(Long filmId) {
 
-        if (films.get(filmId)!=null) {
+        if (films.get(filmId) != null) {
             return films.get(filmId);
         } else {
             log.warn("Фильм c id {} не найден", filmId);
@@ -37,7 +37,7 @@ public class FilmRepository {
 
     public void save(Film film) {
         film.setId(generateFilmId());
-        films.put(film.getId(),film);
+        films.put(film.getId(), film);
     }
 
     public Film update(Film film) {
@@ -51,13 +51,9 @@ public class FilmRepository {
 
             return currentFilm;
 
-    } catch (NullPointerException e) {
-        log.warn("Фильм c id {} не найден", film.getId());
-        throw new ValidationException("Фильм не найден");
+        } catch (NullPointerException e) {
+            log.warn("Фильм c id {} не найден", film.getId());
+            throw new ValidationException("Фильм не найден");
+        }
     }
-    }
-
-
-
-
 }
