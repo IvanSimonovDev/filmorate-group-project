@@ -22,7 +22,13 @@ public class FilmRepository {
     }
 
     public Film getFilm(Long filmId) {
-        return films.get(filmId);
+
+        if (films.get(filmId)!=null) {
+            return films.get(filmId);
+        } else {
+            log.warn("Фильм c id {} не найден", filmId);
+            throw new ValidationException("Фильм не найден");
+        }
     }
 
     public List<Film> getAllFilms() {

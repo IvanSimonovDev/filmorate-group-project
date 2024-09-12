@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,12 @@ public class FilmController {
     public List<Film> getAllFilms() {
         return repository.getAllFilms();
     }
+
+    @GetMapping("{id}")
+    public Film getFilmById(@PathVariable("id") @Positive Long id) {
+        return repository.getFilm(id);
+    }
+
 
 
 }
