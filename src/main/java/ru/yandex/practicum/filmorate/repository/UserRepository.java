@@ -17,7 +17,7 @@ public class UserRepository {
     Long userId = 0L;
 
 
-    private long generateUserId () {
+    private long generateUserId() {
         return ++userId;
     }
 
@@ -31,10 +31,10 @@ public class UserRepository {
 
     public void save(User user) {
         user.setId(generateUserId());
-        if (user.getName()==null ||  user.getName().isBlank()) {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        users.put(user.getId(),user);
+        users.put(user.getId(), user);
     }
 
     public User update(User user) {
@@ -53,8 +53,4 @@ public class UserRepository {
             throw new ValidationException("Пользователь не найден");
         }
     }
-
-
-
-
 }
