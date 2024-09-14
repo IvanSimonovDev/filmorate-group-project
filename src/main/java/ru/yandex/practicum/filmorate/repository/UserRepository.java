@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.List;
 public class UserRepository {
 
     private final HashMap<Long, User> users = new HashMap<>();
-    Long userId = 0L;
+    private Long userId = 0L;
 
 
     private long generateUserId() {
@@ -38,7 +37,6 @@ public class UserRepository {
     }
 
     public User update(User user) {
-        try {
             User currentUser = users.get(user.getId());
             currentUser.setEmail(user.getEmail());
             currentUser.setLogin(user.getLogin());
@@ -47,10 +45,5 @@ public class UserRepository {
             }
             currentUser.setBirthday(user.getBirthday());
             return currentUser;
-
-        } catch (NullPointerException e) {
-            log.warn("Пользователь c id {} не найден", user.getId());
-            throw new ValidationException("Пользователь не найден");
-        }
     }
 }

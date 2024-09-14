@@ -14,11 +14,10 @@ public class User {
     @NotNull(groups = OnUpdate.class)
     private Long id;
 
-    //    @Pattern(regexp = "^(.+)@(\\S+)$")
     @Email(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "некорретный email адрес")
     private String email;
 
-    @Pattern(regexp = "^\\S+$")
+    @Pattern(regexp = "^\\S+$", message = "login не может быть пустым и содержать пробелы")
     private String login;
 
     private String name;

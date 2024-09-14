@@ -2,33 +2,27 @@ package ru.yandex.practicum.filmorate.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
 public class FilmRepository {
 
     private final HashMap<Long, Film> films = new HashMap<>();
-    Long filmId = 0L;
+    private Long filmId = 0L;
 
 
     private long generateFilmId() {
         return ++filmId;
     }
 
-    public Film getFilm(Long filmId) {
-
-        if (films.get(filmId) != null) {
-            return films.get(filmId);
-        } else {
-            log.warn("Фильм c id {} не найден", filmId);
-            throw new ValidationException("Фильм не найден");
-        }
+    public Optional<Film> getFilm(Long filmId) {
+        return Optional.ofNullable(films.get(filmId));
     }
 
     public List<Film> getAllFilms() {
@@ -41,7 +35,6 @@ public class FilmRepository {
     }
 
     public Film update(Film film) {
-        try {
             Film currentFilm = films.get(film.getId());
             currentFilm.setName(film.getName());
             currentFilm.setDescription(film.getDescription());
@@ -50,10 +43,5 @@ public class FilmRepository {
             films.put(currentFilm.getId(), currentFilm);
 
             return currentFilm;
-
-        } catch (NullPointerException e) {
-            log.warn("Фильм c id {} не найден", film.getId());
-            throw new ValidationException("Фильм не найден");
-        }
     }
 }

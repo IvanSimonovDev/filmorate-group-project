@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
@@ -16,13 +18,10 @@ import java.util.List;
 @Slf4j
 @Validated // необходимо добавить @Validated в контроллер на уровне класса, чтобы проверять параметры метода.
             // В этом случае аннотация @Validated устанавливается на уровне класса, даже если она присутствует на методах.
+@RequiredArgsConstructor
 public class UserController {
 
-    UserRepository repository;
-
-    public UserController(final UserRepository repository) {
-        this.repository = repository;
-    }
+    private final UserRepository repository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,26 +34,22 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @Validated(OnUpdate.class) @RequestBody User user) {
-        log.info("PUT / Users --> Update User: {} - started", user);
-        User updatedUser = repository.update(user);
-        log.info("PUT / Users <-- Update User: {} - ended", user);
-        return updatedUser;
+        try {
+            log.info("PUT / Users --> Update User: {} - started", user);
+            User updatedUser = repository.update(user);
+            log.info("PUT / Users <-- Update User: {} - ended", user);
+            return updatedUser;
+        } catch (NullPointerException e) {
+            log.warn("Пользователь c id {} не найден", user.getId());
+            throw new ValidationException("Пользователь не найден");
+        }
+
     }
 
     @GetMapping
     public List<User> getAllUsers() {
         return repository.getAllUsers();
     }
-
-
-/*    private boolean userValidation(User user) {
-        return user.getName() != null && !user.getName().isBlank()
-                && (user.getDescription().length() <= 200)
-                && (user.getDuration().isPositive())
-                && (user.getBirthday().isBefore(Instant.now());
-    }*/
-
-
 
 }
 

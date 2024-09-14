@@ -5,10 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.validation.ValidationErrorResponse;
 import ru.yandex.practicum.filmorate.validation.ValidationViolation;
@@ -17,11 +14,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+//@ControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class ErrorHandlingControllerAdvice {
 
-    @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ValidationErrorResponse onConstraintValidationException(
@@ -44,7 +41,6 @@ public class ErrorHandlingControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public ValidationErrorResponse onMethodArgumentNotValidException(
             MethodArgumentNotValidException e
     ) {
@@ -62,7 +58,6 @@ public class ErrorHandlingControllerAdvice {
 
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
     public ValidationErrorResponse onValidationException(
             ValidationException e
     ) {
