@@ -35,16 +35,16 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@Valid @Validated(OnUpdate.class) @RequestBody Film film) {
-        try {
-            log.info("PUT /films --> Update Film: {} - started", film);
-            Film updatedFilm = repository.update(film);
-            log.info("PUT /films <-- Update Film: {} - ended", film);
-            return updatedFilm;
+        log.info("PUT /films --> Update Film: {} - started", film);
+        Film updatedFilm = repository.update(film);
+        log.info("PUT /films <-- Update Film: {} - ended", film);
 
-        } catch (NullPointerException e) {
-            log.warn("Фильм c id {} не найден", film.getId());
-            throw new ValidationException("Фильм не найден");
+        if (updatedFilm != null) {
+            return updatedFilm;
         }
+
+        log.warn("Фильм c id {} не найден", film.getId());
+        throw new ValidationException("Фильм не найден");
     }
 
     @GetMapping

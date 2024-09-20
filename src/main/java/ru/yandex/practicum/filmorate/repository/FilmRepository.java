@@ -35,7 +35,8 @@ public class FilmRepository {
     }
 
     public Film update(Film film) {
-            Film currentFilm = films.get(film.getId());
+        Film currentFilm = films.get(film.getId());
+        if (currentFilm != null) {
             currentFilm.setName(film.getName());
             currentFilm.setDescription(film.getDescription());
             currentFilm.setReleaseDate(film.getReleaseDate());
@@ -43,5 +44,7 @@ public class FilmRepository {
             films.put(currentFilm.getId(), currentFilm);
 
             return currentFilm;
+        }
+        return null;
     }
 }
