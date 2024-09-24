@@ -8,7 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.InMemoryFilmRepository;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
 import java.util.List;
@@ -22,7 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FilmController {
 
-    private final FilmRepository repository;
+    private final InMemoryFilmRepository repository;
+    private final FilmService service;
 
     @PostMapping
     public Film saveFilm(@Valid @RequestBody Film film) {

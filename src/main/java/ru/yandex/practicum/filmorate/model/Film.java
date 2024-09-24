@@ -6,6 +6,8 @@ import ru.yandex.practicum.filmorate.validation.OnUpdate;
 import ru.yandex.practicum.filmorate.validation.ReleaseDate;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Film.
@@ -28,5 +30,8 @@ public class Film {
 
     @Positive()
     private Integer duration;
+
+    //  id лайков
+    private Set<Long> likes = new HashSet<>();
 
 }

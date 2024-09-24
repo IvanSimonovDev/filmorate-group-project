@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.validation.ValidationErrorResponse;
 import ru.yandex.practicum.filmorate.validation.ValidationViolation;
 
@@ -55,16 +56,32 @@ public class ErrorHandlingControllerAdvice {
         return new ValidationErrorResponse(validationViolations);
     }
 
+//
+//    @ExceptionHandler(ValidationException.class)
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public ValidationErrorResponse onValidationException(
+//            ValidationException e
+//    ) {
+//        log.error("ValidationException: {}", e.getMessage());
+//        final ValidationViolation validationViolation = new ValidationViolation(e.getClass().getSimpleName(), e.getMessage());
+//
+//        return new ValidationErrorResponse(Collections.singletonList(validationViolation));
+//    }
 
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ValidationErrorResponse onValidationException(
-            ValidationException e
+    public ErrorResponse onValidationException(
+            final ValidationException e
     ) {
         log.error("ValidationException: {}", e.getMessage());
-        final ValidationViolation validationViolation = new ValidationViolation(e.getClass().getSimpleName(), e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
 
-        return new ValidationErrorResponse(Collections.singletonList(validationViolation));
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse onException ( final Exception e) {
+        log.warn("Error: ", e);
+        return new ErrorResponse(e.getMessage());
     }
 
 }
