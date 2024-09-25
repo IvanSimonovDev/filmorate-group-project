@@ -48,7 +48,6 @@ public class InMemoryUserRepository implements UserRepository {
         return currentUser;
     }
 
-
     public void addFriend(User user, User friend) {
 
         Set<User> uFriends = usersFriends.computeIfAbsent(user.getId(), id -> new HashSet<>());
@@ -56,9 +55,7 @@ public class InMemoryUserRepository implements UserRepository {
 
         Set<User> fFriends = usersFriends.computeIfAbsent(friend.getId(), id -> new HashSet<>());
         fFriends.add(user);
-
     }
-
 
     public void deleteFriend(User user, User friend) {
 
@@ -69,17 +66,11 @@ public class InMemoryUserRepository implements UserRepository {
         fFriends.remove(user);
     }
 
-
     public Set<User> getFriends(User user) {
-
-        /*return getUser(user.getId()).orElseThrow().getFriends().stream()
-                .map(friend -> getUser(friend).orElseThrow())
-                .toList();*/
         return usersFriends.get(user.getId());
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
-
         return usersFriends.get(userId).stream()
                 .filter(user -> usersFriends.get(otherId).contains(user))
                 .toList();

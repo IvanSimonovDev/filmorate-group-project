@@ -31,9 +31,7 @@ public class InMemoryUserService implements UserService {
         return userRepository.save(user);
     }
 
-
     public User update(final User user) {
-
         long userId = user.getId();
         userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c ID - " + user.getId() + ", не найден."));
@@ -67,7 +65,6 @@ public class InMemoryUserService implements UserService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
         return userRepository.getFriends(user) != null ? userRepository.getFriends(user) : Collections.emptySet();
-
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
@@ -79,8 +76,6 @@ public class InMemoryUserService implements UserService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + otherId + " не найден"));
 
         return userRepository.getCommonFriends(user.getId(), other.getId());
-
     }
-
 
 }

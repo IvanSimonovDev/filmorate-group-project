@@ -31,8 +31,8 @@ public class UserController {
 
     @GetMapping("{id}")
     public User getById(@PathVariable("id") @Positive long id) {
-            log.info("GET /users/id --> Get user by id");
-            return service.getById(id);
+        log.info("GET /users/id --> Get user by id");
+        return service.getById(id);
     }
 
     @PostMapping
@@ -46,40 +46,31 @@ public class UserController {
 
     @PutMapping
     public User update(@Valid @Validated(OnUpdate.class) @RequestBody final User user) {
-//        try {
-            log.info("PUT / Users --> Update User: {} - started", user);
-            User updatedUser = service.update(user);
-            log.info("PUT / Users <-- Update User: {} - ended", user);
-            return updatedUser;
-//        } catch (NullPointerException e) {
-//            log.warn("Пользователь c id {} не найден", user.getId());
-//            throw new ValidationException("Пользователь не найден");
-//        }
-
+        log.info("PUT / Users --> Update User: {} - started", user);
+        User updatedUser = service.update(user);
+        log.info("PUT / Users <-- Update User: {} - ended", user);
+        return updatedUser;
     }
 
-//    добавление в друзья
+    //    добавление в друзья
     @PutMapping("{id}/friends/{friendId}")
     public void addFriend(@PathVariable("id") long userId, @PathVariable("friendId") long friendId) {
-
-        log.info("PUT /users/userId/friends/friendId --> Adding friend {} for user {} - started" , friendId, userId);
+        log.info("PUT /users/userId/friends/friendId --> Adding friend {} for user {} - started", friendId, userId);
         service.addFriend(userId, friendId);
-        log.info("PUT /users/userId/friends/friendId <-- Adding friend {} for user {} - ended" , friendId, userId);
+        log.info("PUT /users/userId/friends/friendId <-- Adding friend {} for user {} - ended", friendId, userId);
     }
 
 
-
-//    удаление из друзей
+    //    удаление из друзей
     @DeleteMapping("{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable("id") long userId, @PathVariable("friendId") long friendId) {
+        log.info("DELETE /users/userId/friends/friendId --> Deleting friend {} for user {} - started", friendId, userId);
+        service.deleteFriend(userId, friendId);
+        log.info("DELETE /users/userId/friends/friendId <-- Deleting friend {} for user {} - ended", friendId, userId);
+    }
 
-    log.info("DELETE /users/userId/friends/friendId --> Deleting friend {} for user {} - started", friendId, userId);
-    service.deleteFriend(userId, friendId);
-    log.info("DELETE /users/userId/friends/friendId <-- Deleting friend {} for user {} - ended", friendId, userId);
-}
 
-
-//    возвращаем список пользователей, являющихся его друзьями
+    //    возвращаем список пользователей, являющихся его друзьями
     @GetMapping("{id}/friends")
     public Set<User> getAllFriends(@PathVariable("id") long userId) {
         log.info("GET /users/userId/friends --> Getting friends list for user {} - started", userId);
@@ -92,16 +83,11 @@ public class UserController {
 
     //    список друзей, общих с другим пользователем
     @GetMapping("{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable("otherId") long otherId)  {
+    public List<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable("otherId") long otherId) {
         log.info("GET /users/userId/friends --> Getting common friends list for user {} with other user {} - started", userId, otherId);
         List<User> commonFriendsList = service.getCommonFriends(userId, otherId);
         log.info("GET /users/userId/friends <-- Getting common friends list for user {} with other user {} - ended", userId, otherId);
-
         return commonFriendsList;
     }
-
-
-
-
 }
 

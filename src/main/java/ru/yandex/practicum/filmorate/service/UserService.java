@@ -7,7 +7,6 @@ import java.util.Set;
 
 public interface UserService {
 
-
     List<User> getAll();
 
     User getById(long id);

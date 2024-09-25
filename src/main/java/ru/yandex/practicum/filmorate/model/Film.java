@@ -29,7 +29,4 @@ public class Film {
     @Positive()
     private Integer duration;
 
-    //  id лайков
-//    private Set<Long> likes = new HashSet<>();
-
 }

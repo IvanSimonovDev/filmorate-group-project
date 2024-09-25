@@ -8,7 +8,6 @@ import java.util.Set;
 
 public interface UserRepository {
 
-
     Optional<User> get(long userId);
 
     List<User> getAll();

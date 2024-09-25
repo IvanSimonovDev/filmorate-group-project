@@ -25,7 +25,4 @@ public class User {
     @Past
     private LocalDate birthday;
 
-    //  id друзей
-//    private Set<Long> friends = new HashSet<>();
-
 }

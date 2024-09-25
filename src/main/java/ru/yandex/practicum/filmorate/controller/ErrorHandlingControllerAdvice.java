@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 //@ControllerAdvice
 @Slf4j
 @RestControllerAdvice
-public class ErrorHandlingControllerAdvice {
+public class   ErrorHandlingControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -69,16 +69,14 @@ public class ErrorHandlingControllerAdvice {
 
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse onValidationException(
-            final ValidationException e
-    ) {
+    public ErrorResponse onValidationException(final ValidationException e) {
         log.error("ValidationException: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse onException ( final Exception e) {
+    public ErrorResponse onException(final Exception e) {
         log.warn("Error: ", e);
         return new ErrorResponse(e.getMessage());
     }

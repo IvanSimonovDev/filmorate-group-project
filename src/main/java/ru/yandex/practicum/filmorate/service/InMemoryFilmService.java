@@ -36,7 +36,6 @@ public class InMemoryFilmService implements FilmService {
         return filmRepository.get(id).orElseThrow(() -> new ValidationException("Фильм c ID - " + id + ", не найден."));
     }
 
-
     public List<Film> getAll() {
         return filmRepository.getAll();
     }
@@ -50,7 +49,6 @@ public class InMemoryFilmService implements FilmService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
         filmRepository.addLike(film, user);
-
     }
 
     public void deleteLike(long filmId, long userId) {
@@ -61,15 +59,11 @@ public class InMemoryFilmService implements FilmService {
         final User user = userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
-        filmRepository.deleteLike (film, user);
+        filmRepository.deleteLike(film, user);
     }
 
     public List<Film> getPopular(long count) {
 
         return filmRepository.getPopular(count);
     }
-
-
-
-
 }

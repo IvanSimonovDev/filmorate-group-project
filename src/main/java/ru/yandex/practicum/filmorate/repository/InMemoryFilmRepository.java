@@ -14,9 +14,7 @@ public class InMemoryFilmRepository implements FilmRepository {
 
     private final HashMap<Long, Film> films = new HashMap<>();
     private final HashMap<Long, Set<User>> filmsLikes = new HashMap<>();
-
     private Long filmId = 0L;
-
 
     private long generateFilmId() {
         return ++filmId;
@@ -50,7 +48,6 @@ public class InMemoryFilmRepository implements FilmRepository {
         return null;
     }
 
-
     public void addLike(Film film, User user) {
 
         Set<User> fLikes = filmsLikes.computeIfAbsent(film.getId(), id -> new HashSet<>());
@@ -82,6 +79,5 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .limit(count)
                 .toList();
     }
-
 
 }

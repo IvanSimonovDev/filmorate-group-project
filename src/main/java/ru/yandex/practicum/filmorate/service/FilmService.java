@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface FilmService {
 
-
     Film save(Film film);
 
     Film update(Film film);
