@@ -88,6 +88,6 @@ public class FilmValidationTests {
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertTrue(violations.isEmpty(), "проверить параметры");
-        assertEquals(repository.getAllFilms().size(), 1, "репозиторий не должен быть пустым");
+        assertEquals(repository.getAll().size(), 1, "репозиторий не должен быть пустым");
     }
 }

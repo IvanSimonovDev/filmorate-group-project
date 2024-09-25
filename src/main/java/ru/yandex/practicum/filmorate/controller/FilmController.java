@@ -6,14 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.repository.InMemoryFilmRepository;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController()
@@ -23,47 +21,65 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FilmController {
 
-    private final InMemoryFilmRepository repository;
     private final FilmService service;
 
     @PostMapping
-    public Film saveFilm(@Valid @RequestBody Film film) {
+    public Film save(@Valid @RequestBody Film film) {
         log.info("POST /films --> Create Film: {} - started", film);
-        repository.save(film);
+        service.save(film);
         log.info("POST /films <-- Create Film: {} - ended", film);
 
         return film;
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @Validated(OnUpdate.class) @RequestBody Film film) {
+    public Film update(@Valid @Validated(OnUpdate.class) @RequestBody Film film) {
         log.info("PUT /films --> Update Film: {} - started", film);
-        Film updatedFilm = repository.update(film);
+        Film updatedFilm = service.update(film);
         log.info("PUT /films <-- Update Film: {} - ended", film);
-
-        if (updatedFilm != null) {
-            return updatedFilm;
-        }
-
-        log.warn("Фильм c id {} не найден", film.getId());
-        throw new ValidationException("Фильм не найден");
+        return updatedFilm;
     }
 
     @GetMapping
-    public List<Film> getAllFilms() {
-        log.info("GET /films --> Get all films");
-        return repository.getAllFilms();
+    public List<Film> getAll() {
+        log.info("GET /films <--> Get all films");
+        return service.getAll();
     }
 
     @GetMapping("{id}")
-    public Optional<Film> getFilmById(@PathVariable("id") @Positive Long id) {
-        if (repository.getFilm(id).isPresent()) {
-            log.info("GET /films/id --> Get film by id");
-            return repository.getFilm(id);
-        } else {
-            log.warn("Фильм c id {} не найден", id);
-            throw new ValidationException("Фильм не найден");
-        }
+    public Film getById(@PathVariable("id") @Positive long id) {
+        log.info("GET /films/id <--> Get film by id");
+        return service.getById(id);
+    }
+
+    //    пользователь ставит лайк фильму.
+    @PutMapping("{id}/like/{userId}")
+    public void addLike(@PathVariable("id") long filmId, @PathVariable("userId") long userId) {
+        log.info("PUT /films/filmId/like/userId --> User {} adding like for Film {} - started", userId, filmId);
+        service.addLike(filmId, userId);
+        log.info("PUT /films/filmId/like/userId <-- User {} adding like for Film {} - ended", userId, filmId);
+
+    }
+
+
+    //    пользователь удаляет лайк
+    @DeleteMapping("{id}/like/{userId}")
+    public void deleteLike(@PathVariable("id") long filmId, @PathVariable("userId") long userId) {
+        log.info("DELETE /films/filmId/like/userId --> User {} deleting like for Film {} - started", userId, filmId);
+        service.deleteLike(filmId, userId);
+        log.info("DELETE /films/filmId/like/userId <-- User {} deleting like for Film {} - ended", userId, filmId);
+
+    }
+
+    //    возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано, верните первые 10.
+    @GetMapping("/popular")
+    public List<Film> getPopular(@RequestParam(required = false, defaultValue = "10") long count) {
+
+        log.info("GET /films/popular?count --> getting {} popular Films - started", count);
+        List<Film> popularFilms = service.getPopular(count);
+        log.info("GET /films/popular?count --> getting {} popular Films - ended", count);
+
+        return popularFilms;
     }
 
 }

@@ -1,16 +1,25 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.model.Film;
 
-@Service
-@RequiredArgsConstructor
-public class FilmService {
+import java.util.List;
 
-    private final FilmRepository filmRepository;
+public interface FilmService {
 
 
+    Film save(Film film);
+
+    Film update(Film film);
+
+    Film getById(long id);
+
+    List<Film> getAll();
+
+    void addLike(long filmId, long userId);
+
+    void deleteLike(long filmId, long userId);
+
+    List<Film> getPopular(long count);
 
 
 }

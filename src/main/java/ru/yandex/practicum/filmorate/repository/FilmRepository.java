@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.repository;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +9,19 @@ import java.util.Optional;
 public interface FilmRepository {
 
 
-    Optional<Film> getFilm(Long filmId);
+    Optional<Film> get(Long filmId);
 
-    List<Film> getAllFilms();
+    List<Film> getAll();
 
-    void save(Film film);
+    Film save(Film film);
 
     Film update(Film film);
+
+    void addLike(Film film, User user);
+
+    void deleteLike(Film film, User user);
+
+    List<Film> getPopular(long count);
 
 
 }

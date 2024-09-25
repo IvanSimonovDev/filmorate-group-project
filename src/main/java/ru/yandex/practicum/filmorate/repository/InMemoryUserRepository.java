@@ -19,11 +19,11 @@ public class InMemoryUserRepository implements UserRepository {
         return ++userId;
     }
 
-    public Optional<User> getUser(long userId) {
+    public Optional<User> get(long userId) {
         return Optional.ofNullable(users.get(userId));
     }
 
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         return new ArrayList<>(users.values());
     }
 

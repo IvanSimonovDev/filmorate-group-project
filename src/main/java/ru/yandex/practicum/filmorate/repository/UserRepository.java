@@ -9,9 +9,9 @@ import java.util.Set;
 public interface UserRepository {
 
 
-    Optional<User> getUser(long userId);
+    Optional<User> get(long userId);
 
-    List<User> getAllUsers();
+    List<User> getAll();
 
     User save(User user);
 
