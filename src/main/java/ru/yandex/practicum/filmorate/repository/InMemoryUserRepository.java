@@ -80,10 +80,9 @@ public class InMemoryUserRepository implements UserRepository {
 
     public List<User> getCommonFriends(long userId, long otherId) {
 
-        List<User> commonFriends = usersFriends.get(userId).stream()
+        return usersFriends.get(userId).stream()
                 .filter(user -> usersFriends.get(otherId).contains(user))
                 .toList();
-        return commonFriends;
     }
 
 }

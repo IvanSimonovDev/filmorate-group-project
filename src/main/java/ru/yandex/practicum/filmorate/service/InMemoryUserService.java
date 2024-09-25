@@ -75,10 +75,10 @@ public class InMemoryUserService implements UserService {
         User user = userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
-        User friend = userRepository.get(otherId)
+        User other = userRepository.get(otherId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + otherId + " не найден"));
 
-        return userRepository.getCommonFriends(userId, otherId);
+        return userRepository.getCommonFriends(user.getId(), other.getId());
 
     }
 

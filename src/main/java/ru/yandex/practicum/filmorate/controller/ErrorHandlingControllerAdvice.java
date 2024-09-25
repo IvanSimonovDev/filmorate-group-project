@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.validation.ValidationErrorResponse;
 import ru.yandex.practicum.filmorate.validation.ValidationViolation;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
