@@ -25,7 +25,7 @@ public class InMemoryFilmService implements FilmService {
     public Film update(final Film film) {
 
         long filmId = film.getId();
-        final Film existed = filmRepository.get(filmId)
+        filmRepository.get(filmId)
                 .orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
 
         return filmRepository.update(film);

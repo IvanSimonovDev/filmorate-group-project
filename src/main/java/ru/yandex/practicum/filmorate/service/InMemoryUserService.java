@@ -35,7 +35,7 @@ public class InMemoryUserService implements UserService {
     public User update(final User user) {
 
         long userId = user.getId();
-        final User existed = userRepository.get(userId)
+        userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c ID - " + user.getId() + ", не найден."));
 
         return userRepository.update(user);
