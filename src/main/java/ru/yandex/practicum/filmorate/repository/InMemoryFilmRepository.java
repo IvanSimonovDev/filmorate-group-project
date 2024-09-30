@@ -12,13 +12,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class InMemoryFilmRepository implements FilmRepository {
 
-    private final HashMap<Long, Film> films = new HashMap<>();
-    private final HashMap<Long, Set<User>> filmsLikes = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
+    private final Map<Long, Set<User>> filmsLikes = new HashMap<>();
     private Long filmId = 0L;
-
-    private long generateFilmId() {
-        return ++filmId;
-    }
 
     public Optional<Film> get(Long filmId) {
         return Optional.ofNullable(films.get(filmId));
@@ -41,7 +37,6 @@ public class InMemoryFilmRepository implements FilmRepository {
             currentFilm.setDescription(film.getDescription());
             currentFilm.setReleaseDate(film.getReleaseDate());
             currentFilm.setDuration(film.getDuration());
-            films.put(currentFilm.getId(), currentFilm);
 
             return currentFilm;
         }
@@ -73,11 +68,13 @@ public class InMemoryFilmRepository implements FilmRepository {
                                 (e1, e2) -> e1,
                                 LinkedHashMap::new));
 
-        return sorted.keySet().stream()
-//                .peek(id -> System.out.println(films.get(id)))
+        return new ArrayList<>(sorted.keySet().stream()
                 .map(films::get)
                 .limit(count)
-                .toList();
+                .toList());
     }
 
+    private long generateFilmId() {
+        return ++filmId;
+    }
 }

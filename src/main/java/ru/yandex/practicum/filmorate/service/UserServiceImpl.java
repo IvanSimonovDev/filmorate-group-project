@@ -6,13 +6,12 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class InMemoryUserService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -28,6 +27,7 @@ public class InMemoryUserService implements UserService {
 
     public User save(final User user) {
 
+        checkUserName(user);
         return userRepository.save(user);
     }
 
@@ -36,6 +36,7 @@ public class InMemoryUserService implements UserService {
         userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c ID - " + user.getId() + ", не найден."));
 
+        checkUserName(user);
         return userRepository.update(user);
     }
 
@@ -64,7 +65,7 @@ public class InMemoryUserService implements UserService {
         final User user = userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
-        return userRepository.getFriends(user) != null ? userRepository.getFriends(user) : Collections.emptySet();
+        return userRepository.getFriends(user);
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
@@ -76,6 +77,12 @@ public class InMemoryUserService implements UserService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + otherId + " не найден"));
 
         return userRepository.getCommonFriends(user.getId(), other.getId());
+    }
+
+    private void checkUserName(User user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 
 }

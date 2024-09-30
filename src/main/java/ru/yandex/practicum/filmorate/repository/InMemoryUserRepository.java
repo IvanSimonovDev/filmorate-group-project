@@ -10,14 +10,10 @@ import java.util.*;
 @Slf4j
 public class InMemoryUserRepository implements UserRepository {
 
-    private final HashMap<Long, User> users = new HashMap<>();
-    private final HashMap<Long, Set<User>> usersFriends = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
+    private final Map<Long, Set<User>> usersFriends = new HashMap<>();
     private Long userId = 0L;
 
-
-    private long generateUserId() {
-        return ++userId;
-    }
 
     public Optional<User> get(long userId) {
         return Optional.ofNullable(users.get(userId));
@@ -29,23 +25,20 @@ public class InMemoryUserRepository implements UserRepository {
 
     public User save(final User user) {
         user.setId(generateUserId());
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
         users.put(user.getId(), user);
         return user;
     }
 
     public User update(User user) {
         User currentUser = users.get(user.getId());
-        currentUser.setEmail(user.getEmail());
-        currentUser.setLogin(user.getLogin());
-        if (!user.getName().isBlank()) {
+        if (currentUser != null) {
+            currentUser.setEmail(user.getEmail());
+            currentUser.setLogin(user.getLogin());
             currentUser.setName(user.getName());
+            currentUser.setBirthday(user.getBirthday());
+            return currentUser;
         }
-        currentUser.setBirthday(user.getBirthday());
-        users.put(currentUser.getId(), currentUser);
-        return currentUser;
+        return null;
     }
 
     public void addFriend(User user, User friend) {
@@ -67,13 +60,17 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     public Set<User> getFriends(User user) {
-        return usersFriends.get(user.getId());
+        return new HashSet<>(usersFriends.getOrDefault(user.getId(), Collections.emptySet()));
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
-        return usersFriends.get(userId).stream()
+        return new ArrayList<>(usersFriends.getOrDefault(userId, Collections.emptySet()).stream()
                 .filter(user -> usersFriends.get(otherId).contains(user))
-                .toList();
+                .toList());
+    }
+
+    private long generateUserId() {
+        return ++userId;
     }
 
 }
