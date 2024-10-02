@@ -16,10 +16,9 @@ import ru.yandex.practicum.filmorate.validation.ValidationViolation;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@ControllerAdvice
 @Slf4j
 @RestControllerAdvice
-public class   ErrorHandlingControllerAdvice {
+public class ErrorHandlingControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -70,5 +69,4 @@ public class   ErrorHandlingControllerAdvice {
         log.warn("Error: ", e);
         return new ErrorResponse(e.getMessage());
     }
-
 }

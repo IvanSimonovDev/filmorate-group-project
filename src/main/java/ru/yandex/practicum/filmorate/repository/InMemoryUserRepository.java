@@ -31,14 +31,11 @@ public class InMemoryUserRepository implements UserRepository {
 
     public User update(User user) {
         User currentUser = users.get(user.getId());
-        if (currentUser != null) {
-            currentUser.setEmail(user.getEmail());
-            currentUser.setLogin(user.getLogin());
-            currentUser.setName(user.getName());
-            currentUser.setBirthday(user.getBirthday());
-            return currentUser;
-        }
-        return null;
+        currentUser.setEmail(user.getEmail());
+        currentUser.setLogin(user.getLogin());
+        currentUser.setName(user.getName());
+        currentUser.setBirthday(user.getBirthday());
+        return currentUser;
     }
 
     public void addFriend(User user, User friend) {

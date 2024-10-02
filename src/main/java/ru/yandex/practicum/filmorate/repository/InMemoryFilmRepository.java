@@ -32,15 +32,11 @@ public class InMemoryFilmRepository implements FilmRepository {
 
     public Film update(Film film) {
         Film currentFilm = films.get(film.getId());
-        if (currentFilm != null) {
-            currentFilm.setName(film.getName());
-            currentFilm.setDescription(film.getDescription());
-            currentFilm.setReleaseDate(film.getReleaseDate());
-            currentFilm.setDuration(film.getDuration());
-
-            return currentFilm;
-        }
-        return null;
+        currentFilm.setName(film.getName());
+        currentFilm.setDescription(film.getDescription());
+        currentFilm.setReleaseDate(film.getReleaseDate());
+        currentFilm.setDuration(film.getDuration());
+        return currentFilm;
     }
 
     public void addLike(Film film, User user) {
