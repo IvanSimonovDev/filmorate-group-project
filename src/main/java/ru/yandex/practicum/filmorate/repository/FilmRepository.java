@@ -1,47 +1,25 @@
 package ru.yandex.practicum.filmorate.repository;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-@Slf4j
-public class FilmRepository {
+public interface FilmRepository {
 
-    private final HashMap<Long, Film> films = new HashMap<>();
-    private Long filmId = 0L;
+    Optional<Film> get(Long filmId);
 
+    List<Film> getAll();
 
-    private long generateFilmId() {
-        return ++filmId;
-    }
+    Film save(Film film);
 
-    public Optional<Film> getFilm(Long filmId) {
-        return Optional.ofNullable(films.get(filmId));
-    }
+    Film update(Film film);
 
-    public List<Film> getAllFilms() {
-        return new ArrayList<>(films.values());
-    }
+    void addLike(Film film, User user);
 
-    public void save(Film film) {
-        film.setId(generateFilmId());
-        films.put(film.getId(), film);
-    }
+    void deleteLike(Film film, User user);
 
-    public Film update(Film film) {
-            Film currentFilm = films.get(film.getId());
-            currentFilm.setName(film.getName());
-            currentFilm.setDescription(film.getDescription());
-            currentFilm.setReleaseDate(film.getReleaseDate());
-            currentFilm.setDuration(film.getDuration());
-            films.put(currentFilm.getId(), currentFilm);
+    List<Film> getPopular(long count);
 
-            return currentFilm;
-    }
 }

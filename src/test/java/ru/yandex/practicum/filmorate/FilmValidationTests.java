@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.InMemoryFilmRepository;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -78,7 +78,7 @@ public class FilmValidationTests {
     @DisplayName("Проверка валидации, создание Film с корректными полями модели")
     @Test
     void shouldReturnNoException() {
-        FilmRepository repository = new FilmRepository();
+        InMemoryFilmRepository repository = new InMemoryFilmRepository();
         Film film = new Film();
         film.setName("Film name");
         film.setDescription("Description");
@@ -88,6 +88,6 @@ public class FilmValidationTests {
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertTrue(violations.isEmpty(), "проверить параметры");
-        assertEquals(repository.getAllFilms().size(), 1, "репозиторий не должен быть пустым");
+        assertEquals(repository.getAll().size(), 1, "репозиторий не должен быть пустым");
     }
 }

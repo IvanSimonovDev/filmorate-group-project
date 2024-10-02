@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.UserRepository;
+import ru.yandex.practicum.filmorate.repository.InMemoryUserRepository;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -66,7 +66,7 @@ public class UserValidationTests {
     @DisplayName("Проверка валидации, создание User с корректными полями модели")
     @Test
     void shouldReturnNoUserValidationException() {
-        UserRepository repository = new UserRepository();
+        InMemoryUserRepository repository = new InMemoryUserRepository();
         User user = new User();
         user.setEmail("test@mail.ru");
         user.setLogin("dolore");
@@ -76,6 +76,6 @@ public class UserValidationTests {
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertTrue(violations.isEmpty(), "проверить параметры");
-        assertEquals(repository.getAllUsers().size(), 1, "репозиторий не должен быть пустым");
+        assertEquals(repository.getAll().size(), 1, "репозиторий не должен быть пустым");
     }
 }
