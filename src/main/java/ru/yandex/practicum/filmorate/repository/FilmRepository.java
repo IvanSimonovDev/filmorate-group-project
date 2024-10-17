@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface FilmRepository {
 
-    Optional<Film> get(Long filmId);
+    Optional<Film> get(long filmId);
 
     List<Film> getAll();
 

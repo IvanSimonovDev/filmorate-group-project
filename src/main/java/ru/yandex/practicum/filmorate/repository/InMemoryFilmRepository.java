@@ -16,7 +16,7 @@ public class InMemoryFilmRepository implements FilmRepository {
     private final Map<Long, Set<User>> filmsLikes = new HashMap<>();
     private Long filmId = 0L;
 
-    public Optional<Film> get(Long filmId) {
+    public Optional<Film> get(long filmId) {
         return Optional.ofNullable(films.get(filmId));
     }
 

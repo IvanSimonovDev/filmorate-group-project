@@ -24,7 +24,6 @@ public class InDbUserRepository extends BaseRepository<User> implements UserRepo
     private static final String DELETE_FRIEND_QUERY = "DELETE from user_friends WHERE  user_id = ? AND friend_id = ?";
     private static final String SELECT_FRIENDS_QUERY = "SELECT * FROM users WHERE id IN " +
             "(SELECT uf.friend_id FROM users u LEFT JOIN user_friends uf ON u.id = uf.user_id WHERE u.id = ?)";
-
     private static final String SELECT_COMMON_FRIENDS_QUERY = "WITH cte AS " +
             "(SELECT uf.friend_id " +
             " FROM users u " +

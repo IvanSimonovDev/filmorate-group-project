@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS rating (
+CREATE TABLE IF NOT EXISTS mpa (
                                       id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                       name VARCHAR(255),
                                       description VARCHAR(255)
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS film (
                                     release_date DATE,
                                     duration INTEGER,
                                     rating_id INTEGER,
-                                    CONSTRAINT film_rating_fkey FOREIGN KEY (rating_id) REFERENCES rating (id)
+                                    CONSTRAINT film_rating_fkey FOREIGN KEY (rating_id) REFERENCES mpa (id)
 );
 
 CREATE TABLE IF NOT EXISTS film_genre (

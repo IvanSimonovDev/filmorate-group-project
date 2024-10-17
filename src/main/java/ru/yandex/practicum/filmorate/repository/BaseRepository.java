@@ -58,8 +58,14 @@ public class BaseRepository<T> {
 
         Long id = null;
 //      System.out.println(keyHolder.getKeys());
+//        if (keyHolder.getKeys() != null && !keyHolder.getKeys().isEmpty() && keyHolder.getKeys().size() == 1) {
+//            id = keyHolder.getKeyAs(Integer.class).longValue();
+//        }
         if (keyHolder.getKeys() != null && !keyHolder.getKeys().isEmpty() && keyHolder.getKeys().size() == 1) {
-            id = keyHolder.getKeyAs(Integer.class).longValue();
+            Integer key = keyHolder.getKeyAs(Integer.class);
+            if (key != null) {
+                id = key.longValue();
+            }
         }
 
         // Возвращаем id нового пользователя
