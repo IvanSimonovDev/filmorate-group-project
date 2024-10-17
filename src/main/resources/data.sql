@@ -1,7 +1,7 @@
 -- Очистка таблиц по порядку зависимости
 DELETE FROM film_likes;        -- Удаляем лайки фильмов
 DELETE FROM film_genre;       -- Удаляем жанры фильмов
-DELETE FROM user_friends;     -- Удаляем дружеские связи пользователей
+DELETE FROM user_friend;     -- Удаляем дружеские связи пользователей
 DELETE FROM film;             -- Удаляем фильмы
 DELETE FROM genre;            -- Удаляем жанры
 DELETE FROM mpa;           -- Удаляем рейтинги
@@ -85,7 +85,7 @@ INSERT INTO film_likes (film_id, user_id) VALUES
                                               (6, 1),  -- User 1 likes Pulp Fiction
                                               (6, 2);  -- User 2 likes Pulp Fiction
 
-INSERT INTO user_friends (user_id, friend_id, isConfirmed) VALUES
+INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES
                                                                (1, 2, false),
                                                                (1, 3, false),
                                                                (2, 1, false),

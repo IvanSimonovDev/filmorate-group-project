@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
-public class UserFriends {
+public class UserFriend {
 
     @NotNull
     private Long userId;

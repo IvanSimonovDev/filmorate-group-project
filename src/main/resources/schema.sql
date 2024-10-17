@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS film (
                                     release_date DATE,
                                     duration INTEGER,
                                     rating_id INTEGER,
-                                    CONSTRAINT film_rating_fkey FOREIGN KEY (rating_id) REFERENCES mpa (id)
+                                    CONSTRAINT fk_film_rating FOREIGN KEY (rating_id) REFERENCES mpa (id)
 );
 
 CREATE TABLE IF NOT EXISTS film_genre (
@@ -43,11 +43,11 @@ CREATE TABLE IF NOT EXISTS film_likes (
                                           CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS user_friends (
+CREATE TABLE IF NOT EXISTS user_friend (
                                             user_id INTEGER,
                                             friend_id INTEGER,
                                             isConfirmed BOOLEAN,
                                             PRIMARY KEY (user_id, friend_id),
-                                            CONSTRAINT fk_user_id_friends FOREIGN KEY (user_id) REFERENCES users (id),
+                                            CONSTRAINT fk_user_id_friend FOREIGN KEY (user_id) REFERENCES users (id),
                                             CONSTRAINT fk_friend_id FOREIGN KEY (friend_id) REFERENCES users (id)
 );
