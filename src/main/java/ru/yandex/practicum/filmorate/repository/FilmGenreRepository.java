@@ -4,17 +4,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Slf4j
 public class FilmGenreRepository  extends BaseRepository<FilmGenre> {
 
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM film_genre WHERE id = ?";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM film_genre WHERE film_id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM film_genre";
+    private static final String INSERT_QUERY = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
 
     public FilmGenreRepository(JdbcTemplate jdbc, RowMapper<FilmGenre> mapper) {
         super(jdbc, mapper);
@@ -24,8 +26,15 @@ public class FilmGenreRepository  extends BaseRepository<FilmGenre> {
         return findMany(FIND_ALL_QUERY);
     }
 
-    public Optional<FilmGenre> getById(long id) {
-        return findOne(FIND_BY_ID_QUERY, id);
+    public List<FilmGenre> getById(long id) {
+        return findMany(FIND_BY_ID_QUERY, id);
+    }
+
+    public int[] save(Film film) {
+        return batchInsert(INSERT_QUERY,
+                film.getId(),
+                new ArrayList<>(film.getGenres()) //.stream().map(Genre::getId).toList()
+        );
     }
 
 }

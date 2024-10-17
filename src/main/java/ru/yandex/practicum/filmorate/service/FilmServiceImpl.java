@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
-import ru.yandex.practicum.filmorate.repository.UserRepository;
+import ru.yandex.practicum.filmorate.repository.*;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -16,10 +16,27 @@ public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
     private final UserRepository userRepository;
+    private final MpaRepository mpaRepository;
+    private final GenreRepository genreRepository;
+    private final FilmGenreRepository filmGenreRepository;
 
 
     public Film save(Film film) {
-        return filmRepository.save(film);
+        Film savedFilm = filmRepository.save(film);
+
+        if (!film.getGenres().isEmpty()) {
+            filmGenreRepository.save(film);
+
+            film.setGenres(new HashSet<>(filmGenreRepository.getById(film.getId()).stream()
+                    .map(id -> genreRepository.getById(id.getGenreId())
+                            .orElseThrow(() -> new ValidationException("Жанр не найден.")))
+                    .toList())
+            );
+        }
+        film.setMpa(mpaRepository.getById(film.getMpa().getId())
+                .orElseThrow(() -> new ValidationException("Рейтинг не найден."))
+        );
+        return savedFilm;
     }
 
     public Film update(final Film film) {
@@ -63,7 +80,6 @@ public class FilmServiceImpl implements FilmService {
     }
 
     public List<Film> getPopular(long count) {
-
         return filmRepository.getPopular(count);
     }
 }

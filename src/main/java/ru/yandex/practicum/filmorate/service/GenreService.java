@@ -21,9 +21,14 @@ public class GenreService {
         return genreRepository.getAll();
     }
 
-    public Genre getById (long id) {
-        return genreRepository.getById(id).orElseThrow(() -> new ValidationException("Genre c ID - " + id + ", не найден."));
-    }
+    public Genre getById(long id) {
+//        Optional<Genre> genres = genreRepository.getById(id);
+//        if (genres.isEmpty()) {
+//            throw new ValidationException("Жанры для фильма c ID - " + id + ", не найдены.");
+//        }
+//        return genres;
 
+        return genreRepository.getById(id).orElseThrow(() -> new ValidationException("Жанры для фильма c ID - " + id + ", не найдены."));
+    }
 
 }
