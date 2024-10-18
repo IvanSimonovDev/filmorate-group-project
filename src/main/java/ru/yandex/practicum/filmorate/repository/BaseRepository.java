@@ -83,7 +83,7 @@ public class BaseRepository<T> {
     }
 
     protected int[] batchInsert(String query, Long filmId, ArrayList<Genre> params) {
-      return   jdbc.batchUpdate(query,
+        return jdbc.batchUpdate(query,
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {

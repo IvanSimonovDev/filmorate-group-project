@@ -33,7 +33,7 @@ public class FilmGenreRepository  extends BaseRepository<FilmGenre> {
     public int[] save(Film film) {
         return batchInsert(INSERT_QUERY,
                 film.getId(),
-                new ArrayList<>(film.getGenres()) //.stream().map(Genre::getId).toList()
+                new ArrayList<>(film.getGenres())
         );
     }
 

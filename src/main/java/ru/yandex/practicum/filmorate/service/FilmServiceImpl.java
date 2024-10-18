@@ -2,12 +2,14 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.FKConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.*;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service
@@ -22,21 +24,23 @@ public class FilmServiceImpl implements FilmService {
 
 
     public Film save(Film film) {
-        Film savedFilm = filmRepository.save(film);
+        film.setMpa(mpaRepository.getById(film.getMpa().getId())
+                .orElseThrow(() -> new FKConstraintViolationException("Рейтинг вне диапазона."))
+        );
+        filmRepository.save(film);
 
-        if (!film.getGenres().isEmpty()) {
-            filmGenreRepository.save(film);
+        if (null != film.getGenres()) {
 
-            film.setGenres(new HashSet<>(filmGenreRepository.getById(film.getId()).stream()
-                    .map(id -> genreRepository.getById(id.getGenreId())
-                            .orElseThrow(() -> new ValidationException("Жанр не найден.")))
+            film.setGenres(new LinkedHashSet<>(film.getGenres().stream()
+                    .map(id -> genreRepository.getById(id.getId())
+                            .orElseThrow(() -> new FKConstraintViolationException("Жанр вне диапазона.")))
+
                     .toList())
             );
+            filmGenreRepository.save(film);
         }
-        film.setMpa(mpaRepository.getById(film.getMpa().getId())
-                .orElseThrow(() -> new ValidationException("Рейтинг не найден."))
-        );
-        return savedFilm;
+
+        return film;
     }
 
     public Film update(final Film film) {
@@ -48,9 +52,19 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.update(film);
     }
 
-    public Film getById(long id) {
+    public Film getById(long filmId) {
 
-        return filmRepository.get(id).orElseThrow(() -> new ValidationException("Фильм c ID - " + id + ", не найден."));
+        Film film = filmRepository.get(filmId).orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
+
+            film.setMpa(mpaRepository.getById(film.getMpa().getId())
+                    .orElseThrow(() -> new FKConstraintViolationException("Рейтинг вне диапазона."))
+            );
+        film.setGenres(new HashSet<>(filmGenreRepository.getById(film.getId()).stream()
+                    .map(id -> genreRepository.getById(id.getGenreId())
+                            .orElseThrow(() -> new ValidationException("Жанр не найден.")))
+                    .toList()));
+
+        return film;
     }
 
     public List<Film> getAll() {

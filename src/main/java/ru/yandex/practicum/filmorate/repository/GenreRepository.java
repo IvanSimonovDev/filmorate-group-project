@@ -28,5 +28,4 @@ public class GenreRepository extends BaseRepository<Genre> {
         return findOne(FIND_BY_ID_QUERY, id);
     }
 
-
 }

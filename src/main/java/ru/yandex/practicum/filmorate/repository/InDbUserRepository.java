@@ -20,18 +20,18 @@ public class InDbUserRepository extends BaseRepository<User> implements UserRepo
     private static final String INSERT_QUERY = "INSERT INTO users (email, login, name, birthday)" +
             "VALUES (?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?";
-    private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friends(user_Id, friend_id, isConfirmed) VALUES (?, ?, ?)";
-    private static final String DELETE_FRIEND_QUERY = "DELETE from user_friends WHERE  user_id = ? AND friend_id = ?";
+    private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friend (user_Id, friend_id, isConfirmed) VALUES (?, ?, ?)";
+    private static final String DELETE_FRIEND_QUERY = "DELETE from user_friend WHERE  user_id = ? AND friend_id = ?";
     private static final String SELECT_FRIENDS_QUERY = "SELECT * FROM users WHERE id IN " +
-            "(SELECT uf.friend_id FROM users u LEFT JOIN user_friends uf ON u.id = uf.user_id WHERE u.id = ?)";
+            "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = ?)";
     private static final String SELECT_COMMON_FRIENDS_QUERY = "WITH cte AS " +
             "(SELECT uf.friend_id " +
             " FROM users u " +
-            " LEFT JOIN user_friends uf ON u.id = uf.user_id " +
+            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
             " WHERE u.id = ?) " +
             "SELECT u1.* " +
             "FROM users u " +
-            " LEFT JOIN user_friends uf ON u.id = uf.user_id " +
+            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
             " INNER JOIN cte ON uf.friend_id = cte.friend_id " +
             " INNER JOIN users u1 ON u1.id = uf.friend_id " +
             "WHERE u.id = ?";

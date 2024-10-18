@@ -57,7 +57,7 @@ public class InDbFilmRepository extends BaseRepository<Film> implements FilmRepo
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getMpa(),
+                film.getMpa().getId(),
                 film.getId()
         );
         return film;

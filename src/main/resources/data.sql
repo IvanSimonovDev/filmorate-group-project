@@ -34,12 +34,12 @@ INSERT INTO film (name, description, release_date, duration, rating_id) VALUES
                                                                             ('The Lion King', 'A young lion returns to reclaim his throne.', '1994-06-15', 88, 1);
 
 INSERT INTO genre (name) VALUES
-                             ('Comedy'),
-                             ('Drama'),
-                             ('Animation'),
-                             ('Thriller'),
-                             ('Documentary'),
-                             ('Action');
+                             ('Комедия'),
+                             ('Драма'),
+                             ('Мультфильм'),
+                             ('Триллер'),
+                             ('Документальный'),
+                             ('Боевик');
 
 INSERT INTO film_genre (film_id, genre_id) VALUES
                                                (1, 4),  -- Inception - Thriller
