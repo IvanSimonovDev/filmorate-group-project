@@ -11,11 +11,11 @@ import java.util.Optional;
 
 @Repository
 @Slf4j
-public class UserFriendsRepository extends BaseRepository<UserFriend> {
+public class UserFriendRepository extends BaseRepository<UserFriend> {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM user_friend WHERE id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM user_friend";
 
-    public UserFriendsRepository(JdbcTemplate jdbc, RowMapper<UserFriend> mapper) {
+    public UserFriendRepository(JdbcTemplate jdbc, RowMapper<UserFriend> mapper) {
         super(jdbc, mapper);
     }
 
