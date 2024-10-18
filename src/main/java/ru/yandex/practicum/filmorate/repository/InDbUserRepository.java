@@ -72,11 +72,11 @@ public class InDbUserRepository extends BaseRepository<User> implements UserRepo
         return user;
     }
 
-    public void addFriend(User user, User friend) {
+    public void addFriend(User user, User friend, boolean isConfirmed) {
         insert(INSERT_FRIEND_QUERY,
                 user.getId(),
                 friend.getId(),
-                "false"
+                isConfirmed
         );
     }
 

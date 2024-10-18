@@ -38,7 +38,7 @@ public class InMemoryUserRepository implements UserRepository {
         return currentUser;
     }
 
-    public void addFriend(User user, User friend) {
+    public void addFriend(User user, User friend, boolean isConfirmed) {
 
         Set<User> uFriends = usersFriends.computeIfAbsent(user.getId(), id -> new HashSet<>());
         uFriends.add(friend);

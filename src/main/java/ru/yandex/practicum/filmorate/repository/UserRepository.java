@@ -16,7 +16,7 @@ public interface UserRepository {
 
     User update(User user);
 
-    void addFriend(User user, User friend);
+    void addFriend(User user, User friend, boolean isConfirmed);
 
     void deleteFriend(User user, User friend);
 

@@ -40,14 +40,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.update(user);
     }
 
-    public void addFriend(long userId, long friendId) {
+    public void addFriend(long userId, long friendId, boolean isConfirmed) {
         final User user = userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
         final User friend = userRepository.get(friendId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + friendId + " не найден"));
 
-        userRepository.addFriend(user, friend);
+        userRepository.addFriend(user, friend, isConfirmed);
     }
 
     public void deleteFriend(long userId, long friendId) {
