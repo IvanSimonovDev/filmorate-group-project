@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exception.FKConstraintViolationException;
+import ru.yandex.practicum.filmorate.exception.FkConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.validation.ValidationErrorResponse;
@@ -64,9 +64,9 @@ public class ErrorHandlingControllerAdvice {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(FKConstraintViolationException.class)
+    @ExceptionHandler(FkConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse onFKConstraintViolationException(final FKConstraintViolationException e) {
+    public ErrorResponse onFKConstraintViolationException(final FkConstraintViolationException e) {
         log.error("FKConstraintViolationException: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }

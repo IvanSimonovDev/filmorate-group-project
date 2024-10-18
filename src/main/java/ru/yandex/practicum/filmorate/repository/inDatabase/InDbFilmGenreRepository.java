@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.repository;
+package ru.yandex.practicum.filmorate.repository.inDatabase;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,13 +12,13 @@ import java.util.List;
 
 @Repository
 @Slf4j
-public class FilmGenreRepository  extends BaseRepository<FilmGenre> {
+public class InDbFilmGenreRepository extends InDbBaseRepository<FilmGenre> {
 
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film_genre WHERE film_id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM film_genre";
     private static final String INSERT_QUERY = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
 
-    public FilmGenreRepository(JdbcTemplate jdbc, RowMapper<FilmGenre> mapper) {
+    public InDbFilmGenreRepository(JdbcTemplate jdbc, RowMapper<FilmGenre> mapper) {
         super(jdbc, mapper);
     }
 

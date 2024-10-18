@@ -2,11 +2,15 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.FKConstraintViolationException;
+import ru.yandex.practicum.filmorate.exception.FkConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.*;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.InDbFilmGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.InDbMpaRepository;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -18,14 +22,14 @@ public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
     private final UserRepository userRepository;
-    private final MpaRepository mpaRepository;
-    private final GenreRepository genreRepository;
-    private final FilmGenreRepository filmGenreRepository;
+    private final InDbMpaRepository mpaRepository;
+    private final InDbGenreRepository genreRepository;
+    private final InDbFilmGenreRepository filmGenreRepository;
 
 
     public Film save(Film film) {
         film.setMpa(mpaRepository.getById(film.getMpa().getId())
-                .orElseThrow(() -> new FKConstraintViolationException("Рейтинг вне диапазона."))
+                .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."))
         );
         filmRepository.save(film);
 
@@ -33,7 +37,7 @@ public class FilmServiceImpl implements FilmService {
 
             film.setGenres(new LinkedHashSet<>(film.getGenres().stream()
                     .map(id -> genreRepository.getById(id.getId())
-                            .orElseThrow(() -> new FKConstraintViolationException("Жанр вне диапазона.")))
+                            .orElseThrow(() -> new FkConstraintViolationException("Жанр вне диапазона.")))
 
                     .toList())
             );
@@ -57,7 +61,7 @@ public class FilmServiceImpl implements FilmService {
         Film film = filmRepository.get(filmId).orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
 
             film.setMpa(mpaRepository.getById(film.getMpa().getId())
-                    .orElseThrow(() -> new FKConstraintViolationException("Рейтинг вне диапазона."))
+                    .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."))
             );
         film.setGenres(new HashSet<>(filmGenreRepository.getById(film.getId()).stream()
                     .map(id -> genreRepository.getById(id.getGenreId())

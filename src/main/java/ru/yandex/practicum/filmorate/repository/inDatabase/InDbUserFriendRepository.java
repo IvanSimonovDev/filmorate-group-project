@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.repository;
+package ru.yandex.practicum.filmorate.repository.inDatabase;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Repository
 @Slf4j
-public class UserFriendRepository extends BaseRepository<UserFriend> {
+public class InDbUserFriendRepository extends InDbBaseRepository<UserFriend> {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM user_friend WHERE id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM user_friend";
     private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (?, ?, ?)";
@@ -23,7 +23,7 @@ public class UserFriendRepository extends BaseRepository<UserFriend> {
     private static final String SELECT_COMMON_FRIENDS_QUERY = "select * from user_friend where user_id in(?,?)";
 
 
-    public UserFriendRepository(JdbcTemplate jdbc, RowMapper<UserFriend> mapper) {
+    public InDbUserFriendRepository(JdbcTemplate jdbc, RowMapper<UserFriend> mapper) {
         super(jdbc, mapper);
     }
 
