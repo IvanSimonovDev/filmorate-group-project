@@ -20,7 +20,7 @@ public class MpaService {
         return mpaRepository.getAll();
     }
 
-    public Mpa getById (long id) {
+    public Mpa getById(long id) {
         return mpaRepository.getById(id).orElseThrow(() -> new ValidationException("Rating c ID - " + id + ", не найден."));
     }
 
