@@ -29,7 +29,7 @@ public class MpaController {
     }
 
     @GetMapping("/{id}")
-    public Mpa getById(@PathVariable("id") @Positive long id ) {
+    public Mpa getById(@PathVariable("id") @Positive long id) {
         log.info("GET /mpa/id <--> Get 1 rating");
         return mpaService.getById(id);
     }
