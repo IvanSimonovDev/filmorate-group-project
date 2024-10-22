@@ -71,15 +71,15 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
         );
     }
 
-    public void deleteLike(Film film, User user) {
-        delete(DELETE_LIKE_QUERY,
+    public boolean deleteLike(Film film, User user) {
+        return delete(DELETE_LIKE_QUERY,
                 film.getId(),
                 user.getId()
         );
     }
 
     public List<Film> getPopular(long count) {
-        return findMany(SELECT_POPULAR_QUERY,count);
+        return findMany(SELECT_POPULAR_QUERY, count);
     }
 
 }

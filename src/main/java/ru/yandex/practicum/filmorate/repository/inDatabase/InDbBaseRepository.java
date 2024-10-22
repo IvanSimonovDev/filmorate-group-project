@@ -45,7 +45,7 @@ public class InDbBaseRepository<T> {
     protected void update(String query, Object... params) {
         int rowsUpdated = jdbc.update(query, params);
         if (rowsUpdated == 0) {
-            throw new ValidationException("Не удалось обновить данные пользователя с ID: " + params[4]);
+            throw new ValidationException("Не удалось обновить данные с: " + params[4]);
         }
     }
 
@@ -97,4 +97,5 @@ public class InDbBaseRepository<T> {
                     }
                 });
     }
+
 }

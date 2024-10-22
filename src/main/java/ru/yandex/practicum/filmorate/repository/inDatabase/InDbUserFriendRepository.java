@@ -9,13 +9,11 @@ import ru.yandex.practicum.filmorate.model.UserFriend;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Repository
 @Slf4j
 public class InDbUserFriendRepository extends InDbBaseRepository<UserFriend> {
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM user_friend WHERE id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM user_friend";
     private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (?, ?, ?)";
     private static final String DELETE_FRIEND_QUERY = "DELETE from user_friend WHERE  user_id = ? AND friend_id = ?";
@@ -29,10 +27,6 @@ public class InDbUserFriendRepository extends InDbBaseRepository<UserFriend> {
 
     public List<UserFriend> getAll() {
         return findMany(FIND_ALL_QUERY);
-    }
-
-    public Optional<UserFriend> getById(long id) {
-        return findOne(FIND_BY_ID_QUERY, id);
     }
 
     public void addFriend(User user, User friend, boolean isConfirmed) {
@@ -57,6 +51,5 @@ public class InDbUserFriendRepository extends InDbBaseRepository<UserFriend> {
     public List<UserFriend> getCommonFriends(long userId, long otherId) {
         return findMany(SELECT_COMMON_FRIENDS_QUERY, userId, otherId);
     }
-
 
 }

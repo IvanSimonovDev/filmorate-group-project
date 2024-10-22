@@ -79,6 +79,7 @@ INSERT INTO film_likes (film_id, user_id) VALUES
 INSERT INTO film_likes (film_id, user_id) VALUES
                                               (5, 2),  -- User 2 likes The Godfather
                                               (5, 3),  -- User 3 likes The Godfather
+                                              (5, 1),  -- User 1 likes The Godfather
                                               (5, 4);  -- User 4 likes The Godfather
 
 INSERT INTO film_likes (film_id, user_id) VALUES

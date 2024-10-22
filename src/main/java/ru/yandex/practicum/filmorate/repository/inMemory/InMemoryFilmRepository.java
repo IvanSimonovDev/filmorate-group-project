@@ -46,12 +46,13 @@ public class InMemoryFilmRepository implements FilmRepository {
         fLikes.add(user);
     }
 
-    public void deleteLike(Film film, User user) {
+    public boolean deleteLike(Film film, User user) {
 
         Set<User> fLikes = filmsLikes.computeIfAbsent(film.getId(), id -> new HashSet<>());
         if (!fLikes.isEmpty()) {
-            fLikes.remove(user);
+            return fLikes.remove(user);
         }
+        return false;
     }
 
     public List<Film> getPopular(long count) {

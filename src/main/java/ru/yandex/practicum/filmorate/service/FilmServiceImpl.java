@@ -38,12 +38,10 @@ public class FilmServiceImpl implements FilmService {
             film.setGenres(new LinkedHashSet<>(film.getGenres().stream()
                     .map(id -> genreRepository.getById(id.getId())
                             .orElseThrow(() -> new FkConstraintViolationException("Жанр вне диапазона.")))
-
                     .toList())
             );
             filmGenreRepository.save(film);
         }
-
         return film;
     }
 
