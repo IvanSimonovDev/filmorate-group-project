@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.GenreRowMapper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +33,7 @@ public class InDbGenreRepositoryTests {
         assertThat(genres)
                 .isNotEmpty()
                 .hasSizeGreaterThanOrEqualTo(6)
-                .allMatch(genre -> genre instanceof Genre);
+                .allMatch(Objects::nonNull);
     }
 
     @DisplayName("Проверяем получение одной записи из таблицы Жанров(genre)")

@@ -15,6 +15,7 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.UserFriendRowM
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +50,7 @@ public class InDbUserFriendRepositoryTests {
         assertThat(usersFriends)
                 .isNotEmpty()
                 .hasSizeGreaterThanOrEqualTo(7)
-                .allMatch(userFriend -> userFriend instanceof UserFriend);
+                .allMatch(Objects::nonNull);
     }
 
     @DisplayName("Добавляем нового друга")

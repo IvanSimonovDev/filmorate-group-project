@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.UserRowMapper;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +58,7 @@ public class UserRepositoryTests {
         assertThat(users)
                 .isNotEmpty()
                 .hasSize(5)
-                .allMatch(user -> user instanceof User);
+                .allMatch(Objects::nonNull);
     }
 
     @DisplayName("Добавляем нового пользователя")

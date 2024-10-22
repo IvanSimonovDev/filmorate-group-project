@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.InDbMpaRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.MpaRowMapper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +33,7 @@ public class InDbMpaRepositoryTests {
         assertThat(mpaAll)
                 .isNotEmpty()
                 .hasSizeGreaterThanOrEqualTo(5)
-                .allMatch(mpa -> mpa instanceof Mpa);
+                .allMatch(Objects::nonNull);
     }
 
     @DisplayName("Проверяем получение одной записи из таблицы mpa")

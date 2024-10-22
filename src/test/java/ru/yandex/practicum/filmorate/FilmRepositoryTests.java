@@ -17,6 +17,7 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmRowMapper;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -89,7 +90,7 @@ public class FilmRepositoryTests {
         assertThat(films)
                 .isNotEmpty()
                 .hasSize(10)
-                .allMatch(film -> film instanceof Film);
+                .allMatch(Objects::nonNull);
     }
 
     @DisplayName("Проверяем добавление нового фильма, метод save")
@@ -138,7 +139,7 @@ public class FilmRepositoryTests {
         assertThat(popular)
                 .isNotEmpty()
                 .hasSize(3)
-                .allMatch(film -> film instanceof Film)
+                .allMatch(Objects::nonNull)
                 .extracting(Film::getName)
                 .contains("The Shawshank Redemption", "The Godfather", "Interstellar");
     }
