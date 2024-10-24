@@ -66,15 +66,14 @@ public class ErrorHandlingControllerAdvice {
 
     @ExceptionHandler(FkConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse onFKConstraintViolationException(final FkConstraintViolationException e) {
+    public ErrorResponse onFkConstraintViolationException(final FkConstraintViolationException e) {
         log.error("FKConstraintViolationException: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
-
-    @ExceptionHandler
+    @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse onException(final Exception e) {
+    public ErrorResponse handleAnyException(final Throwable e) {
         log.warn("Error: ", e);
         return new ErrorResponse(e.getMessage());
     }
