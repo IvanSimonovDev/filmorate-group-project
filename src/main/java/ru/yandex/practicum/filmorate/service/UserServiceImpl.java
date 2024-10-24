@@ -4,14 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.model.UserFriend;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.InDbUserFriendRepository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +49,7 @@ public class UserServiceImpl implements UserService {
         final User friend = userRepository.get(friendId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + friendId + " не найден"));
 
-        userFriendRepository.addFriend(user, friend, isConfirmed);
+        userFriendRepository.add(user, friend, isConfirmed);
     }
 
     public void deleteFriend(long userId, long friendId) {
@@ -62,7 +59,7 @@ public class UserServiceImpl implements UserService {
         User friend = userRepository.get(friendId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + friendId + " не найден"));
 
-        userFriendRepository.deleteFriend(user, friend);
+        userFriendRepository.delete(user, friend);
     }
 
     public Set<User> getFriends(long userId) {
@@ -70,13 +67,7 @@ public class UserServiceImpl implements UserService {
         final User user = userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
-        Set<Long> uf = userFriendRepository.getFriends(user).stream()
-                .map(UserFriend::getFriendId)
-                .collect(Collectors.toSet());
-
-        return userRepository.getAll().stream()
-                .filter(u -> uf.contains(u.getId()))
-                .collect(Collectors.toSet());
+        return userRepository.getFriends(user);
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
@@ -87,17 +78,7 @@ public class UserServiceImpl implements UserService {
         User other = userRepository.get(otherId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + otherId + " не найден"));
 
-        Set<Long> uf = userFriendRepository.getCommonFriends(user.getId(), other.getId()).stream()
-                .map(UserFriend::getFriendId)
-                .collect(Collectors.groupingBy(friendId -> friendId, Collectors.counting())) // Группируем по friendId и считаем
-                .entrySet().stream() // Преобразуем в поток пар (friendId, count)
-                .filter(entry -> entry.getValue() > 1) // Оставляем только те, где count > 1
-                .map(Map.Entry::getKey) // Извлекаем friendId
-                .collect(Collectors.toSet()); // Собираем в Set
-
-        return userRepository.getAll().stream()
-                .filter(u -> uf.contains(u.getId()))
-                .toList();
+        return userRepository.getCommonFriends(user.getId(), other.getId());
     }
 
     private void checkUserName(User user) {
