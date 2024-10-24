@@ -12,10 +12,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class InDbBaseRepository<T> {
@@ -61,15 +58,8 @@ public class InDbBaseRepository<T> {
         }, keyHolder);
 
         Long id = null;
-//      System.out.println(keyHolder.getKeys());
-//        if (keyHolder.getKeys() != null && !keyHolder.getKeys().isEmpty() && keyHolder.getKeys().size() == 1) {
-//            id = keyHolder.getKeyAs(Integer.class).longValue();
-//        }
         if (keyHolder.getKeys() != null && !keyHolder.getKeys().isEmpty() && keyHolder.getKeys().size() == 1) {
-            Integer key = keyHolder.getKeyAs(Integer.class);
-            if (key != null) {
-                id = key.longValue();
-            }
+            id = Objects.requireNonNull(keyHolder.getKeyAs(Integer.class)).longValue();
         }
 
         // Возвращаем id нового пользователя
