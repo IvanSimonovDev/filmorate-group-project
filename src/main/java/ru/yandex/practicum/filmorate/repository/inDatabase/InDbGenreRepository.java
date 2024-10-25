@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -27,5 +28,13 @@ public class InDbGenreRepository extends InDbBaseRepository<Genre> {
     public Optional<Genre> getById(long id) {
         return findOne(FIND_BY_ID_QUERY, id);
     }
+    public List<Genre> getByIds(List<Long> ids) {
+        String list = ids.stream().map(String::valueOf)
+                .collect(Collectors.joining(","));
+        String sql = "SELECT * FROM genre WHERE id in (" + list + ")";
+
+        return findMany(sql);
+    }
+
 
 }

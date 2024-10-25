@@ -37,4 +37,10 @@ public class InDbFilmGenreRepository extends InDbBaseRepository<FilmGenre> {
         );
     }
 
+    public boolean delete(Film film) {
+        String sql ="delete from film_genre where film_id = ?";
+        return delete(sql, film.getId()
+        );
+    }
+
 }

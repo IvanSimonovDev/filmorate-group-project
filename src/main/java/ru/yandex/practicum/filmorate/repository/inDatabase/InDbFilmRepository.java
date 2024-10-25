@@ -30,7 +30,7 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
 //    private static final String FIND_ALL_QUERY = "SELECT * FROM film";
     private static final String INSERT_QUERY = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
             "VALUES (?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE film SET name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? WHERE id = ?";
+//    private static final String UPDATE_QUERY = "UPDATE film SET name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? WHERE id = ?";
 
     private static final String INSERT_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
     private static final String DELETE_LIKE_QUERY = "DELETE from film_likes WHERE  film_id = ? AND user_Id = ?";
@@ -107,8 +107,9 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
     }
 
     public Film update(Film film) {
+        String sql = "UPDATE film SET name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? WHERE id = ?";
         update(
-                UPDATE_QUERY,
+                sql,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
@@ -116,7 +117,11 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
                 film.getMpa().getId(),
                 film.getId()
         );
-        return film;
+        if (null != film.getGenres()) {
+            filmGenreRepository.delete(film);
+            filmGenreRepository.save(film);
+        }
+        return get(film.getId()).orElseThrow();
     }
 
     public void addLike(Film film, User user) {
