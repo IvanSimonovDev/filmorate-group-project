@@ -10,8 +10,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +22,7 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
     private final InDbFilmGenreRepository filmGenreRepository;
     private final InDbGenreRepository genreRepository;
     private final FilmExtractor filmExtractor;
+    private final FilmGenreRowMapper filmGenreRowMapper;
 
 //    private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
 
@@ -38,14 +37,15 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
 //            "FROM film f JOIN film_likes fl ON f.id = fl.film_id " +
 //            "GROUP BY f.name ORDER BY likes DESC LIMIT ?";
 
-    private static record FilmGenre(long filmId, long genreId) {
+    protected record FilmGenre(long filmId, long genreId) {
     }
 
-    public InDbFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, InDbFilmGenreRepository filmGenreRepository, InDbGenreRepository genreRepository, FilmExtractor filmExtractor) {
+    public InDbFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, InDbFilmGenreRepository filmGenreRepository, InDbGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper) {
         super(jdbc, mapper);
         this.filmGenreRepository = filmGenreRepository;
         this.genreRepository = genreRepository;
         this.filmExtractor = filmExtractor;
+        this.filmGenreRowMapper = filmGenreRowMapper;
     }
 
     public Optional<Film> get(long filmId) {
@@ -65,7 +65,7 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
 
         List<Genre> genres = genreRepository.getAll();
         List<Film> films = findMany(sql);
-        List<FilmGenre> filmGenres = jdbc.query(sql2, new FilmGenreRowMapper());
+        List<FilmGenre> filmGenres = jdbc.query(sql2, filmGenreRowMapper);
 
 //        return findMany(FIND_ALL_QUERY);
 
@@ -81,16 +81,6 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
 
         return films;
     }
-
-    private static class FilmGenreRowMapper implements RowMapper<InDbFilmRepository.FilmGenre> {
-        @Override
-        public InDbFilmRepository.FilmGenre mapRow(ResultSet rs, int rowNum) throws SQLException {
-            long filmId = rs.getLong("film_id");
-            long genreId = rs.getLong("genre_id");
-            return new InDbFilmRepository.FilmGenre(filmId, genreId);
-        }
-    }
-
 
     public Film save(Film film) {
         String sql = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
