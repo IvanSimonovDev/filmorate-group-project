@@ -14,24 +14,27 @@ import java.util.List;
 @Slf4j
 public class InDbFilmGenreRepository extends InDbBaseRepository<FilmGenre> {
 
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM film_genre WHERE film_id = ?";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM film_genre";
-    private static final String INSERT_QUERY = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
+//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM film_genre WHERE film_id = ?";
+//    private static final String FIND_ALL_QUERY = "SELECT * FROM film_genre";
+//    private static final String INSERT_QUERY = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
 
     public InDbFilmGenreRepository(JdbcTemplate jdbc, RowMapper<FilmGenre> mapper) {
         super(jdbc, mapper);
     }
 
     public List<FilmGenre> getAll() {
-        return findMany(FIND_ALL_QUERY);
+        String sql = "SELECT * FROM film_genre";
+        return findMany(sql);
     }
 
     public List<FilmGenre> getById(long id) {
-        return findMany(FIND_BY_ID_QUERY, id);
+        String sql = "SELECT * FROM film_genre WHERE film_id = ?";
+        return findMany(sql, id);
     }
 
     public int[] save(Film film) {
-        return batchInsert(INSERT_QUERY,
+        String sql = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
+        return batchInsert(sql,
                 film.getId(),
                 new ArrayList<>(film.getGenres())
         );

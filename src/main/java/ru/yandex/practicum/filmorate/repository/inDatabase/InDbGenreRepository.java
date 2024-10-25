@@ -14,19 +14,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public class InDbGenreRepository extends InDbBaseRepository<Genre> {
 
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM genre";
+//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?";
+//    private static final String FIND_ALL_QUERY = "SELECT * FROM genre";
 
     public InDbGenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper);
     }
 
     public List<Genre> getAll() {
-        return findMany(FIND_ALL_QUERY);
+        String sql = "SELECT * FROM genre";
+        return findMany(sql);
     }
 
     public Optional<Genre> getById(long id) {
-        return findOne(FIND_BY_ID_QUERY, id);
+        String sql = "SELECT * FROM genre WHERE id = ?";
+        return findOne(sql, id);
     }
     public List<Genre> getByIds(List<Long> ids) {
         String list = ids.stream().map(String::valueOf)

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 import ru.yandex.practicum.filmorate.validation.ReleaseDate;
 
@@ -17,7 +16,6 @@ import java.util.Set;
  */
 
 @Data
-@EqualsAndHashCode(of = "id")
 public class Film {
 
     @NotNull(groups = OnUpdate.class)

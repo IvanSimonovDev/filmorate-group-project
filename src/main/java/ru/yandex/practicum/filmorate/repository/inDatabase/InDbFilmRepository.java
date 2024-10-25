@@ -28,17 +28,19 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
 //    private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
 
 //    private static final String FIND_ALL_QUERY = "SELECT * FROM film";
-    private static final String INSERT_QUERY = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
-            "VALUES (?, ?, ?, ?, ?)";
+//    private static final String INSERT_QUERY = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
+//            "VALUES (?, ?, ?, ?, ?)";
 //    private static final String UPDATE_QUERY = "UPDATE film SET name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? WHERE id = ?";
 
-    private static final String INSERT_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
-    private static final String DELETE_LIKE_QUERY = "DELETE from film_likes WHERE  film_id = ? AND user_Id = ?";
-    private static final String SELECT_POPULAR_QUERY = " SELECT f.*, COUNT(fl.film_id) AS likes " +
-            "FROM film f JOIN film_likes fl ON f.id = fl.film_id " +
-            "GROUP BY f.name ORDER BY likes DESC LIMIT ?";
+//    private static final String INSERT_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
+//    private static final String DELETE_LIKE_QUERY = "DELETE from film_likes WHERE  film_id = ? AND user_Id = ?";
+//    private static final String SELECT_POPULAR_QUERY = "SELECT f.*, COUNT(fl.film_id) AS likes " +
+//            "FROM film f JOIN film_likes fl ON f.id = fl.film_id " +
+//            "GROUP BY f.name ORDER BY likes DESC LIMIT ?";
 
-    private static record FilmGenre (long filmId, long genreId) {}
+    private static record FilmGenre(long filmId, long genreId) {
+    }
+
     public InDbFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, InDbFilmGenreRepository filmGenreRepository, InDbGenreRepository genreRepository, FilmExtractor filmExtractor) {
         super(jdbc, mapper);
         this.filmGenreRepository = filmGenreRepository;
@@ -48,8 +50,9 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
 
     public Optional<Film> get(long filmId) {
         String sql = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
-                "JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID " +
-                "JOIN GENRE g ON g.ID = fg.GENRE_ID WHERE f.id = ?";
+                "LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID " +
+                "LEFT JOIN GENRE g ON g.ID = fg.GENRE_ID " +
+                " WHERE f.id = ?";
 
         return Optional.ofNullable(jdbc.query(sql, filmExtractor, filmId));
 
@@ -89,9 +92,11 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
     }
 
 
-
     public Film save(Film film) {
-        long id = insert(INSERT_QUERY,
+        String sql = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        long id = insert(sql,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
@@ -121,25 +126,33 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
             filmGenreRepository.delete(film);
             filmGenreRepository.save(film);
         }
-        return get(film.getId()).orElseThrow();
+//        return get(film.getId()).orElseThrow();
+        return film;
     }
 
     public void addLike(Film film, User user) {
-        insert(INSERT_LIKE_QUERY,
+        String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
+        insert(sql,
                 film.getId(),
                 user.getId()
         );
     }
 
     public boolean deleteLike(Film film, User user) {
-        return delete(DELETE_LIKE_QUERY,
+        String sql = "DELETE from film_likes WHERE  film_id = ? AND user_Id = ?";
+        return delete(sql,
                 film.getId(),
                 user.getId()
         );
     }
 
     public List<Film> getPopular(long count) {
-        return findMany(SELECT_POPULAR_QUERY, count);
+        String sql = "SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes " +
+                "FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
+                "JOIN film_likes fl ON f.id = fl.film_id " +
+                "GROUP BY f.name ORDER BY likes DESC LIMIT ?";
+
+        return findMany(sql, count);
     }
 
 }

@@ -30,13 +30,15 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."))
         );
 
-        List<Long> ids = film.getGenres().stream()
-                .map(Genre::getId)
-                .toList();
-        List<Genre> genres = genreRepository.getByIds(ids);
+        if (null != film.getGenres()) {
+            List<Long> ids = film.getGenres().stream()
+                    .map(Genre::getId)
+                    .toList();
+            List<Genre> genres = genreRepository.getByIds(ids);
 
-        if (ids.size() != genres.size()) {
-            throw new FkConstraintViolationException("Жанр вне диапазона.");
+            if (ids.size() != genres.size()) {
+                throw new FkConstraintViolationException("Жанр вне диапазона.");
+            }
         }
         return filmRepository.save(film);
     }

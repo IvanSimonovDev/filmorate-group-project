@@ -16,24 +16,24 @@ import java.util.Set;
 @Primary
 public class InDbUserRepository extends InDbBaseRepository<User> implements UserRepository {
 
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM users";
-    private static final String INSERT_QUERY = "INSERT INTO users (email, login, name, birthday)" +
-            "VALUES (?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?";
-    private static final String SELECT_FRIENDS_QUERY = "SELECT * FROM users WHERE id IN " +
-            "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = ?)";
-    private static final String SELECT_COMMON_FRIENDS_QUERY = "WITH cte AS " +
-            "(SELECT uf.friend_id " +
-            " FROM users u " +
-            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
-            " WHERE u.id = ?) " +
-            "SELECT u1.* " +
-            "FROM users u " +
-            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
-            " INNER JOIN cte ON uf.friend_id = cte.friend_id " +
-            " INNER JOIN users u1 ON u1.id = uf.friend_id " +
-            "WHERE u.id = ?";
+//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
+//    private static final String FIND_ALL_QUERY = "SELECT * FROM users";
+//    private static final String INSERT_QUERY = "INSERT INTO users (email, login, name, birthday)" +
+//            "VALUES (?, ?, ?, ?)";
+//    private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?";
+//    private static final String SELECT_FRIENDS_QUERY = "SELECT * FROM users WHERE id IN " +
+//            "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = ?)";
+//    private static final String SELECT_COMMON_FRIENDS_QUERY = "WITH cte AS " +
+//            "(SELECT uf.friend_id " +
+//            " FROM users u " +
+//            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
+//            " WHERE u.id = ?) " +
+//            "SELECT u1.* " +
+//            "FROM users u " +
+//            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
+//            " INNER JOIN cte ON uf.friend_id = cte.friend_id " +
+//            " INNER JOIN users u1 ON u1.id = uf.friend_id " +
+//            "WHERE u.id = ?";
 
 
     public InDbUserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
@@ -41,15 +41,21 @@ public class InDbUserRepository extends InDbBaseRepository<User> implements User
     }
 
     public Optional<User> get(long userId) {
-        return findOne(FIND_BY_ID_QUERY, userId);
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return findOne(sql, userId);
     }
 
     public List<User> getAll() {
-        return findMany(FIND_ALL_QUERY);
+        String sql = "SELECT * FROM users";
+
+        return findMany(sql);
     }
 
     public User save(User user) {
-        long id = insert(INSERT_QUERY,
+        String sql = "INSERT INTO users (email, login, name, birthday)" +
+                "VALUES (?, ?, ?, ?)";
+
+        long id = insert(sql,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
@@ -60,8 +66,10 @@ public class InDbUserRepository extends InDbBaseRepository<User> implements User
     }
 
     public User update(User user) {
-        update(
-                UPDATE_QUERY,
+        String sql = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?";
+
+                update(
+                sql,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
@@ -72,11 +80,26 @@ public class InDbUserRepository extends InDbBaseRepository<User> implements User
     }
 
     public Set<User> getFriends(User user) {
-        return new HashSet<>(findMany(SELECT_FRIENDS_QUERY, user.getId()));
+        String sql = "SELECT * FROM users WHERE id IN " +
+                "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = ?)";
+
+        return new HashSet<>(findMany(sql, user.getId()));
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
-        return findMany(SELECT_COMMON_FRIENDS_QUERY, userId, otherId);
+        String sql = "WITH cte AS " +
+                "(SELECT uf.friend_id " +
+                " FROM users u " +
+                " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
+                " WHERE u.id = ?) " +
+                "SELECT u1.* " +
+                "FROM users u " +
+                " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
+                " INNER JOIN cte ON uf.friend_id = cte.friend_id " +
+                " INNER JOIN users u1 ON u1.id = uf.friend_id " +
+                "WHERE u.id = ?";
+
+        return findMany(sql, userId, otherId);
     }
 
 }

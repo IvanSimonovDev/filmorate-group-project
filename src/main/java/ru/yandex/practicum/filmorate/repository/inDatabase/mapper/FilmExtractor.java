@@ -30,12 +30,14 @@ public class FilmExtractor implements ResultSetExtractor<Film> {
                 film.setDuration(rs.getInt("duration"));
                 film.setMpa(new Mpa(rs.getLong("mpa.id"), rs.getString("mpa.name")));
             }
-            genres.add(new Genre(rs.getLong("genre.id"), rs.getString("genre.name")));
+            long genreId = rs.getLong("genre.id");
+            if (!rs.wasNull()) {
+                genres.add(new Genre(genreId, rs.getString("genre.name")));
+            }
         }
-        if (film != null) {
+        if (!genres.isEmpty()) {
             film.setGenres(genres);
         }
         return film;
     }
-
 }

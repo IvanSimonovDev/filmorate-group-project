@@ -8,15 +8,17 @@ import ru.yandex.practicum.filmorate.model.User;
 @Repository
 @Slf4j
 public class InDbUserFriendRepository extends InDbBaseRepository<Object> {
-    private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (?, ?, ?)";
-    private static final String DELETE_FRIEND_QUERY = "DELETE from user_friend WHERE  user_id = ? AND friend_id = ?";
+//    private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (?, ?, ?)";
+//    private static final String DELETE_FRIEND_QUERY = "DELETE from user_friend WHERE  user_id = ? AND friend_id = ?";
 
     public InDbUserFriendRepository(JdbcTemplate jdbc) {
         super(jdbc, null);
     }
 
     public void add(User user, User friend, boolean isConfirmed) {
-        insert(INSERT_FRIEND_QUERY,
+        String sql = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (?, ?, ?)";
+
+        insert(sql,
                 user.getId(),
                 friend.getId(),
                 isConfirmed
@@ -24,7 +26,9 @@ public class InDbUserFriendRepository extends InDbBaseRepository<Object> {
     }
 
     public void delete(User user, User friend) {
-        delete(DELETE_FRIEND_QUERY,
+        String sql = "DELETE from user_friend WHERE  user_id = ? AND friend_id = ?";
+
+        delete(sql,
                 user.getId(),
                 friend.getId()
         );

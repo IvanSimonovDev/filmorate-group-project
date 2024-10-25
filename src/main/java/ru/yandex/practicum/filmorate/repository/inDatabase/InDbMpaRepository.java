@@ -13,19 +13,21 @@ import java.util.Optional;
 @Slf4j
 public class InDbMpaRepository extends InDbBaseRepository<Mpa> {
 
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM mpa WHERE id = ?";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM mpa";
+//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM mpa WHERE id = ?";
+//    private static final String FIND_ALL_QUERY = "SELECT * FROM mpa";
 
     public InDbMpaRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper);
     }
 
     public List<Mpa> getAll() {
-       return findMany(FIND_ALL_QUERY);
+        String sql = "SELECT * FROM mpa";
+       return findMany(sql);
     }
 
     public Optional<Mpa> getById(long id) {
-        return findOne(FIND_BY_ID_QUERY, id);
+        String sql = "SELECT * FROM mpa WHERE id = ?";
+        return findOne(sql, id);
     }
 
 
