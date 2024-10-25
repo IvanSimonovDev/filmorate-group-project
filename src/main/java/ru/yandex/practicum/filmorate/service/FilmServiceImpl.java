@@ -12,8 +12,6 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.InDbFilmGenreReposito
 import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.InDbMpaRepository;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service
@@ -33,15 +31,15 @@ public class FilmServiceImpl implements FilmService {
         );
         filmRepository.save(film);
 
-        if (null != film.getGenres()) {
-
-            film.setGenres(new LinkedHashSet<>(film.getGenres().stream()
-                    .map(id -> genreRepository.getById(id.getId())
-                            .orElseThrow(() -> new FkConstraintViolationException("Жанр вне диапазона.")))
-                    .toList())
-            );
-            filmGenreRepository.save(film);
-        }
+//        if (null != film.getGenres()) {
+//
+//            film.setGenres(new LinkedHashSet<>(film.getGenres().stream()
+//                    .map(id -> genreRepository.getById(id.getId())
+//                            .orElseThrow(() -> new FkConstraintViolationException("Жанр вне диапазона.")))
+//                    .toList())
+//            );
+//            filmGenreRepository.save(film);
+//        }
         return film;
     }
 
@@ -56,17 +54,17 @@ public class FilmServiceImpl implements FilmService {
 
     public Film getById(long filmId) {
 
-        Film film = filmRepository.get(filmId).orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
+//        Film film = filmRepository.get(filmId).orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
+//
+//            film.setMpa(mpaRepository.getById(film.getMpa().getId())
+//                    .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."))
+//            );
+//        film.setGenres(new HashSet<>(filmGenreRepository.getById(film.getId()).stream()
+//                    .map(id -> genreRepository.getById(id.getGenreId())
+//                            .orElseThrow(() -> new ValidationException("Жанр не найден.")))
+//                    .toList()));
 
-            film.setMpa(mpaRepository.getById(film.getMpa().getId())
-                    .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."))
-            );
-        film.setGenres(new HashSet<>(filmGenreRepository.getById(film.getId()).stream()
-                    .map(id -> genreRepository.getById(id.getGenreId())
-                            .orElseThrow(() -> new ValidationException("Жанр не найден.")))
-                    .toList()));
-
-        return film;
+        return filmRepository.get(filmId).orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
     }
 
     public List<Film> getAll() {
