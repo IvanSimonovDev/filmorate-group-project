@@ -18,7 +18,6 @@ public class JdbcFilmGenreRepository extends JdbcBaseRepository<Object> {
 
     public int[] save(Film film) {
         String sql = "INSERT INTO film_genre (film_id, genre_id) VALUES (:film_id, :genre_id)";
-//        Map<String, Object> params = Map.of("film_id", film.getId(), "genre_id", new ArrayList<>(film.getGenres()));
 
         return batchInsert(sql,
                 film.getId(),

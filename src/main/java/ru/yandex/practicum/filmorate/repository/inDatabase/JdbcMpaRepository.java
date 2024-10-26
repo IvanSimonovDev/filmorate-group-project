@@ -16,16 +16,13 @@ import java.util.Optional;
 @Slf4j
 public class JdbcMpaRepository extends JdbcBaseRepository<Mpa> implements MpaRepository {
 
-//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM mpa WHERE id = ?";
-//    private static final String FIND_ALL_QUERY = "SELECT * FROM mpa";
-
     public JdbcMpaRepository(NamedParameterJdbcOperations jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper);
     }
 
     public List<Mpa> getAll() {
         String sql = "SELECT * FROM mpa";
-       return findMany(sql, Collections.emptyMap());
+        return findMany(sql, Collections.emptyMap());
     }
 
     public Optional<Mpa> getById(long id) {
@@ -33,6 +30,5 @@ public class JdbcMpaRepository extends JdbcBaseRepository<Mpa> implements MpaRep
         Map<String, Long> params = Map.of("id", id);
         return findOne(sql, params);
     }
-
 
 }

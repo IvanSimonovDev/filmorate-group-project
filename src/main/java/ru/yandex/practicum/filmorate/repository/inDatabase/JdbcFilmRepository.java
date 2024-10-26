@@ -22,23 +22,11 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     private final FilmExtractor filmExtractor;
     private final FilmGenreRowMapper filmGenreRowMapper;
 
-//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
-
-//    private static final String FIND_ALL_QUERY = "SELECT * FROM film";
-//    private static final String INSERT_QUERY = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
-//            "VALUES (?, ?, ?, ?, ?)";
-//    private static final String UPDATE_QUERY = "UPDATE film SET name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? WHERE id = ?";
-
-//    private static final String INSERT_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
-//    private static final String DELETE_LIKE_QUERY = "DELETE from film_likes WHERE  film_id = ? AND user_Id = ?";
-//    private static final String SELECT_POPULAR_QUERY = "SELECT f.*, COUNT(fl.film_id) AS likes " +
-//            "FROM film f JOIN film_likes fl ON f.id = fl.film_id " +
-//            "GROUP BY f.name ORDER BY likes DESC LIMIT ?";
-
     protected record FilmGenre(long filmId, long genreId) {
     }
 
-    public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository, JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper) {
+    public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository,
+                              JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper) {
         super(jdbc, mapper);
         this.filmGenreRepository = filmGenreRepository;
         this.genreRepository = genreRepository;
@@ -56,8 +44,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
 
         return Optional.ofNullable(jdbc.query(sql, params, filmExtractor));
-
-//        return findOne(sql, filmId);
     }
 
     public List<Film> getAll() {
@@ -68,8 +54,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         List<Film> films = findMany(sql, Collections.emptyMap());
         List<FilmGenre> filmGenres = jdbc.query(sql2, filmGenreRowMapper);
 
-//        return findMany(FIND_ALL_QUERY);
-
         films.forEach(film -> {
             Set<Genre> associatedGenres = filmGenres.stream()
                     .filter(fg -> fg.filmId() == film.getId())
@@ -79,7 +63,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
             film.setGenres(associatedGenres);
         });
-
         return films;
     }
 
@@ -87,17 +70,10 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
                 "VALUES (:name, :description, :release_date, :duration, :rating_id)";
 
-        Map<String, Object> params = Map.of("name", film.getName(), "description", film.getDescription(), "release_date",film.getReleaseDate(),
-                "duration", film.getDuration(), "rating_id",film.getMpa().getId());
+        Map<String, Object> params = Map.of("name", film.getName(), "description", film.getDescription(), "release_date", film.getReleaseDate(),
+                "duration", film.getDuration(), "rating_id", film.getMpa().getId());
 
-
-        long id = insert(sql, params
-//                film.getName(),
-//                film.getDescription(),
-//                film.getReleaseDate(),
-//                film.getDuration(),
-//                film.getMpa().getId()
-        );
+        long id = insert(sql, params);
         film.setId(id);
 
         if (null != film.getGenres()) {
@@ -108,24 +84,16 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
     public Film update(Film film) {
         String sql = "UPDATE film SET name = :name, description = :description, release_date = :release_date, duration = :duration, " +
-                                    "rating_id = :rating_id WHERE id = :id";
-        Map<String, Object> params = Map.of("name", film.getName(), "description", film.getDescription(),"release_date", film.getReleaseDate(),
-                                "duration", film.getDuration(), "rating_id", film.getMpa().getId(), "id", film.getId());
+                "rating_id = :rating_id WHERE id = :id";
+        Map<String, Object> params = Map.of("name", film.getName(), "description", film.getDescription(), "release_date", film.getReleaseDate(),
+                "duration", film.getDuration(), "rating_id", film.getMpa().getId(), "id", film.getId());
 
         update(
-                sql, params
-//                film.getName(),
-//                film.getDescription(),
-//                film.getReleaseDate(),
-//                film.getDuration(),
-//                film.getMpa().getId(),
-//                film.getId()
-        );
+                sql, params);
         if (null != film.getGenres()) {
             filmGenreRepository.delete(film);
             filmGenreRepository.save(film);
         }
-//        return get(film.getId()).orElseThrow();
         return film;
     }
 
@@ -133,10 +101,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (:film_id, :user_id)";
         Map<String, Object> params = Map.of("film_id", film.getId(), "user_id", user.getId());
 
-        insert(sql, params
-//                film.getId(),
-//                user.getId()
-        );
+        insert(sql, params);
     }
 
     public boolean deleteLike(Film film, User user) {
@@ -151,7 +116,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                 "FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
                 "JOIN film_likes fl ON f.id = fl.film_id " +
                 "GROUP BY f.name ORDER BY likes DESC LIMIT :count";
-
         Map<String, Long> params = Map.of("count", count);
 
         return findMany(sql, params);

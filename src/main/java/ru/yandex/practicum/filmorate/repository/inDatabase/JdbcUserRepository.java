@@ -13,26 +13,6 @@ import java.util.*;
 @Primary
 public class JdbcUserRepository extends JdbcBaseRepository<User> implements UserRepository {
 
-//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-//    private static final String FIND_ALL_QUERY = "SELECT * FROM users";
-//    private static final String INSERT_QUERY = "INSERT INTO users (email, login, name, birthday)" +
-//            "VALUES (?, ?, ?, ?)";
-//    private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?";
-//    private static final String SELECT_FRIENDS_QUERY = "SELECT * FROM users WHERE id IN " +
-//            "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = ?)";
-//    private static final String SELECT_COMMON_FRIENDS_QUERY = "WITH cte AS " +
-//            "(SELECT uf.friend_id " +
-//            " FROM users u " +
-//            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
-//            " WHERE u.id = ?) " +
-//            "SELECT u1.* " +
-//            "FROM users u " +
-//            " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
-//            " INNER JOIN cte ON uf.friend_id = cte.friend_id " +
-//            " INNER JOIN users u1 ON u1.id = uf.friend_id " +
-//            "WHERE u.id = ?";
-
-
     public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper);
     }
@@ -53,31 +33,18 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
         String sql = "INSERT INTO users (email, login, name, birthday)" +
                 "VALUES (:email, :login, :name, :birthday)";
         Map<String, Object> params = Map.of("email", user.getEmail(), "login", user.getLogin(),
-                                            "name", user.getName(), "birthday", user.getBirthday());
-
-        long id = insert(sql, params
-//                user.getEmail(),
-//                user.getLogin(),
-//                user.getName(),
-//                user.getBirthday()
-        );
+                "name", user.getName(), "birthday", user.getBirthday());
+        long id = insert(sql, params);
         user.setId(id);
+
         return user;
     }
 
     public User update(User user) {
         String sql = "UPDATE users SET email = :email, login = :login, name = :name, birthday = :birthday WHERE id = :id";
-        Map<String, Object> params = Map.of("email", user.getEmail(), "login", user.getLogin(), "name",user.getName(),
-                                              "birthday", user.getBirthday(), "id",user.getId());
-
-                update(
-                sql, params
-//                user.getEmail(),
-//                user.getLogin(),
-//                user.getName(),
-//                user.getBirthday(),
-//                user.getId()
-        );
+        Map<String, Object> params = Map.of("email", user.getEmail(), "login", user.getLogin(), "name", user.getName(),
+                "birthday", user.getBirthday(), "id", user.getId());
+        update(sql, params);
 
         return user;
     }
@@ -104,7 +71,7 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
                 "WHERE u.id = :otherId";
 
         Map<String, Long> params = Map.of("userId", userId,
-                                          "otherId", otherId);
+                "otherId", otherId);
 
         return findMany(sql, params);
     }

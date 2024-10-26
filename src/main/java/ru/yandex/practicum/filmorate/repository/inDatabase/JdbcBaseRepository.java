@@ -18,7 +18,6 @@ import java.util.Optional;
 public class JdbcBaseRepository<T> {
 
     protected final NamedParameterJdbcOperations jdbc;
-     //JdbcTemplate jdbc;
     protected final RowMapper<T> mapper;
 
 
@@ -77,20 +76,7 @@ public class JdbcBaseRepository<T> {
             batchParams[i] = params;
         }
 
-        return jdbc.batchUpdate(query, batchParams
-//                new BatchPreparedStatementSetter() {
-//                    @Override
-//                    public void setValues(PreparedStatement ps, int i) throws SQLException {
-//                        ps.setLong(1, filmId);
-//                        ps.setLong(2, params.get(i).getId());
-//                    }
-//
-//                    @Override
-//                    public int getBatchSize() {
-//                        return params.size();
-//                    }
-//                }
-                );
+        return jdbc.batchUpdate(query, batchParams);
     }
 
 }

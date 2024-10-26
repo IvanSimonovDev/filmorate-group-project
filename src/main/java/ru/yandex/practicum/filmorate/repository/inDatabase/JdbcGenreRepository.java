@@ -17,9 +17,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements GenreRepository {
 
-//    private static final String FIND_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?";
-//    private static final String FIND_ALL_QUERY = "SELECT * FROM genre";
-
     public JdbcGenreRepository(NamedParameterJdbcOperations jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper);
     }
@@ -34,6 +31,7 @@ public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements Ge
         Map<String, Long> params = Map.of("id", id);
         return findOne(sql, params);
     }
+
     public List<Genre> getByIds(List<Long> ids) {
         String list = ids.stream().map(String::valueOf)
                 .collect(Collectors.joining(","));
@@ -41,6 +39,5 @@ public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements Ge
 
         return findMany(sql, Collections.emptyMap());
     }
-
 
 }

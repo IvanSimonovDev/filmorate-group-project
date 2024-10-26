@@ -10,8 +10,6 @@ import java.util.Map;
 @Repository
 @Slf4j
 public class JdbcUserFriendRepository extends JdbcBaseRepository<Object> {
-//    private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (?, ?, ?)";
-//    private static final String DELETE_FRIEND_QUERY = "DELETE from user_friend WHERE  user_id = ? AND friend_id = ?";
 
     public JdbcUserFriendRepository(NamedParameterJdbcOperations jdbc) {
         super(jdbc, null);
@@ -21,16 +19,12 @@ public class JdbcUserFriendRepository extends JdbcBaseRepository<Object> {
         String sql = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (:user_id, :friend_id, :isConfirmed)";
         Map<String, Object> params = Map.of("user_id", user.getId(), "friend_id", friend.getId(), "isConfirmed", isConfirmed);
 
-        insert(sql, params
-//                user.getId(),
-//                friend.getId(),
-//                isConfirmed
-        );
+        insert(sql, params);
     }
 
     public void delete(User user, User friend) {
         String sql = "DELETE from user_friend WHERE  user_id = :user_Id AND friend_id = :friend_id";
-        Map<String, Long> params = Map.of("user_Id", user.getId(), "friend_id",friend.getId());
+        Map<String, Long> params = Map.of("user_Id", user.getId(), "friend_id", friend.getId());
 
         delete(sql, params);
     }

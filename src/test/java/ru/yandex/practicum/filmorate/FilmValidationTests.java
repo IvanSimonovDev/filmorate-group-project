@@ -93,4 +93,5 @@ public class FilmValidationTests {
         assertTrue(violations.isEmpty(), "проверить параметры");
         assertEquals(repository.getAll().size(), 1, "репозиторий не должен быть пустым");
     }
+
 }
