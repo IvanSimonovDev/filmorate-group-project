@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.*;
 
 @RequiredArgsConstructor
-public class InDbBaseRepository<T> {
+public class JdbcBaseRepository<T> {
 
     protected final JdbcTemplate jdbc;
     protected final RowMapper<T> mapper;

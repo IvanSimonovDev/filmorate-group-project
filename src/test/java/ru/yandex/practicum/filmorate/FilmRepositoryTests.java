@@ -11,9 +11,9 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.inDatabase.FilmGenreRowMapper;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbFilmGenreRepository;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbFilmRepository;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcFilmGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcFilmRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcGenreRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.GenreRowMapper;
@@ -27,12 +27,12 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import({InDbFilmRepository.class, FilmRowMapper.class, FilmExtractor.class,InDbFilmGenreRepository.class,
-        FilmGenreRowMapper.class , InDbGenreRepository.class, GenreRowMapper.class})
+@Import({JdbcFilmRepository.class, FilmRowMapper.class, FilmExtractor.class, JdbcFilmGenreRepository.class,
+        FilmGenreRowMapper.class , JdbcGenreRepository.class, GenreRowMapper.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmRepositoryTests {
 
-    private final InDbFilmRepository filmRepository;
+    private final JdbcFilmRepository filmRepository;
     public static final long TEST_USER_ID = 2L;
     public static final long UPDATED_FILM_ID = 8L;
     public static final long TEST_NEWFILM_ID = 11L;

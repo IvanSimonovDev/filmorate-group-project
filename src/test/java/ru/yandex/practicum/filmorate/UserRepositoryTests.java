@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbUserRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcUserRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.UserRowMapper;
 
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import({InDbUserRepository.class, UserRowMapper.class})
+@Import({JdbcUserRepository.class, UserRowMapper.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserRepositoryTests {
 
@@ -27,7 +27,7 @@ public class UserRepositoryTests {
     public static final long TEST_USER2_ID = 2L;
     public static final long TEST_USER3_ID = 3L;
     public static final long TEST_NEWUSER_ID = 5L;
-    private final InDbUserRepository userRepository;
+    private final JdbcUserRepository userRepository;
 
     static User getTestUser() {
         User user = new User();

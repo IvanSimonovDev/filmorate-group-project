@@ -8,9 +8,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.GenreRepository;
+import ru.yandex.practicum.filmorate.repository.MpaRepository;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbMpaRepository;
 
 import java.util.List;
 
@@ -20,10 +20,8 @@ public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
     private final UserRepository userRepository;
-    private final InDbMpaRepository mpaRepository;
-    private final InDbGenreRepository genreRepository;
-//    private final InDbFilmGenreRepository filmGenreRepository;
-
+    private final MpaRepository mpaRepository;
+    private final GenreRepository genreRepository;
 
     public Film save(Film film) {
         film.setMpa(mpaRepository.getById(film.getMpa().getId())
@@ -101,4 +99,5 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getPopular(long count) {
         return filmRepository.getPopular(count);
     }
+
 }

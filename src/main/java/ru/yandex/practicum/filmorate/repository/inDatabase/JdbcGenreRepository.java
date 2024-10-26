@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.repository.GenreRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,12 +13,12 @@ import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
-public class InDbGenreRepository extends InDbBaseRepository<Genre> {
+public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements GenreRepository {
 
 //    private static final String FIND_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?";
 //    private static final String FIND_ALL_QUERY = "SELECT * FROM genre";
 
-    public InDbGenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
+    public JdbcGenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper);
     }
 

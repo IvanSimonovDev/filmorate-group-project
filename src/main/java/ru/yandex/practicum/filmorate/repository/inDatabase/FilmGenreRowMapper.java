@@ -7,12 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class FilmGenreRowMapper implements RowMapper<InDbFilmRepository.FilmGenre> {
+public class FilmGenreRowMapper implements RowMapper<JdbcFilmRepository.FilmGenre> {
     @Override
-    public InDbFilmRepository.FilmGenre mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public JdbcFilmRepository.FilmGenre mapRow(ResultSet rs, int rowNum) throws SQLException {
         long filmId = rs.getLong("film_id");
         long genreId = rs.getLong("genre_id");
-        return new InDbFilmRepository.FilmGenre(filmId, genreId);
+        return new JdbcFilmRepository.FilmGenre(filmId, genreId);
     }
 
 }

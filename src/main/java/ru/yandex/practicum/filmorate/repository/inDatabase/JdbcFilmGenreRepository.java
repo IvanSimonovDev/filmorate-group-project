@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 @Repository
 @Slf4j
-public class InDbFilmGenreRepository extends InDbBaseRepository<Object> {
+public class JdbcFilmGenreRepository extends JdbcBaseRepository<Object> {
 
-    public InDbFilmGenreRepository(JdbcTemplate jdbc) {
+    public JdbcFilmGenreRepository(JdbcTemplate jdbc) {
         super(jdbc, null);
     }
 

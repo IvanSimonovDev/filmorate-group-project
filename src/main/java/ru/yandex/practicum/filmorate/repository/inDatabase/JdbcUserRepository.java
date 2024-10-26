@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Repository
 @Primary
-public class InDbUserRepository extends InDbBaseRepository<User> implements UserRepository {
+public class JdbcUserRepository extends JdbcBaseRepository<User> implements UserRepository {
 
 //    private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
 //    private static final String FIND_ALL_QUERY = "SELECT * FROM users";
@@ -36,7 +36,7 @@ public class InDbUserRepository extends InDbBaseRepository<User> implements User
 //            "WHERE u.id = ?";
 
 
-    public InDbUserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
+    public JdbcUserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper);
     }
 

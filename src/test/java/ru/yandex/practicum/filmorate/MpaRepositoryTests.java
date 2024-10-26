@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbMpaRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcMpaRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.MpaRowMapper;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import({InDbMpaRepository.class, MpaRowMapper.class})
+@Import({JdbcMpaRepository.class, MpaRowMapper.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class InDbMpaRepositoryTests {
+public class MpaRepositoryTests {
 
-    private final InDbMpaRepository mpaRepository;
+    private final JdbcMpaRepository mpaRepository;
     public static final long MPA_ID = 1L;
     public static final long MPA_ID2 = 5L;
     public static final String MPA_NAME = "G";

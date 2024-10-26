@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcGenreRepository;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class GenreService {
 
-    private final InDbGenreRepository genreRepository;
+    private final JdbcGenreRepository genreRepository;
 
 
     public List<Genre> getAll() {

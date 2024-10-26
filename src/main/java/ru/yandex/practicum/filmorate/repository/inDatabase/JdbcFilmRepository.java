@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 @Repository
 @Primary
-public class InDbFilmRepository extends InDbBaseRepository<Film> implements FilmRepository {
+public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements FilmRepository {
 
-    private final InDbFilmGenreRepository filmGenreRepository;
-    private final InDbGenreRepository genreRepository;
+    private final JdbcFilmGenreRepository filmGenreRepository;
+    private final JdbcGenreRepository genreRepository;
     private final FilmExtractor filmExtractor;
     private final FilmGenreRowMapper filmGenreRowMapper;
 
@@ -40,7 +40,7 @@ public class InDbFilmRepository extends InDbBaseRepository<Film> implements Film
     protected record FilmGenre(long filmId, long genreId) {
     }
 
-    public InDbFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, InDbFilmGenreRepository filmGenreRepository, InDbGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper) {
+    public JdbcFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository, JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper) {
         super(jdbc, mapper);
         this.filmGenreRepository = filmGenreRepository;
         this.genreRepository = genreRepository;

@@ -7,11 +7,11 @@ import ru.yandex.practicum.filmorate.model.User;
 
 @Repository
 @Slf4j
-public class InDbUserFriendRepository extends InDbBaseRepository<Object> {
+public class JdbcUserFriendRepository extends JdbcBaseRepository<Object> {
 //    private static final String INSERT_FRIEND_QUERY = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (?, ?, ?)";
 //    private static final String DELETE_FRIEND_QUERY = "DELETE from user_friend WHERE  user_id = ? AND friend_id = ?";
 
-    public InDbUserFriendRepository(JdbcTemplate jdbc) {
+    public JdbcUserFriendRepository(JdbcTemplate jdbc) {
         super(jdbc, null);
     }
 

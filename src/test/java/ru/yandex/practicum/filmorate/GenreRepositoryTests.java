@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcGenreRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.GenreRowMapper;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import({InDbGenreRepository.class, GenreRowMapper.class})
+@Import({JdbcGenreRepository.class, GenreRowMapper.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class InDbGenreRepositoryTests {
+public class GenreRepositoryTests {
 
-    private final InDbGenreRepository genreRepository;
+    private final JdbcGenreRepository genreRepository;
 
     public static final long GENRE_ID = 1L;
     public static final long GENRE_ID2 = 5L;

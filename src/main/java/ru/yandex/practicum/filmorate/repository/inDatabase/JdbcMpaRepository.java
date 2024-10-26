@@ -5,18 +5,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.repository.MpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @Slf4j
-public class InDbMpaRepository extends InDbBaseRepository<Mpa> {
+public class JdbcMpaRepository extends JdbcBaseRepository<Mpa> implements MpaRepository {
 
 //    private static final String FIND_BY_ID_QUERY = "SELECT * FROM mpa WHERE id = ?";
 //    private static final String FIND_ALL_QUERY = "SELECT * FROM mpa";
 
-    public InDbMpaRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
+    public JdbcMpaRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper);
     }
 
