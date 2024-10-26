@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.MpaRowMapper;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,6 +21,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class InDbMpaRepositoryTests {
 
     private final InDbMpaRepository mpaRepository;
+    public static final long MPA_ID = 1L;
+    public static final long MPA_ID2 = 5L;
+    public static final String MPA_NAME = "G";
+    public static final String MPA_NAME2 = "NC-17";
+
+    static Mpa getTestMpa() {
+        Mpa mpa = new Mpa();
+        mpa.setId(MPA_ID);
+        mpa.setName(MPA_NAME);
+        return mpa;
+    }
+
+    static Mpa getTestMpa2() {
+        Mpa mpa = new Mpa();
+        mpa.setId(MPA_ID2);
+        mpa.setName(MPA_NAME2);
+        return mpa;
+    }
 
     @DisplayName("Проверяем получение всех записей из таблицы mpa")
     @Test
@@ -31,20 +48,20 @@ public class InDbMpaRepositoryTests {
         assertThat(mpaAll)
                 .isNotEmpty()
                 .hasSizeGreaterThanOrEqualTo(5)
-                .allMatch(Objects::nonNull);
+                .allMatch(Objects::nonNull)
+                .extracting(Mpa::getName)
+                .contains(getTestMpa().getName(), getTestMpa2().getName());
     }
 
     @DisplayName("Проверяем получение одной записи из таблицы mpa")
     @Test
     public void shouldGetMpaById() {
-        Optional<Mpa> optionalMpa = mpaRepository.getById(4);
+        Mpa mpa = mpaRepository.getById(getTestMpa().getId()).orElseThrow();
 
-        assertThat(optionalMpa)
-                .isPresent()
-                .hasValueSatisfying(mpa -> {
-                    assertThat(mpa).hasFieldOrPropertyWithValue("id", 4L);
-                    assertThat(mpa).hasFieldOrPropertyWithValue("name", "R");
-                });
+        assertThat(mpa)
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(getTestMpa());
     }
 
 }

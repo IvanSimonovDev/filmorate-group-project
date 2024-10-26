@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,30 +23,59 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserRepositoryTests {
 
+    public static final long TEST_USER1_ID = 1L;
+    public static final long TEST_USER2_ID = 2L;
+    public static final long TEST_USER3_ID = 3L;
+    public static final long TEST_NEWUSER_ID = 5L;
     private final InDbUserRepository userRepository;
-    User newUser = new User();
 
-    @BeforeEach
-    void setUp() {
-        newUser.setEmail("user6@example.com");
-        newUser.setLogin("user6");
-        newUser.setName("Bober Kurva");
-        newUser.setBirthday(LocalDate.of(2024, 8, 15));
+    static User getTestUser() {
+        User user = new User();
+        user.setId(TEST_USER1_ID);
+        user.setEmail("TestUser1@example.com");
+        user.setLogin("TestUser1");
+        user.setName("Bober Kurva");
+        user.setBirthday(LocalDate.of(1990, 5, 15));
+        return user;
+    }
+
+    static User getTestUser2() {
+        User user = new User();
+        user.setId(TEST_USER2_ID);
+        user.setEmail("TestUser2@example.com");
+        user.setLogin("TestUser2");
+        user.setName("John Doe");
+        user.setBirthday(LocalDate.of(1991, 1, 10));
+        return user;
+    }
+
+    static User getTestUser3() {
+        User user = new User();
+        user.setId(TEST_USER3_ID);
+        user.setEmail("TestUser3@example.com");
+        user.setLogin("TestUser3");
+        user.setName("Test User3");
+        user.setBirthday(LocalDate.of(2000, 1, 10));
+        return user;
+    }
+
+    static User getNewUser() {
+        User user = new User();
+        user.setId(TEST_NEWUSER_ID);
+        user.setEmail("NewUser@example.com");
+        user.setLogin("NewUser");
+        user.setName("New User");
+        user.setBirthday(LocalDate.of(1970, 11, 10));
+        return user;
     }
 
     @Test
     public void shouldGetUserById() {
-        Optional<User> userOptional = userRepository.get(1);
-        assertThat(userOptional)
-                .isPresent()
-                .hasValueSatisfying(user -> {
-                    assertThat(user).hasFieldOrPropertyWithValue("id", 1L);
-                    assertThat(user).hasFieldOrPropertyWithValue("email", "user1@example.com");
-                    assertThat(user).hasFieldOrPropertyWithValue("login", "user1");
-                    assertThat(user).hasFieldOrPropertyWithValue("name", "Alice Smith");
-                    assertThat(user).hasFieldOrPropertyWithValue("birthday", LocalDate.of(1990, 5, 15));
-                        }
-                );
+        User user = userRepository.get(TEST_USER1_ID).orElseThrow();
+        assertThat(user)
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(getTestUser());
     }
 
     @DisplayName("Проверяем получение всех пользователей")
@@ -55,38 +84,65 @@ public class UserRepositoryTests {
         List<User> users = userRepository.getAll();
         assertThat(users)
                 .isNotEmpty()
-                .hasSize(5)
-                .allMatch(Objects::nonNull);
+                .hasSize(4)
+                .allMatch(Objects::nonNull)
+                .contains(getTestUser(), getTestUser2());
     }
 
     @DisplayName("Добавляем нового пользователя")
     @Test
     public void shouldSaveUser() {
-        userRepository.save(newUser);
+        userRepository.save(getNewUser());
         List<User> users = userRepository.getAll();
 
         assertThat(users)
                 .isNotEmpty()
-                .hasSize(6)
-                .anyMatch(user1 -> user1.getName().equals(newUser.getName()));
+                .hasSize(5)
+                .filteredOn(u -> Objects.equals(u.getId(), getNewUser().getId()))
+                .first()
+                .usingRecursiveComparison()
+                .isEqualTo(getNewUser());
     }
 
     @DisplayName("Меняем данные существующего пользователя")
     @Test
     public void shouldUpdateUser() {
-        newUser.setName("Bober Davis");
-        newUser.setEmail("BoberNekurva@example.com");
-        newUser.setId(5L);
+        getTestUser().setName("Bober Davis");
+        getNewUser().setEmail("BoberNekurva@example.com");
+        getTestUser().setId(5L);
 
-        userRepository.update(newUser);
-        Optional<User> optionalUser = userRepository.get(newUser.getId());
+        userRepository.update(getTestUser());
+        Optional<User> optionalUser = userRepository.get(getTestUser().getId());
 
         assertThat(optionalUser)
                 .isPresent()
                 .hasValueSatisfying(user -> {
-                    assertThat(user).hasFieldOrPropertyWithValue("name", "Bober Davis");
-                    assertThat(user).hasFieldOrPropertyWithValue("email", "BoberNekurva@example.com");
+                    assertThat(user).hasFieldOrPropertyWithValue("name", getTestUser().getName());
+                    assertThat(user).hasFieldOrPropertyWithValue("email", getTestUser().getEmail());
                 });
+    }
+
+    @DisplayName("Проверяем получение списка друзей пользователя")
+    @Test
+    public void shouldGetFriends() {
+        Set<User> friends = userRepository.getFriends(getTestUser());
+
+        assertThat(friends)
+                .isNotEmpty()
+                .hasSize(2)
+                .allMatch(Objects::nonNull)
+                .contains(getTestUser2(), getTestUser3());
+    }
+
+    @DisplayName("Проверяем получение общих друзей пользователя")
+    @Test
+    public void shouldGetCommonFriends() {
+        User commonFriends = userRepository.getCommonFriends(getTestUser().getId(), getTestUser2().getId()).getFirst();
+
+        assertThat(commonFriends)
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(getTestUser3());
     }
 
 }

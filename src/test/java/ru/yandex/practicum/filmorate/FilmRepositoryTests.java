@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,13 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.repository.inDatabase.FilmGenreRowMapper;
+import ru.yandex.practicum.filmorate.repository.inDatabase.InDbFilmGenreRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.InDbFilmRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.InDbGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmRowMapper;
+import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.GenreRowMapper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,61 +27,79 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import({InDbFilmRepository.class, FilmRowMapper.class})
+@Import({InDbFilmRepository.class, FilmRowMapper.class, FilmExtractor.class,InDbFilmGenreRepository.class,
+        FilmGenreRowMapper.class , InDbGenreRepository.class, GenreRowMapper.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmRepositoryTests {
 
     private final InDbFilmRepository filmRepository;
-    Film updatedFilm = new Film();
-    Film newFilm = new Film();
-    User user = new User();
+    public static final long TEST_USER_ID = 2L;
+    public static final long UPDATED_FILM_ID = 8L;
+    public static final long TEST_NEWFILM_ID = 11L;
+    public static final long TEST_FILM1_ID = 1L;
 
-    @BeforeEach
-    void setUp() {
-//        user
-        user.setId(1L);
-//        updatedFilm
+    static Film getTestFilm1() {
+        Film film = new Film();
+        Mpa newMpa = new Mpa();
+        newMpa.setId(3L);
+        film.setId(TEST_FILM1_ID);
+        film.setName("Inception");
+        film.setDescription("A thief is given a chance to erase his criminal past.");
+        film.setReleaseDate(LocalDate.of(2010, 7, 16));
+        film.setDuration(148);
+        film.setMpa(newMpa);
+        return film;
+    }
+
+    static Film getNewFilm() {
+        Film film = new Film();
+        Mpa newMpa = new Mpa();
+        newMpa.setId(2L);
+        newMpa.setName("PG");
+        Genre newGenre = new Genre();
+        newGenre.setId(6L);
+        newGenre.setName("Боевик");
+        film.setId(TEST_NEWFILM_ID);
+        film.setName("Comandos");
+        film.setDescription("Saving the world.");
+        film.setReleaseDate(LocalDate.of(1985, 6, 20));
+        film.setDuration(90);
+        film.setMpa(newMpa);
+        film.setGenres(Set.of(newGenre));
+        return film;
+    }
+
+    static Film getUpdatedFilm() {
+        Film film = new Film();
         Mpa mpa = new Mpa();
         mpa.setId(5L);
         Genre genre = new Genre();
         genre.setId(4L);
-        updatedFilm.setId(8L);
-        updatedFilm.setName("Gladiator 2");
-        updatedFilm.setDescription("A general seeks revenge against a corrupt emperor.");
-        updatedFilm.setReleaseDate(LocalDate.of(2010, 5, 5));
-        updatedFilm.setDuration(180);
-        updatedFilm.setMpa(mpa);
-        updatedFilm.setGenres(Set.of(genre));
+        film.setId(UPDATED_FILM_ID);
+        film.setName("Gladiator 2");
+        film.setDescription("A general seeks revenge against a corrupt emperor.");
+        film.setReleaseDate(LocalDate.of(2010, 5, 5));
+        film.setDuration(180);
+        film.setMpa(mpa);
+        film.setGenres(Set.of(genre));
+        return film;
+    }
 
-//        newFilm
-        Mpa newMpa = new Mpa();
-        newMpa.setId(2L);
-        Genre newGenre = new Genre();
-        newGenre.setId(6L);
-        newFilm.setId(11L);
-        newFilm.setName("Comandos");
-        newFilm.setDescription("Saving the world.");
-        newFilm.setReleaseDate(LocalDate.of(1985, 6, 20));
-        newFilm.setDuration(90);
-        newFilm.setMpa(newMpa);
-        newFilm.setGenres(Set.of(newGenre));
+    static User getTestUser() {
+        User user = new User();
+        user.setId(TEST_USER_ID);
+        return user;
     }
 
     @DisplayName("Проверяем получение Фильма по ID")
     @Test
     public void shouldReturnFilmById() {
-        Optional<Film> filmOptional = filmRepository.get(8);
-        assertThat(filmOptional)
-                .isPresent()
-                .hasValueSatisfying(film -> {
-                    assertThat(film).hasFieldOrPropertyWithValue("id", 8L);
-                    assertThat(film).hasFieldOrPropertyWithValue("name", "Gladiator");
-                    assertThat(film).hasFieldOrPropertyWithValue("description", "A general seeks revenge against a corrupt emperor.");
-                    assertThat(film).hasFieldOrPropertyWithValue("releaseDate", LocalDate.of(2000, 5, 5));
-                    assertThat(film).hasFieldOrPropertyWithValue("duration", 155);
-                    assertThat(film).hasFieldOrPropertyWithValue("mpa", film.getMpa());
-                        }
-                );
+        Film film = filmRepository.get(TEST_FILM1_ID).orElseThrow();
+
+        assertThat(film)
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(getTestFilm1());
     }
 
     @DisplayName("Проверяем получение всех фильмов")
@@ -94,36 +116,36 @@ public class FilmRepositoryTests {
     @DisplayName("Проверяем добавление нового фильма, метод save")
     @Test
     public void shouldSaveNewFilm() {
-        filmRepository.save(newFilm);
-        Optional<Film> optionalFilm = filmRepository.get(11);
-        assertThat(optionalFilm)
-                .isPresent()
-                .hasValueSatisfying(film -> {
-                    assertThat(film).hasFieldOrPropertyWithValue("id", 11L);
-                    assertThat(film).hasFieldOrPropertyWithValue("name", "Comandos");
-                });
+        filmRepository.save(getNewFilm());
+        List<Film> films = filmRepository.getAll();
+
+        assertThat(films)
+                .isNotEmpty()
+                .hasSize(11)
+                .filteredOn(film -> Objects.equals(film.getId(), getNewFilm().getId()))
+                .first()
+                .usingRecursiveComparison()
+                .isEqualTo(getNewFilm());
     }
 
     @DisplayName("Проверяем обновление данных существующего фильма, метод update")
     @Test
     public void shouldUpdateFilm() {
-        filmRepository.update(updatedFilm);
-        Optional<Film> optionalFilm = filmRepository.get(updatedFilm.getId());
-        System.out.println(optionalFilm);
+        filmRepository.update(getUpdatedFilm());
+        Optional<Film> optionalFilm = filmRepository.get(getUpdatedFilm().getId());
 
         assertThat(optionalFilm)
                 .isPresent()
                 .hasValueSatisfying(film -> {
-                    assertThat(film).hasFieldOrPropertyWithValue("id", 8L);
-                    assertThat(film).hasFieldOrPropertyWithValue("name", "Gladiator 2");
+                    assertThat(film).hasFieldOrPropertyWithValue("id", getUpdatedFilm().getId());
+                    assertThat(film).hasFieldOrPropertyWithValue("name", getUpdatedFilm().getName());
                 });
     }
 
     @DisplayName("Проверяем удаление like для фильма")
     @Test
     public void shouldDeleteLike() {
-        updatedFilm.setId(6L);
-        boolean delLike = filmRepository.deleteLike(updatedFilm, user);
+        boolean delLike = filmRepository.deleteLike(getTestFilm1(), getTestUser());
 
         assertThat(delLike).isNotEqualTo(false);
     }
@@ -131,15 +153,14 @@ public class FilmRepositoryTests {
     @DisplayName("Проверяем получение списка популярных фильмов")
     @Test
     public void shouldGetPopularFilms() {
-        List<Film> popular = filmRepository.getPopular(3);
-        System.out.println(popular);
+        List<Film> popular = filmRepository.getPopular(2);
 
         assertThat(popular)
                 .isNotEmpty()
-                .hasSize(3)
+                .hasSize(2)
                 .allMatch(Objects::nonNull)
                 .extracting(Film::getName)
-                .contains("The Shawshank Redemption", "The Godfather", "Interstellar");
+                .contains("Inception", "The Matrix");
     }
 
 }
