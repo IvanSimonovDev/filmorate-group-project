@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Import({JdbcFilmRepository.class, FilmRowMapper.class, FilmExtractor.class, JdbcFilmGenreRepository.class,
-        FilmGenreRowMapper.class , JdbcGenreRepository.class, GenreRowMapper.class})
+        FilmGenreRowMapper.class, JdbcGenreRepository.class, GenreRowMapper.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmRepositoryTests {
 
