@@ -1,16 +1,13 @@
 package ru.yandex.practicum.filmorate.repository.inDatabase;
 
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 @Primary
@@ -36,54 +33,61 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
 //            "WHERE u.id = ?";
 
 
-    public JdbcUserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
+    public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper);
     }
 
     public Optional<User> get(long userId) {
-        String sql = "SELECT * FROM users WHERE id = ?";
-        return findOne(sql, userId);
+        String sql = "SELECT * FROM users WHERE id = :userId";
+        Map<String, Long> params = Map.of("userId", userId);
+        return findOne(sql, params);
     }
 
     public List<User> getAll() {
         String sql = "SELECT * FROM users";
 
-        return findMany(sql);
+        return findMany(sql, Map.of());
     }
 
     public User save(User user) {
         String sql = "INSERT INTO users (email, login, name, birthday)" +
-                "VALUES (?, ?, ?, ?)";
+                "VALUES (:email, :login, :name, :birthday)";
+        Map<String, Object> params = Map.of("email", user.getEmail(), "login", user.getLogin(),
+                                            "name", user.getName(), "birthday", user.getBirthday());
 
-        long id = insert(sql,
-                user.getEmail(),
-                user.getLogin(),
-                user.getName(),
-                user.getBirthday()
+        long id = insert(sql, params
+//                user.getEmail(),
+//                user.getLogin(),
+//                user.getName(),
+//                user.getBirthday()
         );
         user.setId(id);
         return user;
     }
 
     public User update(User user) {
-        String sql = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE id = ?";
+        String sql = "UPDATE users SET email = :email, login = :login, name = :name, birthday = :birthday WHERE id = :id";
+        Map<String, Object> params = Map.of("email", user.getEmail(), "login", user.getLogin(), "name",user.getName(),
+                                              "birthday", user.getBirthday(), "id",user.getId());
 
                 update(
-                sql,
-                user.getEmail(),
-                user.getLogin(),
-                user.getName(),
-                user.getBirthday(),
-                user.getId()
+                sql, params
+//                user.getEmail(),
+//                user.getLogin(),
+//                user.getName(),
+//                user.getBirthday(),
+//                user.getId()
         );
+
         return user;
     }
 
     public Set<User> getFriends(User user) {
         String sql = "SELECT * FROM users WHERE id IN " +
-                "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = ?)";
+                "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = :id)";
+        Map<String, Long> params = Map.of("id", user.getId());
 
-        return new HashSet<>(findMany(sql, user.getId()));
+        return new HashSet<>(findMany(sql, params));
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
@@ -91,15 +95,18 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
                 "(SELECT uf.friend_id " +
                 " FROM users u " +
                 " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
-                " WHERE u.id = ?) " +
+                " WHERE u.id = :userId) " +
                 "SELECT u1.* " +
                 "FROM users u " +
                 " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
                 " INNER JOIN cte ON uf.friend_id = cte.friend_id " +
                 " INNER JOIN users u1 ON u1.id = uf.friend_id " +
-                "WHERE u.id = ?";
+                "WHERE u.id = :otherId";
 
-        return findMany(sql, userId, otherId);
+        Map<String, Long> params = Map.of("userId", userId,
+                                          "otherId", otherId);
+
+        return findMany(sql, params);
     }
 
 }

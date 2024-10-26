@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.repository.inDatabase;
 
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -10,9 +10,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -40,7 +38,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     protected record FilmGenre(long filmId, long genreId) {
     }
 
-    public JdbcFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository, JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper) {
+    public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository, JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper) {
         super(jdbc, mapper);
         this.filmGenreRepository = filmGenreRepository;
         this.genreRepository = genreRepository;
@@ -52,9 +50,12 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
                 "LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID " +
                 "LEFT JOIN GENRE g ON g.ID = fg.GENRE_ID " +
-                " WHERE f.id = ?";
+                " WHERE f.id = :filmId";
 
-        return Optional.ofNullable(jdbc.query(sql, filmExtractor, filmId));
+        Map<String, Object> params = Map.of("filmId", filmId);
+
+
+        return Optional.ofNullable(jdbc.query(sql, params, filmExtractor));
 
 //        return findOne(sql, filmId);
     }
@@ -64,7 +65,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql2 = "SELECT * FROM film_genre";
 
         List<Genre> genres = genreRepository.getAll();
-        List<Film> films = findMany(sql);
+        List<Film> films = findMany(sql, Collections.emptyMap());
         List<FilmGenre> filmGenres = jdbc.query(sql2, filmGenreRowMapper);
 
 //        return findMany(FIND_ALL_QUERY);
@@ -84,14 +85,18 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
     public Film save(Film film) {
         String sql = "INSERT INTO film (name, description, release_date, duration, rating_id) " +
-                "VALUES (?, ?, ?, ?, ?)";
+                "VALUES (:name, :description, :release_date, :duration, :rating_id)";
 
-        long id = insert(sql,
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration(),
-                film.getMpa().getId()
+        Map<String, Object> params = Map.of("name", film.getName(), "description", film.getDescription(), "release_date",film.getReleaseDate(),
+                "duration", film.getDuration(), "rating_id",film.getMpa().getId());
+
+
+        long id = insert(sql, params
+//                film.getName(),
+//                film.getDescription(),
+//                film.getReleaseDate(),
+//                film.getDuration(),
+//                film.getMpa().getId()
         );
         film.setId(id);
 
@@ -102,15 +107,19 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     }
 
     public Film update(Film film) {
-        String sql = "UPDATE film SET name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? WHERE id = ?";
+        String sql = "UPDATE film SET name = :name, description = :description, release_date = :release_date, duration = :duration, " +
+                                    "rating_id = :rating_id WHERE id = :id";
+        Map<String, Object> params = Map.of("name", film.getName(), "description", film.getDescription(),"release_date", film.getReleaseDate(),
+                                "duration", film.getDuration(), "rating_id", film.getMpa().getId(), "id", film.getId());
+
         update(
-                sql,
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration(),
-                film.getMpa().getId(),
-                film.getId()
+                sql, params
+//                film.getName(),
+//                film.getDescription(),
+//                film.getReleaseDate(),
+//                film.getDuration(),
+//                film.getMpa().getId(),
+//                film.getId()
         );
         if (null != film.getGenres()) {
             filmGenreRepository.delete(film);
@@ -121,28 +130,31 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     }
 
     public void addLike(Film film, User user) {
-        String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
-        insert(sql,
-                film.getId(),
-                user.getId()
+        String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (:film_id, :user_id)";
+        Map<String, Object> params = Map.of("film_id", film.getId(), "user_id", user.getId());
+
+        insert(sql, params
+//                film.getId(),
+//                user.getId()
         );
     }
 
     public boolean deleteLike(Film film, User user) {
-        String sql = "DELETE from film_likes WHERE  film_id = ? AND user_Id = ?";
-        return delete(sql,
-                film.getId(),
-                user.getId()
-        );
+        String sql = "DELETE from film_likes WHERE  film_id = :film_id AND user_Id = :user_Id";
+        Map<String, Long> params = Map.of("film_id", film.getId(), "user_Id", user.getId());
+
+        return delete(sql, params);
     }
 
     public List<Film> getPopular(long count) {
         String sql = "SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes " +
                 "FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
                 "JOIN film_likes fl ON f.id = fl.film_id " +
-                "GROUP BY f.name ORDER BY likes DESC LIMIT ?";
+                "GROUP BY f.name ORDER BY likes DESC LIMIT :count";
 
-        return findMany(sql, count);
+        Map<String, Long> params = Map.of("count", count);
+
+        return findMany(sql, params);
     }
 
 }

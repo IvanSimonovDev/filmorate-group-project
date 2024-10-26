@@ -1,13 +1,15 @@
 package ru.yandex.practicum.filmorate.repository.inDatabase;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.repository.GenreRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,25 +20,26 @@ public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements Ge
 //    private static final String FIND_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?";
 //    private static final String FIND_ALL_QUERY = "SELECT * FROM genre";
 
-    public JdbcGenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
+    public JdbcGenreRepository(NamedParameterJdbcOperations jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper);
     }
 
     public List<Genre> getAll() {
         String sql = "SELECT * FROM genre";
-        return findMany(sql);
+        return findMany(sql, Collections.emptyMap());
     }
 
     public Optional<Genre> getById(long id) {
-        String sql = "SELECT * FROM genre WHERE id = ?";
-        return findOne(sql, id);
+        String sql = "SELECT * FROM genre WHERE id = :id";
+        Map<String, Long> params = Map.of("id", id);
+        return findOne(sql, params);
     }
     public List<Genre> getByIds(List<Long> ids) {
         String list = ids.stream().map(String::valueOf)
                 .collect(Collectors.joining(","));
         String sql = "SELECT * FROM genre WHERE id in (" + list + ")";
 
-        return findMany(sql);
+        return findMany(sql, Collections.emptyMap());
     }
 
 
