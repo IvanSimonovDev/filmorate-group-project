@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcUserFriendRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final JdbcUserFriendRepository userFriendRepository;
 
 
     public List<User> getAll() {
@@ -40,14 +42,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.update(user);
     }
 
-    public void addFriend(long userId, long friendId) {
+    public void addFriend(long userId, long friendId, boolean isConfirmed) {
         final User user = userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
         final User friend = userRepository.get(friendId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + friendId + " не найден"));
 
-        userRepository.addFriend(user, friend);
+        userFriendRepository.add(user, friend, isConfirmed);
     }
 
     public void deleteFriend(long userId, long friendId) {
@@ -57,7 +59,7 @@ public class UserServiceImpl implements UserService {
         User friend = userRepository.get(friendId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + friendId + " не найден"));
 
-        userRepository.deleteFriend(user, friend);
+        userFriendRepository.delete(user, friend);
     }
 
     public Set<User> getFriends(long userId) {

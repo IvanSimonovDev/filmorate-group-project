@@ -16,10 +16,6 @@ public interface UserRepository {
 
     User update(User user);
 
-    void addFriend(User user, User friend);
-
-    void deleteFriend(User user, User friend);
-
     Set<User> getFriends(User user);
 
     List<User> getCommonFriends(long userId, long otherId);
