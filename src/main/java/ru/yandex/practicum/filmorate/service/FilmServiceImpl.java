@@ -27,21 +27,11 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."))
         );
 
-        if (null != film.getGenres()) {
-            List<Long> ids = film.getGenres().stream()
-                    .map(Genre::getId)
-                    .toList();
-            List<Genre> genres = genreRepository.getByIds(ids);
-
-            if (ids.size() != genres.size()) {
-                throw new FkConstraintViolationException("Жанр вне диапазона.");
-            }
-        }
+        fillUpGenres(film);
         return filmRepository.save(film);
     }
 
     public Film update(final Film film) {
-
         long filmId = film.getId();
         filmRepository.get(filmId)
                 .orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
@@ -49,16 +39,7 @@ public class FilmServiceImpl implements FilmService {
         mpaRepository.getById(film.getMpa().getId())
                 .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."));
 
-        if (null != film.getGenres()) {
-            List<Long> ids = film.getGenres().stream()
-                    .map(Genre::getId)
-                    .toList();
-            List<Genre> genres = genreRepository.getByIds(ids);
-
-            if (ids.size() != genres.size()) {
-                throw new FkConstraintViolationException("Жанр вне диапазона.");
-            }
-        }
+        fillUpGenres(film);
 
         if (null != film.getDirectors()) {
             List<Long> ids = film.getDirectors().stream()
@@ -70,12 +51,10 @@ public class FilmServiceImpl implements FilmService {
                 throw new FkConstraintViolationException("Режиссер вне диапазона.");
             }
         }
-
         return filmRepository.update(film);
     }
 
     public Film getById(long filmId) {
-
         return filmRepository.get(filmId)
                 .orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
     }
@@ -105,11 +84,8 @@ public class FilmServiceImpl implements FilmService {
         if ("null".equals(order)) {
             throw new ValidationException("Получено: " + sortBy + " Должно быть year или likes");
         }
-
         return filmRepository.getSortedDirectorsFilms(directorId, SortOrder.from(sortBy));
-
     }
-
 
     public void deleteLike(long filmId, long userId) {
 
@@ -124,6 +100,19 @@ public class FilmServiceImpl implements FilmService {
 
     public List<Film> getPopular(long count) {
         return filmRepository.getPopular(count);
+    }
+
+    private void fillUpGenres(Film film) {
+        if (null != film.getGenres()) {
+            List<Long> ids = film.getGenres().stream()
+                    .map(Genre::getId)
+                    .toList();
+            List<Genre> genres = genreRepository.getByIds(ids);
+
+            if (ids.size() != genres.size()) {
+                throw new FkConstraintViolationException("Жанр вне диапазона.");
+            }
+        }
     }
 
 }

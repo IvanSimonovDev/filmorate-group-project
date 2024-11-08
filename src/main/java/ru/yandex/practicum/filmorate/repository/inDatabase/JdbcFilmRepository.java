@@ -78,20 +78,9 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                     .flatMap(fg -> genres.stream()
                             .filter(genre -> genre.getId() == fg.genreId()))
                     .collect(Collectors.toSet());
-
             film.setGenres(associatedGenres);
         });
-
-        films.forEach(film -> {
-            Set<Director> associatedDirector = filmDirectors.stream()
-                    .filter(fd -> fd.filmId() == film.getId())
-                    .flatMap(fd -> directors.stream()
-                            .filter(director -> director.getId() == fd.directorId()))
-                    .collect(Collectors.toSet());
-
-            film.setDirectors(associatedDirector);
-        });
-        return films;
+        return fillUpDirectors(filmDirectors, directors, films);
     }
 
     public Film save(Film film) {
@@ -126,7 +115,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
             filmDirectorRepository.delete(film);
             filmDirectorRepository.save(film);
         }
-
         return film;
     }
 
@@ -149,17 +137,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         List<FilmDirector> filmDirectors = jdbc.query(sql2, filmDirectorRowMapper);
         List<Director> directors = directorRepository.getAll();
 
-        films.forEach(film -> {
-            Set<Director> associatedDirector = filmDirectors.stream()
-                    .filter(fd -> fd.filmId() == film.getId())
-                    .flatMap(fd -> directors.stream()
-                            .filter(director -> director.getId() == fd.directorId()))
-                    .collect(Collectors.toSet());
-
-            film.setDirectors(associatedDirector);
-        });
-
-        return films;
+        return fillUpDirectors(filmDirectors, directors, films);
     }
 
     public void addLike(Film film, User user) {
@@ -184,6 +162,19 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         Map<String, Long> params = Map.of("count", count);
 
         return findMany(sql, params);
+    }
+
+    private List<Film> fillUpDirectors(List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
+        films.forEach(film -> {
+            Set<Director> associatedDirector = filmDirectors.stream()
+                    .filter(fd -> fd.filmId() == film.getId())
+                    .flatMap(fd -> directors.stream()
+                            .filter(director -> director.getId() == fd.directorId()))
+                    .collect(Collectors.toSet());
+
+            film.setDirectors(associatedDirector);
+        });
+        return films;
     }
 
 }
