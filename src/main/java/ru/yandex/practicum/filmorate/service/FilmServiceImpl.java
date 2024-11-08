@@ -70,6 +70,14 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
     }
 
+    public void delete(final long filmId) {
+
+        filmRepository.get(filmId)
+                .orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
+
+        filmRepository.delete(filmId);
+    }
+
     public List<Film> getAll() {
         return filmRepository.getAll();
     }

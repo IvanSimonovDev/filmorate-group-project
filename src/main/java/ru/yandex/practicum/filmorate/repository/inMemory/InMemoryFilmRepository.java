@@ -72,6 +72,10 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .toList());
     }
 
+    public void delete(final long filmId) {
+    }
+
+
     private long generateFilmId() {
         return ++filmId;
     }

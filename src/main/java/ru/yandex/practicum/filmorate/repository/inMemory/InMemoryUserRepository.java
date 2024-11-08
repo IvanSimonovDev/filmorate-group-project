@@ -67,6 +67,10 @@ public class InMemoryUserRepository implements UserRepository {
                 .toList());
     }
 
+    public void delete(long userId) {
+//        заглушка
+    }
+
     private long generateUserId() {
         return ++userId;
     }

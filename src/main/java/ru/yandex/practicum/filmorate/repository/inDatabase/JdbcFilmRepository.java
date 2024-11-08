@@ -97,6 +97,13 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return film;
     }
 
+    public void delete(final long filmId) {
+        String sql = "DELETE from film WHERE id = :filmId";
+        Map<String, Object> params = Map.of("filmId", filmId);
+
+        delete(sql, params);
+    }
+
     public void addLike(Film film, User user) {
         String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (:film_id, :user_id)";
         Map<String, Object> params = Map.of("film_id", film.getId(), "user_id", user.getId());
