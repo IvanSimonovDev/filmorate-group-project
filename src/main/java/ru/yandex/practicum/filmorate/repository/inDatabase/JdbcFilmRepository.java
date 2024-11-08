@@ -121,7 +121,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     public List<Film> getPopular(long count) {
         String sql = "SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes " +
                 "FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
-                "JOIN film_likes fl ON f.id = fl.film_id " +
+                "LEFT JOIN film_likes fl ON f.id = fl.film_id " +
                 "GROUP BY f.name ORDER BY likes DESC LIMIT :count";
         Map<String, Long> params = Map.of("count", count);
 
