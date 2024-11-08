@@ -122,7 +122,8 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql = "SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes " +
                 "FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
                 "LEFT JOIN film_likes fl ON f.id = fl.film_id " +
-                "GROUP BY f.name ORDER BY likes DESC LIMIT :count";
+                "GROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME " +
+                "ORDER BY likes DESC LIMIT :count";
         Map<String, Long> params = Map.of("count", count);
 
         return findMany(sql, params);
