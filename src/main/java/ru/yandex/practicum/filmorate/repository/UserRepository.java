@@ -16,7 +16,7 @@ public interface UserRepository {
 
     User update(User user);
 
-    void delete(final long userId);
+    void delete(long userId);
 
     Set<User> getFriends(User user);
 
