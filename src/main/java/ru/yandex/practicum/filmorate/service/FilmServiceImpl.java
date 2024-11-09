@@ -12,7 +12,10 @@ import ru.yandex.practicum.filmorate.repository.GenreRepository;
 import ru.yandex.practicum.filmorate.repository.MpaRepository;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
+import java.util.Collection;
 import java.util.List;
+
+import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
@@ -98,6 +101,17 @@ public class FilmServiceImpl implements FilmService {
 
     public List<Film> getPopular(long count) {
         return filmRepository.getPopular(count);
+    }
+
+    @Override
+    public Collection<Film> getCommonFilms(final Long userId1, final Long userId2) {
+        userRepository.get(userId1)
+                .orElseThrow(() -> new ValidationException(format("Пользователь c id: %d не найден", userId1)));
+
+        userRepository.get(userId2)
+                .orElseThrow(() -> new ValidationException(format("Пользователь c id: %d не найден", userId2)));
+
+        return filmRepository.getCommonFilms(userId1, userId2);
     }
 
 }

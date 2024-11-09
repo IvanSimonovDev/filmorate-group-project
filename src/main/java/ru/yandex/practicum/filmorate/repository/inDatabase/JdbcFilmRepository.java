@@ -121,4 +121,29 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return findMany(sql, params);
     }
 
+    public List<Film> getCommonFilms(Long userId1, Long userId2) {
+        String sql = "SELECT * FROM film f JOIN mpa mpa ON f.rating_id = mpa.id" +
+                " WHERE f.id IN (SELECT fl1.film_id FROM film_likes fl1 " +
+                "INNER JOIN film_likes fl2 ON fl1.film_id = fl2.film_id " +
+                "WHERE fl1.user_id = :userId1 AND fl2.user_id = :userId2)";
+
+        Map<String, Object> params = Map.of("userId1", userId1, "userId2", userId2);
+
+        String sql2 = "SELECT * FROM film_genre";
+
+        List<Genre> genres = genreRepository.getAll();
+        List<Film> films = findMany(sql, params);
+        List<FilmGenre> filmGenres = jdbc.query(sql2, filmGenreRowMapper);
+
+        films.forEach(film -> {
+            Set<Genre> associatedGenres = filmGenres.stream()
+                    .filter(fg -> fg.filmId() == film.getId())
+                    .flatMap(fg -> genres.stream()
+                            .filter(genre -> genre.getId() == fg.genreId()))
+                    .collect(Collectors.toSet());
+
+            film.setGenres(associatedGenres);
+        });
+        return films;
+    }
 }
