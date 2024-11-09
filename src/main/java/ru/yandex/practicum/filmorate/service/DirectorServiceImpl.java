@@ -8,8 +8,8 @@ import ru.yandex.practicum.filmorate.repository.DirectorRepository;
 
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class DirectorServiceImpl implements DirectorService {
 
     private final DirectorRepository repository;

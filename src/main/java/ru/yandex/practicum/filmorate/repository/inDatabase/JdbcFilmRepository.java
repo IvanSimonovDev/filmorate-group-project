@@ -14,8 +14,8 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Repository
 @Primary
+@Repository
 public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements FilmRepository {
 
     private final FilmGenreRowMapper filmGenreRowMapper;

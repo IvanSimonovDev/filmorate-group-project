@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 public enum SortOrder {
 
-    year,
-    likes;
+    YEAR,
+    LIKES;
 
     public static String from(String order) {
 

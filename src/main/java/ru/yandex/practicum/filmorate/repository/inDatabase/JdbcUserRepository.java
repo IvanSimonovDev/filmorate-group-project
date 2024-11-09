@@ -9,8 +9,8 @@ import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import java.util.*;
 
-@Repository
 @Primary
+@Repository
 public class JdbcUserRepository extends JdbcBaseRepository<User> implements UserRepository {
 
     public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {

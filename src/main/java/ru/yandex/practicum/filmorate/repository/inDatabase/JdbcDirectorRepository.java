@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
 @Primary
+@Repository
 public class JdbcDirectorRepository extends JdbcBaseRepository<Director> implements DirectorRepository {
 
     public JdbcDirectorRepository(NamedParameterJdbcOperations jdbc, RowMapper<Director> mapper) {
@@ -35,7 +35,8 @@ public class JdbcDirectorRepository extends JdbcBaseRepository<Director> impleme
     }
 
     public List<Director> getByIds(List<Long> ids) {
-        String list = ids.stream().map(String::valueOf)
+        String list = ids.stream()
+                .map(String::valueOf)
                 .collect(Collectors.joining(","));
         String sql = "SELECT * FROM directors WHERE id in (" + list + ")";
 

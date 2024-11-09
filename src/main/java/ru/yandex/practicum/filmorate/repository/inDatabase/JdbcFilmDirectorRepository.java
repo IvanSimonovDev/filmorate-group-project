@@ -9,8 +9,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.ArrayList;
 import java.util.Map;
 
-@Repository
 @Slf4j
+@Repository
 public class JdbcFilmDirectorRepository extends JdbcBaseRepository<Object> {
 
     public JdbcFilmDirectorRepository(NamedParameterJdbcOperations jdbc) {

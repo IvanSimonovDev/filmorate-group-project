@@ -12,8 +12,8 @@ import ru.yandex.practicum.filmorate.repository.*;
 
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
@@ -28,6 +28,7 @@ public class FilmServiceImpl implements FilmService {
         );
 
         fillUpGenres(film);
+        fillUpDirectors(film);
         return filmRepository.save(film);
     }
 
@@ -40,17 +41,8 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."));
 
         fillUpGenres(film);
+        fillUpDirectors(film);
 
-        if (null != film.getDirectors()) {
-            List<Long> ids = film.getDirectors().stream()
-                    .map(Director::getId)
-                    .toList();
-            List<Director> directors = directorRepository.getByIds(ids);
-
-            if (ids.size() != directors.size()) {
-                throw new FkConstraintViolationException("Режиссер вне диапазона.");
-            }
-        }
         return filmRepository.update(film);
     }
 
@@ -81,7 +73,7 @@ public class FilmServiceImpl implements FilmService {
 
         String order = SortOrder.from(sortBy);
 
-        if ("null".equals(order)) {
+        if (order.equals("null")) {
             throw new ValidationException("Получено: " + sortBy + " Должно быть year или likes");
         }
         return filmRepository.getSortedDirectorsFilms(directorId, SortOrder.from(sortBy));
@@ -111,6 +103,19 @@ public class FilmServiceImpl implements FilmService {
 
             if (ids.size() != genres.size()) {
                 throw new FkConstraintViolationException("Жанр вне диапазона.");
+            }
+        }
+    }
+
+    private void fillUpDirectors(Film film) {
+        if (null != film.getDirectors()) {
+            List<Long> ids = film.getDirectors().stream()
+                    .map(Director::getId)
+                    .toList();
+            List<Director> directors = directorRepository.getByIds(ids);
+
+            if (ids.size() != directors.size()) {
+                throw new FkConstraintViolationException("Режиссер вне диапазона.");
             }
         }
     }

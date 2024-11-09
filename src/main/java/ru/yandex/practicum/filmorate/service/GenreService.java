@@ -9,9 +9,9 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcGenreRepository;
 
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class GenreService {
 
     private final JdbcGenreRepository genreRepository;
