@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
 @Slf4j
+@Repository
 public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements GenreRepository {
 
     public JdbcGenreRepository(NamedParameterJdbcOperations jdbc, RowMapper<Genre> mapper) {

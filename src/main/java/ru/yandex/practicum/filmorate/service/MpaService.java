@@ -9,9 +9,9 @@ import ru.yandex.practicum.filmorate.repository.MpaRepository;
 
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class MpaService {
 
     private final MpaRepository mpaRepository;

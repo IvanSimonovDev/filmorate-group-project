@@ -72,6 +72,10 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .toList());
     }
 
+    public List<Film> getSortedDirectorsFilms(long directorId, String sortBy) {
+        return null;
+    }
+
     private long generateFilmId() {
         return ++filmId;
     }

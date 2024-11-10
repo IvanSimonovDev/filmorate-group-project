@@ -9,6 +9,11 @@ CREATE TABLE IF NOT EXISTS genre (
                                      name VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS directors (
+                                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                                     name VARCHAR(255)
+);
+
 CREATE TABLE IF NOT EXISTS film (
                                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                     name VARCHAR(255),
@@ -23,8 +28,16 @@ CREATE TABLE IF NOT EXISTS film_genre (
                                           film_id INTEGER,
                                           genre_id INTEGER,
                                           PRIMARY KEY (film_id, genre_id),
-                                          CONSTRAINT fk_film_id FOREIGN KEY (film_id) REFERENCES film (id),
+                                          CONSTRAINT fk_film_id FOREIGN KEY (film_id) REFERENCES film (id)  ON DELETE CASCADE,
                                           CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genre (id)
+);
+
+CREATE TABLE IF NOT EXISTS film_director (
+                                          film_id INTEGER,
+                                          director_id INTEGER,
+                                          PRIMARY KEY (film_id, director_id),
+                                          CONSTRAINT fk_fd_film_id FOREIGN KEY (film_id) REFERENCES film (id)  ON DELETE CASCADE,
+                                          CONSTRAINT fk_director_id FOREIGN KEY (director_id) REFERENCES directors (id)
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -39,7 +52,7 @@ CREATE TABLE IF NOT EXISTS film_likes (
                                           film_id INTEGER,
                                           user_id INTEGER,
                                           PRIMARY KEY (film_id, user_id),
-                                          CONSTRAINT fk_film_likes_id FOREIGN KEY (film_id) REFERENCES film (id),
+                                          CONSTRAINT fk_film_likes_id FOREIGN KEY (film_id) REFERENCES film (id) ON DELETE CASCADE,
                                           CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
@@ -48,6 +61,6 @@ CREATE TABLE IF NOT EXISTS user_friend (
                                             friend_id INTEGER,
                                             isConfirmed BOOLEAN,
                                             PRIMARY KEY (user_id, friend_id),
-                                            CONSTRAINT fk_user_id_friend FOREIGN KEY (user_id) REFERENCES users (id),
-                                            CONSTRAINT fk_friend_id FOREIGN KEY (friend_id) REFERENCES users (id)
+                                            CONSTRAINT fk_user_id_friend FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+                                            CONSTRAINT fk_friend_id FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
 );

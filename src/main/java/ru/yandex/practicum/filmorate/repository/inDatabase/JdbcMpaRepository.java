@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 @Slf4j
+@Repository
 public class JdbcMpaRepository extends JdbcBaseRepository<Mpa> implements MpaRepository {
 
     public JdbcMpaRepository(NamedParameterJdbcOperations jdbc, RowMapper<Mpa> mapper) {
