@@ -181,10 +181,15 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         Map<String, Object> params = Map.of("userId1", userId1, "userId2", userId2);
 
         String sql2 = "SELECT * FROM film_genre";
+        String sql3 = "SELECT * FROM film_director";
 
-        List<Genre> genres = genreRepository.getAll();
-        List<Film> films = findMany(sql, params);
         List<FilmGenre> filmGenres = jdbc.query(sql2, filmGenreRowMapper);
+        List<Genre> genres = genreRepository.getAll();
+
+        List<FilmDirector> filmDirectors = jdbc.query(sql3, filmDirectorRowMapper);
+        List<Director> directors = directorRepository.getAll();
+
+        List<Film> films = findMany(sql, params);
 
         films.forEach(film -> {
             Set<Genre> associatedGenres = filmGenres.stream()
@@ -192,10 +197,9 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                     .flatMap(fg -> genres.stream()
                             .filter(genre -> genre.getId() == fg.genreId()))
                     .collect(Collectors.toSet());
-
             film.setGenres(associatedGenres);
         });
-        return films;
+        return fillUpDirectors(filmDirectors, directors, films);
     }
 
 
