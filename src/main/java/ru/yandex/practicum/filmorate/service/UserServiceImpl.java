@@ -10,8 +10,8 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcUserFriendReposit
 import java.util.List;
 import java.util.Set;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

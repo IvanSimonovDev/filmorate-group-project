@@ -9,6 +9,11 @@ CREATE TABLE IF NOT EXISTS genre (
                                      name VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS directors (
+                                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                                     name VARCHAR(255)
+);
+
 CREATE TABLE IF NOT EXISTS film (
                                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                     name VARCHAR(255),
@@ -25,6 +30,14 @@ CREATE TABLE IF NOT EXISTS film_genre (
                                           PRIMARY KEY (film_id, genre_id),
                                           CONSTRAINT fk_film_id FOREIGN KEY (film_id) REFERENCES film (id)  ON DELETE CASCADE,
                                           CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genre (id)
+);
+
+CREATE TABLE IF NOT EXISTS film_director (
+                                          film_id INTEGER,
+                                          director_id INTEGER,
+                                          PRIMARY KEY (film_id, director_id),
+                                          CONSTRAINT fk_fd_film_id FOREIGN KEY (film_id) REFERENCES film (id)  ON DELETE CASCADE,
+                                          CONSTRAINT fk_director_id FOREIGN KEY (director_id) REFERENCES directors (id)
 );
 
 CREATE TABLE IF NOT EXISTS users (

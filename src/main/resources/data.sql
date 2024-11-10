@@ -6,12 +6,15 @@ DELETE FROM film;             -- Удаляем фильмы
 DELETE FROM genre;            -- Удаляем жанры
 DELETE FROM mpa;           -- Удаляем рейтинги
 DELETE FROM users;            -- Удаляем пользователей
+DELETE FROM directors;            -- Удаляем режиссеров
 
 -- Сбрасываем счетчики автоинкремента для таблиц с полем id
 ALTER TABLE users ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE film ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE genre ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE mpa ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE directors ALTER COLUMN id RESTART WITH 1;
+
 
 -- Наполнение тестовыми данными
 INSERT INTO mpa (name, description) VALUES

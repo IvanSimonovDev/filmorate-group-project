@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -89,4 +90,14 @@ public class FilmController {
         log.info("DELETE /films/filmId <-- deleting Film {} - ended", filmId);
     }
 
+    //    GET /films/director/{directorId}?sortBy=[year,likes]
+    //    Возвращает список фильмов режиссера отсортированных по количеству лайков или году выпуска.
+    @GetMapping("/director/{directorId}")
+    public List<Film> getSortedDirectorsFilms(@NotEmpty @RequestParam String sortBy, @PathVariable("directorId") long directorId) {
+        log.info("GET /films/director/{directorId}?sortBy --> getting Director {} Films sorted by {}  - started", directorId, sortBy);
+        List<Film> directorsFilms = service.getSortedDirectorsFilms(directorId, sortBy);
+        log.info("GET /films/director/{directorId}?sortBy <-- getting Director {} Films sorted by {}  - ended", directorId, sortBy);
+
+        return directorsFilms;
+    }
 }

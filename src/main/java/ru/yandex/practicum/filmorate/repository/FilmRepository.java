@@ -18,6 +18,8 @@ public interface FilmRepository {
 
     void delete(long filmId);
 
+    List<Film> getSortedDirectorsFilms(long directorId, String sortBy);
+
     void addLike(Film film, User user);
 
     boolean deleteLike(Film film, User user);

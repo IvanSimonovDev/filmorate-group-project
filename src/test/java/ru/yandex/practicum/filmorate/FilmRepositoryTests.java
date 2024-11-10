@@ -10,10 +10,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.inDatabase.FilmGenreRowMapper;
-import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcFilmGenreRepository;
-import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcFilmRepository;
-import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcGenreRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.*;
+import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.DirectorRowMapper;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.GenreRowMapper;
@@ -28,7 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Import({JdbcFilmRepository.class, FilmRowMapper.class, FilmExtractor.class, JdbcFilmGenreRepository.class,
-        FilmGenreRowMapper.class, JdbcGenreRepository.class, GenreRowMapper.class})
+        FilmGenreRowMapper.class,  JdbcGenreRepository.class, GenreRowMapper.class, JdbcDirectorRepository.class,
+        DirectorRowMapper.class, FilmDirectorRowMapper.class, JdbcFilmDirectorRepository.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmRepositoryTests {
 
@@ -66,6 +65,7 @@ public class FilmRepositoryTests {
         film.setDuration(90);
         film.setMpa(newMpa);
         film.setGenres(Set.of(newGenre));
+        film.setDirectors(Set.of());
         return film;
     }
 

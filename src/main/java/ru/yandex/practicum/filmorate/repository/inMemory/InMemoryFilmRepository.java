@@ -75,6 +75,9 @@ public class InMemoryFilmRepository implements FilmRepository {
     public void delete(final long filmId) {
     }
 
+    public List<Film> getSortedDirectorsFilms(long directorId, String sortBy) {
+        return null;
+    }
 
     private long generateFilmId() {
         return ++filmId;
