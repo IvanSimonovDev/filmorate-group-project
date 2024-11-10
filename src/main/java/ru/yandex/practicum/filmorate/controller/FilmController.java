@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -80,4 +81,16 @@ public class FilmController {
         return popularFilms;
     }
 
+    // GET /films/common?userId={userId}&friendId={friendId}
+    @GetMapping("/common")
+    public Collection<Film> getCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - started", userId, friendId);
+
+        Collection<Film> commonFilms = service.getCommonFilms(userId, friendId);
+
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - ended", userId, friendId);
+        return commonFilms;
+    }
 }

@@ -22,4 +22,6 @@ public interface FilmRepository {
 
     List<Film> getPopular(long count);
 
+    List<Film> getCommonFilms(Long userId1, Long userId2);
+    
 }
