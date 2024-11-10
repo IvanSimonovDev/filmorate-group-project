@@ -15,8 +15,8 @@ public class JdbcReviewsLikesDislikesRepository implements ReviewsLikesDislikesR
             """;
 
     private static final String deleteSql = """
-            DELETE FROM reviews_likes_dislikes 
-            WHERE (reviewId = ?) 
+            DELETE FROM reviews_likes_dislikes
+            WHERE (reviewId = ?)
             AND (userID = ?)
             AND (val = ?);
             """;
