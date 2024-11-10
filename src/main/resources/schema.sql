@@ -64,3 +64,18 @@ CREATE TABLE IF NOT EXISTS user_friend (
                                             CONSTRAINT fk_user_id_friend FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
                                             CONSTRAINT fk_friend_id FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS reviews (
+                                        reviewId INTEGER PRIMARY KEY AUTO_INCREMENT,
+                                        content TEXT NOT NULL,
+                                        isPositive BOOLEAN NOT NULL,
+                                        userId INTEGER REFERENCES users ON DELETE CASCADE,
+                                        filmId INTEGER REFERENCES film ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS reviews_likes_dislikes (
+                                                       id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                                                       reviewId INTEGER REFERENCES reviews ON DELETE CASCADE,
+                                                       userId INTEGER REFERENCES users ON DELETE CASCADE,
+                                                       val INTEGER NOT NULL
+);
