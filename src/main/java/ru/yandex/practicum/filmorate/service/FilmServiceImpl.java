@@ -17,7 +17,6 @@ import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
-@Service
 public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
