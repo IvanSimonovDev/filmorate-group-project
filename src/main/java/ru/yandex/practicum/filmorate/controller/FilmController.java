@@ -94,7 +94,7 @@ public class FilmController {
                 "getting movies between the user[id={}] and the user[id={}] - ended", userId, friendId);
         return commonFilms;
     }
-  
+
     //    удаления фильма по идентификатору.
     //    DELETE /films/{filmId}
     @DeleteMapping("{filmId}")
