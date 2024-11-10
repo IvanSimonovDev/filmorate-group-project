@@ -10,8 +10,8 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcUserFriendReposit
 import java.util.List;
 import java.util.Set;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -40,6 +40,13 @@ public class UserServiceImpl implements UserService {
 
         checkUserName(user);
         return userRepository.update(user);
+    }
+
+    public void delete(final long userId) {
+        userRepository.get(userId)
+                .orElseThrow(() -> new ValidationException("Пользователь c ID - " + userId + ", не найден."));
+
+        userRepository.delete(userId);
     }
 
     public void addFriend(long userId, long friendId, boolean isConfirmed) {

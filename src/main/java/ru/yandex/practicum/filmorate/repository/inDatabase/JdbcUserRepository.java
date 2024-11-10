@@ -9,8 +9,8 @@ import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import java.util.*;
 
-@Repository
 @Primary
+@Repository
 public class JdbcUserRepository extends JdbcBaseRepository<User> implements UserRepository {
 
     public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {
@@ -47,6 +47,13 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
         update(sql, params);
 
         return user;
+    }
+
+    public void delete(long userId) {
+        String sql = "DELETE from users WHERE id = :userId";
+        Map<String, Object> params = Map.of("userId", userId);
+
+        delete(sql, params);
     }
 
     public Set<User> getFriends(User user) {

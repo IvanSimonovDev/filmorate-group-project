@@ -90,5 +90,14 @@ public class UserController {
         log.info("GET /users/userId/friends <-- Getting common friends list for user {} with other user {} - ended", userId, otherId);
         return commonFriendsList;
     }
+
+    //    удаления пользователя по идентификатору /users/{userId}
+    @DeleteMapping("{userId}")
+    public void delete(@PathVariable("userId") long userId) {
+        log.info("DELETE /users/userId --> Deleting user {} - started", userId);
+        service.delete(userId);
+        log.info("DELETE /users/userId <-- Deleting user {} - ended", userId);
+    }
+
 }
 
