@@ -49,6 +49,13 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
         return user;
     }
 
+    public void delete(long userId) {
+        String sql = "DELETE from users WHERE id = :userId";
+        Map<String, Object> params = Map.of("userId", userId);
+
+        delete(sql, params);
+    }
+
     public Set<User> getFriends(User user) {
         String sql = "SELECT * FROM users WHERE id IN " +
                 "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = :id)";

@@ -118,6 +118,13 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return film;
     }
 
+    public void delete(long filmId) {
+        String sql = "DELETE from film WHERE id = :filmId";
+        Map<String, Object> params = Map.of("filmId", filmId);
+
+        delete(sql, params);
+    }
+
     public List<Film> getSortedDirectorsFilms(long directorId, String sortBy) {
 
         String sql = "SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes, d.ID, d.NAME  " +
@@ -157,8 +164,9 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     public List<Film> getPopular(long count) {
         String sql = "SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes " +
                 "FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
-                "JOIN film_likes fl ON f.id = fl.film_id " +
-                "GROUP BY f.name ORDER BY likes DESC LIMIT :count";
+                "LEFT JOIN film_likes fl ON f.id = fl.film_id " +
+                "GROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME " +
+                "ORDER BY likes DESC LIMIT :count";
         Map<String, Long> params = Map.of("count", count);
 
         return findMany(sql, params);

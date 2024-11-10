@@ -81,6 +81,15 @@ public class FilmController {
         return popularFilms;
     }
 
+    //    удаления фильма по идентификатору.
+    //    DELETE /films/{filmId}
+    @DeleteMapping("{filmId}")
+    public void delete(@PathVariable("filmId") long filmId) {
+        log.info("DELETE /films/filmId --> deleting Film {} - started", filmId);
+        service.delete(filmId);
+        log.info("DELETE /films/filmId <-- deleting Film {} - ended", filmId);
+    }
+
     //    GET /films/director/{directorId}?sortBy=[year,likes]
     //    Возвращает список фильмов режиссера отсортированных по количеству лайков или году выпуска.
     @GetMapping("/director/{directorId}")
@@ -91,5 +100,4 @@ public class FilmController {
 
         return directorsFilms;
     }
-
 }
