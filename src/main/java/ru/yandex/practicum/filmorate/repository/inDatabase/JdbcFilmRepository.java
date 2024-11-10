@@ -197,19 +197,19 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         });
         return films;
     }
-}
 
-private List<Film> fillUpDirectors(List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
-    films.forEach(film -> {
-        Set<Director> associatedDirector = filmDirectors.stream()
-                .filter(fd -> fd.filmId() == film.getId())
-                .flatMap(fd -> directors.stream()
-                        .filter(director -> director.getId() == fd.directorId()))
-                .collect(Collectors.toSet());
 
-        film.setDirectors(associatedDirector);
-    });
-    return films;
-}
+    private List<Film> fillUpDirectors(List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
+        films.forEach(film -> {
+            Set<Director> associatedDirector = filmDirectors.stream()
+                    .filter(fd -> fd.filmId() == film.getId())
+                    .flatMap(fd -> directors.stream()
+                            .filter(director -> director.getId() == fd.directorId()))
+                    .collect(Collectors.toSet());
+
+            film.setDirectors(associatedDirector);
+        });
+        return films;
+    }
 
 }
