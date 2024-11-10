@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -100,6 +101,11 @@ public class FilmServiceImpl implements FilmService {
 
     public List<Film> getPopular(long count) {
         return filmRepository.getPopular(count);
+    }
+
+    @Override
+    public Collection<Film> search(String query, String by) {
+        return filmRepository.search(query, by);
     }
 
     private void fillUpGenres(Film film) {

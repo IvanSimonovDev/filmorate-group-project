@@ -72,6 +72,11 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .toList());
     }
 
+    @Override
+    public Collection<Film> search(String query, String by) {
+        return null;
+    }
+
     public void delete(final long filmId) {
     }
 

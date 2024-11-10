@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +27,5 @@ public interface FilmRepository {
 
     List<Film> getPopular(long count);
 
+    Collection<Film> search(String query, String by);
 }

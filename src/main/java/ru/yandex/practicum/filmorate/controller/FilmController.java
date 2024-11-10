@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
+import ru.yandex.practicum.filmorate.validation.SearchParamBy;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -99,5 +102,18 @@ public class FilmController {
         log.info("GET /films/director/{directorId}?sortBy <-- getting Director {} Films sorted by {}  - ended", directorId, sortBy);
 
         return directorsFilms;
+    }
+
+    @GetMapping("/search")
+    public Collection<Film> search(@RequestParam String query, @RequestParam String by) {
+        log.info("GET /films/search/?query&by --> getting Films by={}  query={}  - started", by, query);
+
+        if (!SearchParamBy.isValidOption(by))
+            throw new ValidationException(
+                    "Неверное значение параметра 'by'. Доступные варианты: director,title, director, title");
+
+        Collection<Film> foundFilms = service.search(query, by);
+        log.info("GET /films/search/?query&by --> getting Films by={}  query={}  - ended", by, query);
+        return foundFilms;
     }
 }
