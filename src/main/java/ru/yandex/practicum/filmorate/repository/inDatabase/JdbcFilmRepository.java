@@ -50,6 +50,13 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         this.filmRowMapper = filmRowMapper;
     }
 
+
+    protected record FilmGenre(long filmId, long genreId) {
+    }
+
+    protected record FilmDirector(long filmId, long directorId) {
+    }
+
     public Optional<Film> get(long filmId) {
         String sql = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
                 "LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID " +
@@ -188,7 +195,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     }
 
     public List<Film> recommendations(Long userId) {
-        String sqlRequst = "SELECT t3.film_id " +
+        String sql = "SELECT t3.film_id " +
                 "FROM film_likes t3 " +
                 "WHERE t3.user_id IN (SELECT t2.user_id " +
                 "FROM film_likes t1, film_likes t2 " +
@@ -203,12 +210,12 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                 "FROM film_likes t4 " +
                 "WHERE t4.user_id = ?)";
 
-        List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, userId);
+        List<Integer> filmIds = jdbcTemplate.queryForList(sql, Integer.class, userId, userId);
         return filmIds.stream().map(this::getById).collect(Collectors.toList());
     }
 
     public Film getById(Integer id) {
-        String sqlQuery = "SELECT f.*, m.name, g.id, g.name, d.id, d.name, m.id " +
+        String sql = "SELECT f.*, m.name, g.id, g.name, d.id, d.name, m.id " +
                 "FROM film AS f JOIN mpa AS m ON f.RATING_ID = m.id " +
                 "LEFT JOIN film_genre AS fg ON f.id = fg.film_id " +
                 "LEFT JOIN genre AS g ON fg.genre_id = g.id " +
@@ -216,17 +223,11 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                 "LEFT JOIN directors AS d ON fd.director_id = d.id " +
                 "WHERE f.id = :id";
 
-        Map<String, Integer> res = Map.of("id", id);
-        Film film = jdbc.queryForObject(sqlQuery, res, filmRowMapper);
+        Map<String, Integer> params = Map.of("id", id);
+        Film film = jdbc.queryForObject(sql, params, filmRowMapper);
         if (film == null) {
-            throw new ValidationException("Film not found");
+            throw new ValidationException("Фильм с Id - " + id + "не найден");
         }
         return film;
-    }
-
-    protected record FilmGenre(long filmId, long genreId) {
-    }
-
-    protected record FilmDirector(long filmId, long directorId) {
     }
 }
