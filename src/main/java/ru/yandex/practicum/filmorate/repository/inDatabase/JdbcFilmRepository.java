@@ -173,7 +173,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql3 = "SELECT * FROM film_director";
 
 
-
         List<FilmDirector> filmDirectors = jdbc.query(sql3, filmDirectorRowMapper);
         List<Director> directors = directorRepository.getAll();
 
@@ -197,7 +196,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return films;
     }
 
-    private void fillGenres(List<Film> films){
+    private void fillGenres(List<Film> films) {
         String sql = "SELECT * FROM film_genre";
 
         List<FilmGenre> filmGenres = jdbc.query(sql, filmGenreRowMapper);
