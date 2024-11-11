@@ -50,13 +50,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         this.filmRowMapper = filmRowMapper;
     }
 
-
-    protected record FilmGenre(long filmId, long genreId) {
-    }
-
-    protected record FilmDirector(long filmId, long directorId) {
-    }
-
     public Optional<Film> get(long filmId) {
         String sql = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
                 "LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID " +
@@ -238,7 +231,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         }
         return film;
     }
-}
+
     private void fillGenres(List<Film> films) {
         String sql = "SELECT * FROM film_genre";
 
@@ -252,5 +245,11 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                     .collect(Collectors.toSet());
             film.setGenres(associatedGenres);
         });
+    }
+
+    protected record FilmGenre(long filmId, long genreId) {
+    }
+
+    protected record FilmDirector(long filmId, long directorId) {
     }
 }
