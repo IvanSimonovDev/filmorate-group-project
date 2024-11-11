@@ -84,7 +84,7 @@ public class FilmController {
 
     // GET /films/common?userId={userId}&friendId={friendId}
     @GetMapping("/common")
-    public Collection<Film> getCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
+    public Collection<Film> getCommonFilms(@Positive @RequestParam Long userId, @Positive @RequestParam Long friendId) {
         log.info("GET /films/common?userId&friendId --> " +
                 "getting movies between the user[id={}] and the user[id={}] - started", userId, friendId);
 
