@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
+import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmLikeRowMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     private final JdbcFilmDirectorRepository filmDirectorRepository;
     private final JdbcDirectorRepository directorRepository;
     private final FilmExtractor filmExtractor;
+
 
     protected record FilmGenre(long filmId, long genreId) {
     }
@@ -121,7 +123,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     public void delete(long filmId) {
         String sql = "DELETE from film WHERE id = :filmId";
         Map<String, Object> params = Map.of("filmId", filmId);
-
         delete(sql, params);
     }
 
@@ -148,15 +149,14 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     }
 
     public void addLike(Film film, User user) {
-        String sql = "INSERT INTO film_likes (film_id, user_id) VALUES (:film_id, :user_id)";
-        Map<String, Object> params = Map.of("film_id", film.getId(), "user_id", user.getId());
-
+        String sql = "INSERT INTO film_likes (film_id, film_likes_user_id) VALUES (:film_id, :film_likes_user_id)";
+        Map<String, Object> params = Map.of("film_id", film.getId(), "film_likes_user_id", user.getId());
         insert(sql, params);
     }
 
     public boolean deleteLike(Film film, User user) {
-        String sql = "DELETE from film_likes WHERE  film_id = :film_id AND user_Id = :user_Id";
-        Map<String, Long> params = Map.of("film_id", film.getId(), "user_Id", user.getId());
+        String sql = "DELETE from film_likes WHERE  film_id = :film_id AND film_likes_user_id = :film_likes_user_id";
+        Map<String, Long> params = Map.of("film_id", film.getId(), "film_likes_user_id", user.getId());
 
         return delete(sql, params);
     }
@@ -184,5 +184,4 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         });
         return films;
     }
-
 }

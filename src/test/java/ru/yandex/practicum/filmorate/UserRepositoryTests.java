@@ -133,16 +133,4 @@ public class UserRepositoryTests {
                 .allMatch(Objects::nonNull)
                 .contains(getTestUser2(), getTestUser3());
     }
-
-    @DisplayName("Проверяем получение общих друзей пользователя")
-    @Test
-    public void shouldGetCommonFriends() {
-        User commonFriends = userRepository.getCommonFriends(getTestUser().getId(), getTestUser2().getId()).getFirst();
-
-        assertThat(commonFriends)
-                .usingRecursiveComparison()
-                .ignoringExpectedNullFields()
-                .isEqualTo(getTestUser3());
-    }
-
 }

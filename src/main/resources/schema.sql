@@ -50,10 +50,10 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS film_likes (
                                           film_id INTEGER,
-                                          user_id INTEGER,
-                                          PRIMARY KEY (film_id, user_id),
+                                          film_likes_user_id INTEGER,
+                                          PRIMARY KEY (film_id, film_likes_user_id),
                                           CONSTRAINT fk_film_likes_id FOREIGN KEY (film_id) REFERENCES film (id) ON DELETE CASCADE,
-                                          CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id)
+                                          CONSTRAINT fk_user_id FOREIGN KEY (film_likes_user_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS user_friend (
