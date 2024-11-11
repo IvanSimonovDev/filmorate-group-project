@@ -60,14 +60,13 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     }
 
     public List<Film> getAll() {
-        String sql = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id";
-        String sql2 = "SELECT * FROM film_genre";
-        String sql3 = "SELECT * FROM film_director";
+        String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id";
+        String sql2 = "SELECT * FROM film_director";
 
-        List<FilmDirector> filmDirectors = jdbc.query(sql3, filmDirectorRowMapper);
+        List<FilmDirector> filmDirectors = jdbc.query(sql2, filmDirectorRowMapper);
         List<Director> directors = directorRepository.getAll();
 
-        List<Film> films = findMany(sql, Collections.emptyMap());
+        List<Film> films = findMany(sql1, Collections.emptyMap());
 
         fillGenres(films);
         return fillUpDirectors(filmDirectors, directors, films);
@@ -163,25 +162,23 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     }
 
     public List<Film> getCommonFilms(Long userId1, Long userId2) {
-        String sql = "SELECT * FROM film f JOIN mpa mpa ON f.rating_id = mpa.id" +
+        String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.rating_id = mpa.id" +
                 " WHERE f.id IN (SELECT fl1.film_id FROM film_likes fl1 " +
                 "INNER JOIN film_likes fl2 ON fl1.film_id = fl2.film_id " +
                 "WHERE fl1.user_id = :userId1 AND fl2.user_id = :userId2)";
 
+        String sql2 = "SELECT * FROM film_director";
+
         Map<String, Object> params = Map.of("userId1", userId1, "userId2", userId2);
 
-        String sql3 = "SELECT * FROM film_director";
-
-
-        List<FilmDirector> filmDirectors = jdbc.query(sql3, filmDirectorRowMapper);
+        List<FilmDirector> filmDirectors = jdbc.query(sql2, filmDirectorRowMapper);
         List<Director> directors = directorRepository.getAll();
 
-        List<Film> films = findMany(sql, params);
+        List<Film> films = findMany(sql1, params);
 
         fillGenres(films);
         return fillUpDirectors(filmDirectors, directors, films);
     }
-
 
     private List<Film> fillUpDirectors(List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
         films.forEach(film -> {
