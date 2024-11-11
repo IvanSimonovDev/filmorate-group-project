@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.FilmLike;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.FilmLikeService;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
@@ -25,7 +25,7 @@ import java.util.Set;
 public class UserController {
 
     private final UserService service;
-    private final FilmLikeService filmLikeService;
+    private final FilmService filmService;
 
     @GetMapping
     public List<User> getAll() {
@@ -102,9 +102,9 @@ public class UserController {
         log.info("DELETE /users/userId <-- Deleting user {} - ended", userId);
     }
 
-    @GetMapping(value = "/{id}/recommendations")
-    public List<FilmLike> getUsersRecommendations(@Valid @PathVariable Long id) {
-        return filmLikeService.getRecommendations(id);
+    @GetMapping("/{userId}/recommendations")
+    public List<Film> recommendations(@PathVariable Long userId) {
+        return filmService.recommendations(userId);
     }
 }
 

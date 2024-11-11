@@ -98,6 +98,10 @@ public class FilmServiceImpl implements FilmService {
         filmRepository.deleteLike(film, user);
     }
 
+    public List<Film> recommendations(Long userId) {
+        return filmRepository.recommendations(userId);
+    }
+
     public List<Film> getPopular(long count) {
         return filmRepository.getPopular(count);
     }
@@ -127,5 +131,4 @@ public class FilmServiceImpl implements FilmService {
             }
         }
     }
-
 }

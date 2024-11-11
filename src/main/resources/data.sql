@@ -65,12 +65,12 @@ INSERT INTO users (email, login, name, birthday) VALUES
                                                       ('user5@example.com', 'user5', 'Emma Davis', '1995-03-05');
 
 -- Фильмы с одним лайком
-INSERT INTO film_likes (film_id, film_likes_user_id) VALUES
+INSERT INTO film_likes (film_id, user_id) VALUES
                                               (1, 1),  -- User 1 likes Inception
                                               (2, 2);  -- User 2 likes The Matrix
 
 -- Фильмы с 2-5 лайками
-INSERT INTO film_likes (film_id, film_likes_user_id) VALUES
+INSERT INTO film_likes (film_id, user_id) VALUES
                                               (3, 1),  -- User 1 likes Interstellar
                                               (3, 2),  -- User 2 likes Interstellar
                                               (3, 3),  -- User 3 likes Interstellar
@@ -79,13 +79,13 @@ INSERT INTO film_likes (film_id, film_likes_user_id) VALUES
                                               (4, 3),  -- User 3 likes The Shawshank Redemption
                                               (4, 4);  -- User 4 likes The Shawshank Redemption
 
-INSERT INTO film_likes (film_id, film_likes_user_id) VALUES
+INSERT INTO film_likes (film_id, user_id) VALUES
                                               (5, 2),  -- User 2 likes The Godfather
                                               (5, 3),  -- User 3 likes The Godfather
                                               (5, 1),  -- User 1 likes The Godfather
                                               (5, 4);  -- User 4 likes The Godfather
 
-INSERT INTO film_likes (film_id, film_likes_user_id) VALUES
+INSERT INTO film_likes (film_id, user_id) VALUES
                                               (6, 1),  -- User 1 likes Pulp Fiction
                                               (6, 2);  -- User 2 likes Pulp Fiction
 

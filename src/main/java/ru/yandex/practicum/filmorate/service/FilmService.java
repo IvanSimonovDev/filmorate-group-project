@@ -24,4 +24,6 @@ public interface FilmService {
 
     List<Film> getPopular(long count);
 
+    List<Film> recommendations(Long userId);
+
 }
