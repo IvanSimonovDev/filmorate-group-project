@@ -18,7 +18,7 @@ import java.util.Set;
 @RequestMapping("/users")
 @Slf4j
 @Validated // необходимо добавить @Validated в контроллер на уровне класса, чтобы проверять параметры метода.
-            // В этом случае аннотация @Validated устанавливается на уровне класса, даже если она присутствует на методах.
+// В этом случае аннотация @Validated устанавливается на уровне класса, даже если она присутствует на методах.
 @RequiredArgsConstructor
 public class UserController {
 

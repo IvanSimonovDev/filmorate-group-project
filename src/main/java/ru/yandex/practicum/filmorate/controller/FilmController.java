@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -79,6 +80,19 @@ public class FilmController {
         log.info("GET /films/popular?count --> getting {} popular Films - ended", count);
 
         return popularFilms;
+    }
+
+    // GET /films/common?userId={userId}&friendId={friendId}
+    @GetMapping("/common")
+    public Collection<Film> getCommonFilms(@Positive @RequestParam Long userId, @Positive @RequestParam Long friendId) {
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - started", userId, friendId);
+
+        Collection<Film> commonFilms = service.getCommonFilms(userId, friendId);
+
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - ended", userId, friendId);
+        return commonFilms;
     }
 
     //    удаления фильма по идентификатору.
