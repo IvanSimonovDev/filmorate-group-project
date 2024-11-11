@@ -23,7 +23,7 @@ public class FilmLikeService {
         List<FilmLike> recommendFilms = new ArrayList<>();
 
         for (FilmLike indexFilm : recommendUserFilms) {
-            recommendFilms.add((FilmLike) filmLikeRepository.getUserByFilmId(indexFilm.getFilm_id()));
+            recommendFilms.add((FilmLike) filmLikeRepository.getUserByFilmId(indexFilm.getFilmId()));
         }
         return recommendFilms;
     }
