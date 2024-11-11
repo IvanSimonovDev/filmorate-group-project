@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.repository.inDatabase;
 
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
@@ -31,13 +30,11 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
     private final FilmRowMapper filmRowMapper;
 
-    private final JdbcTemplate jdbcTemplate;
-
 
     public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository,
                               JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper,
                               JdbcDirectorRepository directorRepository, FilmDirectorRowMapper filmDirectorRowMapper,
-                              JdbcFilmDirectorRepository filmDirectorRepository, JdbcTemplate jdbcTemplate, FilmRowMapper filmRowMapper) {
+                              JdbcFilmDirectorRepository filmDirectorRepository,FilmRowMapper filmRowMapper) {
         super(jdbc, mapper);
         this.filmGenreRepository = filmGenreRepository;
         this.genreRepository = genreRepository;
@@ -46,7 +43,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         this.directorRepository = directorRepository;
         this.filmDirectorRowMapper = filmDirectorRowMapper;
         this.filmDirectorRepository = filmDirectorRepository;
-        this.jdbcTemplate = jdbcTemplate;
         this.filmRowMapper = filmRowMapper;
     }
 
@@ -202,16 +198,18 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                 "FROM film_likes t1, film_likes t2 " +
                 "WHERE t1.film_id = t2.film_id " +
                 "AND t1.user_id != t2.user_id " +
-                "AND t1.user_id = ? " +
+                "AND t1.user_id = :userId " +
                 "GROUP BY t2.user_id " +
                 "ORDER BY count(t2.film_id) DESC " +
                 "LIMIT 1) " +
                 "AND t3.film_id NOT IN (" +
                 "SELECT t4.film_id " +
                 "FROM film_likes t4 " +
-                "WHERE t4.user_id = ?)";
+                "WHERE t4.user_id = :userId)";
 
-        List<Integer> filmIds = jdbcTemplate.queryForList(sql, Integer.class, userId, userId);
+        Map<String, Object> params = Map.of("userId", userId);
+
+        List<Integer> filmIds = jdbc.queryForList(sql, params, Integer.class);
         return filmIds.stream().map(this::getById).collect(Collectors.toList());
     }
 

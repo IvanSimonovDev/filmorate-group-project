@@ -104,7 +104,10 @@ public class UserController {
 
     @GetMapping("/{userId}/recommendations")
     public List<Film> recommendations(@PathVariable Long userId) {
-        return filmService.recommendations(userId);
+        log.info("GET /users/{userId}/recommendations --> Getting user {} - started", userId);
+        List<Film> recommendations = filmService.recommendations(userId);
+        log.info("GET /users/{userId}/recommendations --> Getting user {} - ended", userId);
+        return recommendations;
     }
 }
 
