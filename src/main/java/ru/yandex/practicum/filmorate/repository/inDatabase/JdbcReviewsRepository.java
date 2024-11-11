@@ -14,13 +14,11 @@ import java.util.Optional;
 
 @Repository
 public class JdbcReviewsRepository extends JdbcBaseRepository<Review> implements ReviewsRepository {
-    private final JdbcTemplate jdbc;
 
     public JdbcReviewsRepository(NamedParameterJdbcOperations jdbc,
                                  RowMapper<Review> mapper,
                                  JdbcTemplate jdbcTemplate) {
         super(jdbc, mapper);
-        this.jdbc = jdbcTemplate;
     }
 
     public Review create(Review review) {
