@@ -28,7 +28,6 @@ public class ReviewsService {
     }
 
     public void deleteReview(long reviewId) {
-        //reviewsValidator.validateReviewId(reviewId);
         reviewsRepository.delete(reviewId);
     }
 
