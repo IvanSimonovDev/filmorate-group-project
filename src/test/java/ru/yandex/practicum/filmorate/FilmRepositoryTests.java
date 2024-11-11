@@ -35,6 +35,7 @@ public class FilmRepositoryTests {
     public static final long UPDATED_FILM_ID = 8L;
     public static final long TEST_NEWFILM_ID = 11L;
     public static final long TEST_FILM1_ID = 1L;
+    @Autowired
     private final JdbcFilmRepository filmRepository;
 
     static Film getTestFilm1() {

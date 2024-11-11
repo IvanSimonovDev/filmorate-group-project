@@ -46,7 +46,7 @@ INSERT INTO users (email, login, name, birthday) VALUES
                                                      ('TestUser4@example.com', 'TestUser3', 'Test User4', '2005-01-10');
 
 
-INSERT INTO film_likes (film_id, user_id) VALUES
+INSERT INTO film_likes (film_id, FILM_LIKES_USER_ID) VALUES
                                               (1, 1),  -- User 1 likes Inception
                                               (2, 2),  -- User 2 likes The Matrix
                                               (1, 2);
