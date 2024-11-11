@@ -10,10 +10,13 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.*;
 
+import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
+import static java.lang.String.format;
+
 @Service
+@RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
@@ -104,6 +107,18 @@ public class FilmServiceImpl implements FilmService {
 
     public List<Film> getPopular(long count) {
         return filmRepository.getPopular(count);
+    }
+
+
+    @Override
+    public Collection<Film> getCommonFilms(final Long userId1, final Long userId2) {
+        userRepository.get(userId1)
+                .orElseThrow(() -> new ValidationException(format("Пользователь c id: %d не найден", userId1)));
+
+        userRepository.get(userId2)
+                .orElseThrow(() -> new ValidationException(format("Пользователь c id: %d не найден", userId2)));
+
+        return filmRepository.getCommonFilms(userId1, userId2);
     }
 
     private void fillUpGenres(Film film) {

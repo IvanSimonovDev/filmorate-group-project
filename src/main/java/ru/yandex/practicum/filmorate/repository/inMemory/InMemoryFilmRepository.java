@@ -72,6 +72,11 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .toList());
     }
 
+    @Override
+    public List<Film> getCommonFilms(Long userId1, Long userId2) {
+        return null;
+    }
+
     public void delete(final long filmId) {
     }
 
