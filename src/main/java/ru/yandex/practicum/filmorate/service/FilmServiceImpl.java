@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service

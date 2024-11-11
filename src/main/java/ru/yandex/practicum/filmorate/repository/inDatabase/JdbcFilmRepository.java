@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmExtractor;
-import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.FilmLikeRowMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
