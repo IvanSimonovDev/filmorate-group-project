@@ -16,9 +16,9 @@ public class FilmLikeService {
 
     private final FilmLikeRepository filmLikeRepository;
 
-    public List<FilmLike> getRecommendations(Long user_id) {
-        List<FilmLike> recommendUserFilms = filmLikeRepository.getRecommendations(user_id);
-        List<FilmLike> userFilms = filmLikeRepository.getFilmsUserById(user_id);
+    public List<FilmLike> getRecommendations(Long userId) {
+        List<FilmLike> recommendUserFilms = filmLikeRepository.getRecommendations(userId);
+        List<FilmLike> userFilms = filmLikeRepository.getFilmsUserById(userId);
         recommendUserFilms.removeAll(userFilms);
         List<FilmLike> recommendFilms = new ArrayList<>();
 
