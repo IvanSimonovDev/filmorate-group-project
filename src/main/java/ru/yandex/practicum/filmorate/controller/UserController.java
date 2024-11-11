@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.FilmLike;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmLikeService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
@@ -21,7 +20,7 @@ import java.util.Set;
 @RequestMapping("/users")
 @Slf4j
 @Validated // необходимо добавить @Validated в контроллер на уровне класса, чтобы проверять параметры метода.
-            // В этом случае аннотация @Validated устанавливается на уровне класса, даже если она присутствует на методах.
+// В этом случае аннотация @Validated устанавливается на уровне класса, даже если она присутствует на методах.
 @RequiredArgsConstructor
 public class UserController {
 

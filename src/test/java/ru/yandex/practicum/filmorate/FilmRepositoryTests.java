@@ -26,16 +26,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Import({JdbcFilmRepository.class, FilmRowMapper.class, FilmExtractor.class, JdbcFilmGenreRepository.class,
-        FilmGenreRowMapper.class,  JdbcGenreRepository.class, GenreRowMapper.class, JdbcDirectorRepository.class,
+        FilmGenreRowMapper.class, JdbcGenreRepository.class, GenreRowMapper.class, JdbcDirectorRepository.class,
         DirectorRowMapper.class, FilmDirectorRowMapper.class, JdbcFilmDirectorRepository.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmRepositoryTests {
 
-    private final JdbcFilmRepository filmRepository;
     public static final long TEST_USER_ID = 2L;
     public static final long UPDATED_FILM_ID = 8L;
     public static final long TEST_NEWFILM_ID = 11L;
     public static final long TEST_FILM1_ID = 1L;
+    private final JdbcFilmRepository filmRepository;
 
     static Film getTestFilm1() {
         Film film = new Film();

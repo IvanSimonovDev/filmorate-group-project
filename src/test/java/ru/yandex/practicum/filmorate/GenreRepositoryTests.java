@@ -20,12 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class GenreRepositoryTests {
 
-    private final JdbcGenreRepository genreRepository;
-
     public static final long GENRE_ID = 1L;
     public static final long GENRE_ID2 = 5L;
     public static final String GENRE_NAME = "Комедия";
     public static final String GENRE_NAME2 = "Документальный";
+    private final JdbcGenreRepository genreRepository;
 
     static Genre getTestGenre() {
         Genre genre = new Genre();

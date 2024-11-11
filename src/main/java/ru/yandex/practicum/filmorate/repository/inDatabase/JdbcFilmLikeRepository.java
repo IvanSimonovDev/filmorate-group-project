@@ -19,20 +19,20 @@ public class JdbcFilmLikeRepository extends JdbcBaseRepository<FilmLike> impleme
 
     public List<FilmLike> getRecommendations(Long userId) {
         String sql = """
-              SELECT FL3.FILM_ID
-                                   FROM FILM_LIKES FL3
-                                   WHERE FL3.FILM_LIKES_USER_ID = (SELECT FL2.FILM_LIKES_USER_ID
-                                                        FROM FILM_LIKES FL2
-                                                        WHERE FL2.FILM_LIKES_USER_ID <> :film_likes_user_id
-                                                          AND FL2.FILM_ID IN (SELECT FL1.FILM_ID
-                                                                              FROM FILM_LIKES FL1
-                                                                              WHERE FL1.FILM_LIKES_USER_ID = :film_likes_user_id
+                  SELECT FL3.FILM_ID
+                                       FROM FILM_LIKES FL3
+                                       WHERE FL3.FILM_LIKES_USER_ID = (SELECT FL2.FILM_LIKES_USER_ID
+                                                            FROM FILM_LIKES FL2
+                                                            WHERE FL2.FILM_LIKES_USER_ID <> :film_likes_user_id
+                                                              AND FL2.FILM_ID IN (SELECT FL1.FILM_ID
+                                                                                  FROM FILM_LIKES FL1
+                                                                                  WHERE FL1.FILM_LIKES_USER_ID = :film_likes_user_id
+                                                                )
+                                                            GROUP BY FL2.FILM_LIKES_USER_ID
+                                                            ORDER BY COUNT(FL2.FILM_ID) DESC
+                                                            LIMIT 1
                                                             )
-                                                        GROUP BY FL2.FILM_LIKES_USER_ID
-                                                        ORDER BY COUNT(FL2.FILM_ID) DESC
-                                                        LIMIT 1
-                                                        )
-            """;
+                """;
 
         Map<String, Long> params = Map.of("film_likes_user_id", userId);
         return findMany(sql, params);

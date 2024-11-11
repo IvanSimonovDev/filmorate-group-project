@@ -27,12 +27,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     private final FilmExtractor filmExtractor;
 
 
-    protected record FilmGenre(long filmId, long genreId) {
-    }
-
-    protected record FilmDirector(long filmId, long directorId) {
-    }
-
     public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository,
                               JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper,
                               JdbcDirectorRepository directorRepository, FilmDirectorRowMapper filmDirectorRowMapper,
@@ -182,5 +176,11 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
             film.setDirectors(associatedDirector);
         });
         return films;
+    }
+
+    protected record FilmGenre(long filmId, long genreId) {
+    }
+
+    protected record FilmDirector(long filmId, long directorId) {
     }
 }

@@ -22,7 +22,7 @@ public class FilmLikeService {
         recommendUserFilms.removeAll(userFilms);
         List<FilmLike> recommendFilms = new ArrayList<>();
 
-        for (FilmLike indexFilm:recommendUserFilms) {
+        for (FilmLike indexFilm : recommendUserFilms) {
             recommendFilms.add((FilmLike) filmLikeRepository.getUserByFilmId(indexFilm.getFilm_id()));
         }
         return recommendFilms;

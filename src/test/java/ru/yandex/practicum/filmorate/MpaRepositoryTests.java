@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class MpaRepositoryTests {
 
-    private final JdbcMpaRepository mpaRepository;
     public static final long MPA_ID = 1L;
     public static final long MPA_ID2 = 5L;
     public static final String MPA_NAME = "G";
     public static final String MPA_NAME2 = "NC-17";
+    private final JdbcMpaRepository mpaRepository;
 
     static Mpa getTestMpa() {
         Mpa mpa = new Mpa();
