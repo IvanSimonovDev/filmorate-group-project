@@ -34,7 +34,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     public JdbcFilmRepository(NamedParameterJdbcOperations jdbc, RowMapper<Film> mapper, JdbcFilmGenreRepository filmGenreRepository,
                               JdbcGenreRepository genreRepository, FilmExtractor filmExtractor, FilmGenreRowMapper filmGenreRowMapper,
                               JdbcDirectorRepository directorRepository, FilmDirectorRowMapper filmDirectorRowMapper,
-                              JdbcFilmDirectorRepository filmDirectorRepository,FilmRowMapper filmRowMapper) {
+                              JdbcFilmDirectorRepository filmDirectorRepository, FilmRowMapper filmRowMapper) {
         super(jdbc, mapper);
         this.filmGenreRepository = filmGenreRepository;
         this.genreRepository = genreRepository;
