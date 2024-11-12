@@ -7,8 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.EventService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
@@ -26,6 +28,7 @@ public class UserController {
 
     private final UserService service;
     private final FilmService filmService;
+    private final EventService eventService;
 
     @GetMapping
     public List<User> getAll() {
@@ -109,5 +112,13 @@ public class UserController {
         log.info("GET /users/{userId}/recommendations --> Getting user {} - ended", userId);
         return recommendations;
     }
-}
 
+    // просмотр последних событий пользователя на платформе
+    @GetMapping("{id}/feed")
+    public List<Event> getEvents(@PathVariable("id") long userId) {
+        log.info("GET /users/userId/feed --> Getting events list for user {} - started", userId);
+        List<Event> eventList = eventService.getEvents(userId);
+        log.info("GET /users/userId/feed --> Getting events list for user {} - ended", userId);
+        return eventList;
+    }
+}

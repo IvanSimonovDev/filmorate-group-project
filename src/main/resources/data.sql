@@ -7,6 +7,7 @@ DELETE FROM genre;            -- Удаляем жанры
 DELETE FROM mpa;           -- Удаляем рейтинги
 DELETE FROM users;            -- Удаляем пользователей
 DELETE FROM directors;            -- Удаляем режиссеров
+DELETE FROM events;            -- Удаляем события
 
 -- Сбрасываем счетчики автоинкремента для таблиц с полем id
 ALTER TABLE users ALTER COLUMN id RESTART WITH 1;
@@ -15,6 +16,7 @@ ALTER TABLE genre ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE mpa ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE directors ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE reviews ALTER COLUMN reviewId RESTART WITH 1;
+ALTER TABLE events ALTER COLUMN id RESTART WITH 1;
 
 
 -- Наполнение тестовыми данными

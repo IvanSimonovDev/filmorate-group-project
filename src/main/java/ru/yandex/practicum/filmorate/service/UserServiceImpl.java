@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.enums.EventType;
+import ru.yandex.practicum.filmorate.enums.Operation;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
@@ -15,6 +17,7 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final EventService eventService;
     private final UserRepository userRepository;
     private final JdbcUserFriendRepository userFriendRepository;
     private final JdbcFilmRepository filmRepository;
@@ -59,6 +62,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + friendId + " не найден"));
 
         userFriendRepository.add(user, friend, isConfirmed);
+        eventService.createEvent(userId, friendId, EventType.FRIEND, Operation.ADD);
     }
 
     public void deleteFriend(long userId, long friendId) {
@@ -69,6 +73,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + friendId + " не найден"));
 
         userFriendRepository.delete(user, friend);
+        eventService.createEvent(userId, friendId, EventType.FRIEND, Operation.REMOVE);
     }
 
     public Set<User> getFriends(long userId) {

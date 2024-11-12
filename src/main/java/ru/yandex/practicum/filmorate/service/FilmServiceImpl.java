@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FkConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.repository.*;
 import ru.yandex.practicum.filmorate.validation.SearchParamBy;
+import ru.yandex.practicum.filmorate.enums.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +18,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
 
+    private final EventService eventService;
     private final FilmRepository filmRepository;
     private final UserRepository userRepository;
     private final MpaRepository mpaRepository;
@@ -76,6 +75,7 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
         filmRepository.addLike(film, user);
+        eventService.createEvent(userId, filmId, EventType.LIKE, Operation.ADD);
     }
 
     public List<Film> getSortedDirectorsFilms(long directorId, String sortBy) {
@@ -100,6 +100,7 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
 
         filmRepository.deleteLike(film, user);
+        eventService.createEvent(userId, filmId, EventType.LIKE, Operation.REMOVE);
     }
 
     public List<Film> recommendations(Long userId) {
