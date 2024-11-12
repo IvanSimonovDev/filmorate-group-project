@@ -83,18 +83,10 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getPopularWhenYearPresents(@RequestParam Optional<Integer> count,
-                                                       @RequestParam Optional<Long> genreId,
-                                                       @RequestParam Optional<Integer> year) {
-        String logStartMessageTemplate =
-        "GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - started";
-        log.info(logStartMessageTemplate, count, genreId, year);
-        List<Film> films = service.getPopularByGenreAndYear(count.orElse(null),
-                                                            genreId.orElse(null),
-                                                            year.orElse(null));
-        String logEndMessageTemplate =
-        "GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - ended";
-        log.info(logEndMessageTemplate, count, genreId, year);
+    public Collection<Film> getPopularWhenYearPresents(@RequestParam Optional<Integer> count, @RequestParam Optional<Long> genreId, @RequestParam Optional<Integer> year) {
+        log.info("GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - started", count, genreId, year);
+        List<Film> films = service.getPopularByGenreAndYear(count.orElse(null), genreId.orElse(null), year.orElse(null));
+        log.info("GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - ended", count, genreId, year);
         return films;
     }
 
