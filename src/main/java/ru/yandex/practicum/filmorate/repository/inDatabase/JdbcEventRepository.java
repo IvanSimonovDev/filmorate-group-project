@@ -21,7 +21,8 @@ public class JdbcEventRepository extends JdbcBaseRepository<Event> implements Ev
     public void addEvent(Event newEvent) {
         String sql = "INSERT INTO events (user_id, timestamp, event_type, operation, entity_id) " +
                      "VALUES (:user_id, :timestamp, :event_type, :operation, :entity_id)";
-        Map<String, Object> params = Map.of("user_id", newEvent.getUserId(),
+        Map<String, Object> params = Map.of(
+                "user_id", newEvent.getUserId(),
                 "timestamp", newEvent.getTimestamp(),
                 "event_type", newEvent.getEventType().name(),
                 "operation", newEvent.getOperation().name(),
