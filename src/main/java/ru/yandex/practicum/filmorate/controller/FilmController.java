@@ -84,6 +84,19 @@ public class FilmController {
         return popularFilms;
     }
 
+    // GET /films/common?userId={userId}&friendId={friendId}
+    @GetMapping("/common")
+    public Collection<Film> getCommonFilms(@Positive @RequestParam Long userId, @Positive @RequestParam Long friendId) {
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - started", userId, friendId);
+
+        Collection<Film> commonFilms = service.getCommonFilms(userId, friendId);
+
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - ended", userId, friendId);
+        return commonFilms;
+    }
+
     //    удаления фильма по идентификатору.
     //    DELETE /films/{filmId}
     @DeleteMapping("{filmId}")
