@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
-import ru.yandex.practicum.filmorate.validation.SearchParamBy;
 
 import java.util.Collection;
 import java.util.List;
@@ -107,7 +105,6 @@ public class FilmController {
     @GetMapping("/search")
     public Collection<Film> search(@RequestParam String query, @RequestParam String by) {
         log.info("GET /films/search/?query&by --> getting Films by={}  query={}  - started", by, query);
-
 
 
         Collection<Film> foundFilms = service.search(query, by);
