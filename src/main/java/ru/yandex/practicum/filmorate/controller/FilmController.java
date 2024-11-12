@@ -119,7 +119,7 @@ public class FilmController {
     public Collection<Film> search(@RequestParam String query, @RequestParam String by) {
         log.info("GET /films/search/?query&by --> getting Films by={} query={} - started", by, query);
 
-        Collection<Film> foundFilms = service.search(query.toLowerCase(), by.toLowerCase());
+        Collection<Film> foundFilms = service.search(query, by.toLowerCase());
         log.info("GET /films/search/?query&by --> getting Films by={} query={} - ended", by, query);
         return foundFilms;
     }
