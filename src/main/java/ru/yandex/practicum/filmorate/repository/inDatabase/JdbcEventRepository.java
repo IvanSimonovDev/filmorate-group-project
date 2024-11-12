@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.repository.inDatabase.mapper.EventRowMapper
 
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 @Repository
 public class JdbcEventRepository extends JdbcBaseRepository<Event> implements EventRepository {
