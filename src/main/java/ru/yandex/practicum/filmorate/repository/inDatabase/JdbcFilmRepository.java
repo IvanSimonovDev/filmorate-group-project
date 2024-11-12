@@ -247,8 +247,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return fillUpDirectors(filmDirectors, directors, films);
     }
 
-    private List<Film> fillUpDirectors
-            (List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
+    private List<Film> fillUpDirectors(List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
         films.forEach(film -> {
             Set<Director> associatedDirector = filmDirectors.stream()
                     .filter(fd -> fd.filmId() == film.getId())
