@@ -171,8 +171,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String genreFiltration = "";
         String yearFiltration = "";
         String groupAndOrderSqlPart = """
-                                      
-                                      GROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME
+                                      \nGROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME
                                       ORDER BY likes DESC
                                       """;
         String sqlLimit = "";
@@ -181,8 +180,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
         if (genreId != null) {
             genreFiltration =  """
-                               
-                               WHERE f.id IN (SELECT film_id
+                               \nWHERE f.id IN (SELECT film_id
                                               FROM film_genre
                                               WHERE genre_id = :genreId)
                                """;
