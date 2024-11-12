@@ -88,6 +88,11 @@ public class InMemoryFilmRepository implements FilmRepository {
         return null;
     }
 
+    @Override
+    public List<Film> recommendations(Long userId) {
+        return null;
+    }
+
     private long generateFilmId() {
         return ++filmId;
     }

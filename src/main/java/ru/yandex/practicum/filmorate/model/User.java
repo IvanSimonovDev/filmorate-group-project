@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Slf4j
@@ -28,4 +30,5 @@ public class User {
     @Past
     private LocalDate birthday;
 
+    private Set<Long> likedMovies = new HashSet<>();
 }

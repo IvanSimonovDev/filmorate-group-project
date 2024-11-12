@@ -21,6 +21,8 @@ public interface FilmRepository {
 
     List<Film> getSortedDirectorsFilms(long directorId, String sortBy);
 
+    List<Film> recommendations(Long userId);
+
     void addLike(Film film, User user);
 
     boolean deleteLike(Film film, User user);

@@ -12,5 +12,4 @@ public class FilmorateApplication {
         log.info("Current working directory: " + System.getProperty("user.dir"));
 
     }
-
 }
