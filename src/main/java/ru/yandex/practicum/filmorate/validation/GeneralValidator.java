@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.validation;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
-@Service
+@Component
 public class GeneralValidator {
     public void validateContainerEntryPositiveOrNull(Integer containerToValidate, String entryParamName) {
         if (containerToValidate != null && containerToValidate <= 0) {

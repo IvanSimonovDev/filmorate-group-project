@@ -2,12 +2,12 @@ package ru.yandex.practicum.filmorate.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import java.time.LocalDate;
 
-@Service
+@Component
 public class ReleaseDateValidator implements ConstraintValidator<ReleaseDate, LocalDate> {
 
     @Override
@@ -19,11 +19,8 @@ public class ReleaseDateValidator implements ConstraintValidator<ReleaseDate, Lo
     }
 
     public void validateYearInContainer(Integer yearContainer) {
-        if (yearContainer != null) {
-            LocalDate date = LocalDate.of(yearContainer, 12, 29);
-            if (!isValid(date, null)) {
-                throw new ValidationException("Год должен быть не меньше 1895.");
-            }
+        if (yearContainer != null && yearContainer < 1895) {
+            throw new ValidationException("Год должен быть не меньше 1895.");
         }
     }
 }

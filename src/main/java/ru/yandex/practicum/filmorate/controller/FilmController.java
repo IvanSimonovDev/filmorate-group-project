@@ -82,15 +82,21 @@ public class FilmController {
         return popularFilms;
     }
 
-    @GetMapping(path = "/popular")
+    @GetMapping("/popular")
     public Collection<Film> getPopularWhenYearPresents(@RequestParam Optional<Integer> count,
                                                        @RequestParam Optional<Long> genreId,
                                                        @RequestParam Optional<Integer> year) {
-        return service.getPopularByGenreAndYear(count.orElse(null),
-                                                genreId.orElse(null),
-                                                year.orElse(null));
+        String logStartMessageTemplate =
+        "GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - started";
+        log.info(logStartMessageTemplate, count, genreId, year);
+        List<Film> films = service.getPopularByGenreAndYear(count.orElse(null),
+                                                            genreId.orElse(null),
+                                                            year.orElse(null));
+        String logEndMessageTemplate =
+        "GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - ended";
+        log.info(logEndMessageTemplate, count, genreId, year);
+        return films;
     }
-
 
     // GET /films/common?userId={userId}&friendId={friendId}
     @GetMapping("/common")

@@ -117,9 +117,7 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.getPopular(count);
     }
 
-    public List<Film> getPopularByGenreAndYear(Integer count,
-                                               Long genreId,
-                                               Integer year) {
+    public List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year) {
         generalValidator.validateContainerEntryPositiveOrNull(count, "count");
         genreValidator.validateGenreIdInContainer(genreId);
         releaseDateValidator.validateYearInContainer(year);

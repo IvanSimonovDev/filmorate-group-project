@@ -162,46 +162,47 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     public List<Film> getPopularByGenreAndYear(Integer count,
                                                Long genreId,
                                                Integer year) {
-        String sql = """
-                SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes
-                FROM film f
-                JOIN mpa mpa ON f.RATING_ID = mpa.id
-                LEFT JOIN film_likes fl ON f.id = fl.film_id
-                """;
+        String sqlTemplate = """
+                             SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes
+                             FROM film f
+                             JOIN mpa mpa ON f.RATING_ID = mpa.id
+                             LEFT JOIN film_likes fl ON f.id = fl.film_id%s%s%s%s
+                             """;
+        String genreFiltration = "";
+        String yearFiltration = "";
+        String groupAndOrderSqlPart = """
+                                      
+                                      GROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME
+                                      ORDER BY likes DESC
+                                      """;
+        String sqlLimit = "";
 
         Map<String, Object> params = new HashMap<>();
 
         if (genreId != null) {
-            sql = sql + """
-                    WHERE f.id IN (SELECT film_id
-                                   FROM film_genre
-                                   WHERE genre_id = :genreId)
-                    """;
+            genreFiltration =  """
+                               
+                               WHERE f.id IN (SELECT film_id
+                                              FROM film_genre
+                                              WHERE genre_id = :genreId)
+                               """;
             params.put("genreId", genreId);
 
             if (year != null) {
-                sql = sql + "AND EXTRACT(YEAR FROM f.release_date)  = :year\n";
+                yearFiltration = "AND EXTRACT(YEAR FROM f.release_date)  = :year";
                 params.put("year", year);
             }
-        } else {
-            if (year != null) {
-                sql = sql + "WHERE EXTRACT(YEAR FROM f.release_date)  = :year\n";
-                params.put("year", year);
-            }
-        }
+        } else if (year != null) {
+              yearFiltration =  "\nWHERE EXTRACT(YEAR FROM f.release_date)  = :year";
+              params.put("year", year);
 
-        String groupAndOrderSqlPart = """
-                GROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME
-                ORDER BY likes DESC""";
-        sql = sql + groupAndOrderSqlPart;
+        }
 
         if (count != null) {
-            sql = sql + "\nLIMIT :count";
+            sqlLimit =  "LIMIT :count";
             params.put("count", count);
         }
-
-        sql = sql + ";";
-
+        String sql = String.format(sqlTemplate, genreFiltration, yearFiltration, groupAndOrderSqlPart, sqlLimit);
         return findMany(sql, params);
     }
 
