@@ -109,9 +109,9 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Collection<Film> search(String query, String by) {
         if (!SearchParamBy.isValidOption(by))
-            throw new jakarta.validation.ValidationException(
+            throw new ValidationException(
                     "Неверное значение параметра 'by'. Доступные варианты: 'director,title' ; 'director' ; 'title'");
-        return filmRepository.search(query, by);
+        return filmRepository.searchFilmsByParams(query, by);
     }
 
     @Override
@@ -150,5 +150,4 @@ public class FilmServiceImpl implements FilmService {
             }
         }
     }
-
 }

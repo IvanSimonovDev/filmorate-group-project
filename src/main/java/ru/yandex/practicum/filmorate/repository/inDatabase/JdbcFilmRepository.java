@@ -68,7 +68,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
         List<Film> films = findMany(sql1, Collections.emptyMap());
 
-        fillGenres(films);
+        fillUpGenres(films);
         return fillUpDirectors(filmDirectors, directors, films);
     }
 
@@ -166,9 +166,8 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
     }
 
     @Override
-    public Collection<Film> search(String query, String by) {
+    public Collection<Film> searchFilmsByParams(String query, String by) {
         String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id";
-        String sql2 = "SELECT * FROM film_genre";
         String sql3 = "SELECT * FROM film_director";
 
         List<FilmDirector> filmDirectors = jdbc.query(sql3, filmDirectorRowMapper);
@@ -194,17 +193,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         }
         foundByTitle.addAll(foundByDirector);
 
-        List<FilmGenre> filmGenres = jdbc.query(sql2, filmGenreRowMapper);
-        List<Genre> genres = genreRepository.getAll();
-        foundByTitle.forEach(film -> {
-            Set<Genre> associatedGenres = filmGenres.stream()
-                    .filter(fg -> fg.filmId() == film.getId())
-                    .flatMap(fg -> genres.stream()
-                            .filter(genre -> genre.getId() == fg.genreId()))
-                    .collect(Collectors.toSet());
-            film.setGenres(associatedGenres);
-        });
-
+        fillUpGenres(foundByTitle);
         return foundByTitle;
     }
 
@@ -242,7 +231,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
         List<Film> films = findMany(sql1, params);
 
-        fillGenres(films);
+        fillUpGenres(films);
 
         return fillUpDirectors(filmDirectors, directors, films);
     }
@@ -260,7 +249,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return films;
     }
 
-    private void fillGenres(List<Film> films) {
+    private void fillUpGenres(List<Film> films) {
         String sql = "SELECT * FROM film_genre";
 
         List<FilmGenre> filmGenres = jdbc.query(sql, filmGenreRowMapper);

@@ -73,7 +73,7 @@ public class InMemoryFilmRepository implements FilmRepository {
     }
 
     @Override
-    public Collection<Film> search(String query, String by) {
+    public Collection<Film> searchFilmsByParams(String query, String by) {
         return null;
     }
 
