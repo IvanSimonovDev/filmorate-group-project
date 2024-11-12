@@ -14,8 +14,10 @@ import ru.yandex.practicum.filmorate.validation.SearchParamBy;
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
+import static java.lang.String.format;
+
 @Service
+@RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
@@ -110,6 +112,17 @@ public class FilmServiceImpl implements FilmService {
             throw new jakarta.validation.ValidationException(
                     "Неверное значение параметра 'by'. Доступные варианты: 'director,title' ; 'director' ; 'title'");
         return filmRepository.search(query, by);
+    }
+
+    @Override
+    public Collection<Film> getCommonFilms(final Long userId1, final Long userId2) {
+        userRepository.get(userId1)
+                .orElseThrow(() -> new ValidationException(format("Пользователь c id: %d не найден", userId1)));
+
+        userRepository.get(userId2)
+                .orElseThrow(() -> new ValidationException(format("Пользователь c id: %d не найден", userId2)));
+
+        return filmRepository.getCommonFilms(userId1, userId2);
     }
 
     private void fillUpGenres(Film film) {
