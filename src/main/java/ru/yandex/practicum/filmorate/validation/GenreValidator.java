@@ -12,10 +12,8 @@ public class GenreValidator {
 
     public void validateGenreIdInContainer(Long genreIdContainer) {
         if (genreIdContainer != null) {
-            String exceptionMessageTemplate = "Жанр с id = %d не существует.";
-            String exceptionMessage = String.format(exceptionMessageTemplate, genreIdContainer);
-            ValidationException exception = new ValidationException(exceptionMessage);
-            genreRepository.getById(genreIdContainer).orElseThrow(() -> exception);
+            genreRepository.getById(genreIdContainer)
+                           .orElseThrow(() -> new ValidationException(String.format("Жанр с id = %d не существует.", genreIdContainer)));
         }
     }
 }
