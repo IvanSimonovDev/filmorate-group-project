@@ -26,6 +26,6 @@ public interface FilmService {
     List<Film> getPopular(long count);
 
     Collection<Film> search(String query, String by);
-  
+
     Collection<Film> getCommonFilms(Long userId1, Long userId2);
 }

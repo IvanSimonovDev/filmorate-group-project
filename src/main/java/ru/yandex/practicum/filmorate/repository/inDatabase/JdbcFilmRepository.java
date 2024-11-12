@@ -224,6 +224,8 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         List<Film> films = findMany(sql, params);
         List<FilmDirector> filmDirectors = jdbc.query(sql2, filmDirectorRowMapper);
         List<Director> directors = directorRepository.getAll();
+        return fillUpDirectors(filmDirectors, directors, films);
+    }
 
     public List<Film> getCommonFilms(Long userId1, Long userId2) {
         String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.rating_id = mpa.id" +
@@ -245,7 +247,8 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return fillUpDirectors(filmDirectors, directors, films);
     }
 
-    private List<Film> fillUpDirectors(List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
+    private List<Film> fillUpDirectors
+            (List<FilmDirector> filmDirectors, List<Director> directors, List<Film> films) {
         films.forEach(film -> {
             Set<Director> associatedDirector = filmDirectors.stream()
                     .filter(fd -> fd.filmId() == film.getId())

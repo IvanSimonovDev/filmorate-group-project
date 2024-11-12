@@ -76,7 +76,7 @@ public class InMemoryFilmRepository implements FilmRepository {
     public Collection<Film> search(String query, String by) {
         return null;
     }
-  
+
     public List<Film> getCommonFilms(Long userId1, Long userId2) {
         return null;
     }
