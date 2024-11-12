@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.validation;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public enum SearchParamBy {
     DIRECTOR_TITLE("director,title"),
     TITLE_DIRECTOR("title,director"),
@@ -10,10 +12,6 @@ public enum SearchParamBy {
     TITLE("title");
 
     private final String value;
-
-    SearchParamBy(String value) {
-        this.value = value;
-    }
 
     public static boolean isValidOption(String value) {
         for (SearchParamBy option : SearchParamBy.values()) {

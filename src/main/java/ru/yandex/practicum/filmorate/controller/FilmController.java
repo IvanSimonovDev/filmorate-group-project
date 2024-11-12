@@ -108,9 +108,7 @@ public class FilmController {
     public Collection<Film> search(@RequestParam String query, @RequestParam String by) {
         log.info("GET /films/search/?query&by --> getting Films by={}  query={}  - started", by, query);
 
-        if (!SearchParamBy.isValidOption(by))
-            throw new ValidationException(
-                    "Неверное значение параметра 'by'. Доступные варианты: director,title, director, title");
+
 
         Collection<Film> foundFilms = service.search(query, by);
         log.info("GET /films/search/?query&by --> getting Films by={}  query={}  - ended", by, query);

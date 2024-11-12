@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.*;
+import ru.yandex.practicum.filmorate.validation.SearchParamBy;
 
 import java.util.Collection;
 import java.util.List;
@@ -105,6 +106,9 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Collection<Film> search(String query, String by) {
+        if (!SearchParamBy.isValidOption(by))
+            throw new jakarta.validation.ValidationException(
+                    "Неверное значение параметра 'by'. Доступные варианты: 'director,title' ; 'director' ; 'title'");
         return filmRepository.search(query, by);
     }
 
