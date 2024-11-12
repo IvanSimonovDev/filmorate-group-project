@@ -13,7 +13,7 @@ public class GenreValidator {
     public void validateGenreIdInContainer(Long genreIdContainer) {
         if (genreIdContainer != null) {
             genreRepository.getById(genreIdContainer)
-                           .orElseThrow(() -> new ValidationException(String.format("Жанр с id = %d не существует.", genreIdContainer)));
+                    .orElseThrow(() -> new ValidationException(String.format("Жанр с id = %d не существует.", genreIdContainer)));
         }
     }
 }
