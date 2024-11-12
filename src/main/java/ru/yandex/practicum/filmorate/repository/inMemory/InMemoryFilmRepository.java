@@ -72,6 +72,11 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .toList());
     }
 
+    //заглушка
+    public List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year) {
+        return null;
+    }
+
     @Override
     public List<Film> getCommonFilms(Long userId1, Long userId2) {
         return null;

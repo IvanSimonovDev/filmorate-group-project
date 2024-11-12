@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController()
@@ -72,15 +73,24 @@ public class FilmController {
     }
 
     //    возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано, верните первые 10.
-    @GetMapping("/popular")
+    @GetMapping(path = "/popular", params = {"!year", "!genreId"})
     public List<Film> getPopular(@Positive @RequestParam(defaultValue = "10") long count) {
 
         log.info("GET /films/popular?count --> getting {} popular Films - started", count);
         List<Film> popularFilms = service.getPopular(count);
         log.info("GET /films/popular?count --> getting {} popular Films - ended", count);
-
         return popularFilms;
     }
+
+    @GetMapping(path = "/popular")
+    public Collection<Film> getPopularWhenYearPresents(@RequestParam Optional<Integer> count,
+                                                       @RequestParam Optional<Long> genreId,
+                                                       @RequestParam Optional<Integer> year) {
+        return service.getPopularByGenreAndYear(count.orElse(null),
+                                                genreId.orElse(null),
+                                                year.orElse(null));
+    }
+
 
     // GET /films/common?userId={userId}&friendId={friendId}
     @GetMapping("/common")
