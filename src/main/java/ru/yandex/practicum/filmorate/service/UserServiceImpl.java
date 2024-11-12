@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
+import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcFilmRepository;
 import ru.yandex.practicum.filmorate.repository.inDatabase.JdbcUserFriendRepository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final JdbcUserFriendRepository userFriendRepository;
+    private final JdbcFilmRepository filmRepository;
 
 
     public List<User> getAll() {

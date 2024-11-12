@@ -25,6 +25,7 @@ public interface FilmService {
 
     List<Film> getPopular(long count);
 
-    Collection<Film> getCommonFilms(Long userId1, Long userId2);
+    List<Film> recommendations(Long userId);
 
+    Collection<Film> getCommonFilms(Long userId1, Long userId2);
 }
