@@ -25,6 +25,8 @@ public interface FilmService {
 
     List<Film> getPopular(long count);
 
+    Collection<Film> search(String query, String by);
+
     List<Film> recommendations(Long userId);
 
     List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year);

@@ -68,4 +68,9 @@ public class JdbcDirectorRepository extends JdbcBaseRepository<Director> impleme
         delete(sql, params);
     }
 
+    public List<Director> findBySubstringName(String substring) {
+        String sql = "SELECT * FROM directors d WHERE d.name LIKE '%" + substring + "%'";
+        return findMany(sql, Collections.emptyMap());
+    }
+
 }

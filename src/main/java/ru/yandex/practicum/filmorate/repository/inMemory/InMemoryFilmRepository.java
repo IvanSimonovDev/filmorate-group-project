@@ -78,6 +78,10 @@ public class InMemoryFilmRepository implements FilmRepository {
     }
 
     @Override
+    public Collection<Film> searchFilmsByParams(String query, String by) {
+        return null;
+    }
+
     public List<Film> getCommonFilms(Long userId1, Long userId2) {
         return null;
     }

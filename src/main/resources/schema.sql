@@ -79,3 +79,12 @@ CREATE TABLE IF NOT EXISTS reviews_likes_dislikes (
                                                        userId INTEGER REFERENCES users ON DELETE CASCADE,
                                                        val INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS events (
+                                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                                    user_id INTEGER REFERENCES users,
+                                    timestamp BIGINT,
+                                    event_type VARCHAR(255),
+                                    operation VARCHAR(255),
+                                    entity_id INTEGER NOT NULL
+);

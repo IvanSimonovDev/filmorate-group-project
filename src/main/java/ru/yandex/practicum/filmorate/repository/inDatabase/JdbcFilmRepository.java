@@ -68,7 +68,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
         List<Film> films = findMany(sql1, Collections.emptyMap());
 
-        fillGenres(films);
+        fillUpGenres(films);
         return fillUpDirectors(filmDirectors, directors, films);
     }
 
@@ -84,6 +84,10 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
         if (null != film.getGenres()) {
             filmGenreRepository.save(film);
+        }
+
+        if (null != film.getDirectors()) {
+            filmDirectorRepository.save(film);
         }
         return film;
     }
@@ -203,6 +207,57 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql = String.format(sqlTemplate, genreFiltration, yearFiltration, groupAndOrderSqlPart, sqlLimit);
         return findMany(sql, params);
     }
+  
+    @Override
+    public Collection<Film> searchFilmsByParams(String query, String by) {
+        String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id";
+        String sql3 = "SELECT * FROM film_director";
+
+        List<FilmDirector> filmDirectors = jdbc.query(sql3, filmDirectorRowMapper);
+
+        List<Film> foundByDirector = new ArrayList<>();
+        if (by.contains("director")) {
+            List<Director> filteredDirectors = directorRepository.findBySubstringName(query);
+            filteredDirectors.forEach(director -> {
+                List<Film> films = getDirectorsFilms(director.getId());
+                foundByDirector.addAll(films);
+            });
+        }
+
+        List<Film> foundByTitle = new ArrayList<>();
+        if (by.contains("title")) {
+
+            List<Film> filteredFilms = findMany(
+                    sql1 + " WHERE LOWER(f.name) LIKE LOWER('%" + query + "%')",
+                    Collections.emptyMap());
+
+            List<Director> allDirectors = directorRepository.getAll();
+            foundByTitle = fillUpDirectors(filmDirectors, allDirectors, filteredFilms);
+        }
+        foundByTitle.addAll(foundByDirector);
+
+        fillUpGenres(foundByTitle);
+        return foundByTitle;
+    }
+
+    public List<Film> getDirectorsFilms(long directorId) {
+        String sql = "SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes, d.ID, d.NAME  " +
+                "FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id " +
+                "LEFT JOIN film_likes fl ON f.id = fl.film_id " +
+                "LEFT JOIN FILM_DIRECTOR fd ON f.ID = fd.FILM_ID " +
+                "LEFT JOIN DIRECTORS d ON d.ID = fd.DIRECTOR_ID " +
+                "WHERE d.ID = :directorId " +
+                "GROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME, d.ID, d.NAME";
+
+        String sql2 = "SELECT * FROM film_director";
+
+        Map<String, Object> params = Map.of("directorId", directorId);
+
+        List<Film> films = findMany(sql, params);
+        List<FilmDirector> filmDirectors = jdbc.query(sql2, filmDirectorRowMapper);
+        List<Director> directors = directorRepository.getAll();
+        return fillUpDirectors(filmDirectors, directors, films);
+    }
 
     public List<Film> getCommonFilms(Long userId1, Long userId2) {
         String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.rating_id = mpa.id" +
@@ -219,7 +274,8 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
         List<Film> films = findMany(sql1, params);
 
-        fillGenres(films);
+        fillUpGenres(films);
+
         return fillUpDirectors(filmDirectors, directors, films);
     }
 
@@ -275,7 +331,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return film;
     }
 
-    private void fillGenres(List<Film> films) {
+    private void fillUpGenres(List<Film> films) {
         String sql = "SELECT * FROM film_genre";
 
         List<FilmGenre> filmGenres = jdbc.query(sql, filmGenreRowMapper);
