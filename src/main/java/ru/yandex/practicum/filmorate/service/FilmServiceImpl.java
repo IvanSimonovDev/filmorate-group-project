@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exception.FkConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.repository.*;
+import ru.yandex.practicum.filmorate.validation.SearchParamBy;
 import ru.yandex.practicum.filmorate.enums.*;
 
 import java.util.Collection;
@@ -112,6 +113,13 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.getPopular(count);
     }
 
+    @Override
+    public Collection<Film> search(String query, String by) {
+        if (!SearchParamBy.isValidOption(by))
+            throw new ValidationException(
+                    "Неверное значение параметра 'by'. Доступные варианты: 'director,title' ; 'director' ; 'title'");
+        return filmRepository.searchFilmsByParams(query, by);
+    }
 
     @Override
     public Collection<Film> getCommonFilms(final Long userId1, final Long userId2) {
