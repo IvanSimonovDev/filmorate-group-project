@@ -2,8 +2,9 @@ package ru.yandex.practicum.filmorate.repository.inDatabase.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.enums.EventType;
+import ru.yandex.practicum.filmorate.enums.Operation;
 import ru.yandex.practicum.filmorate.model.Event;
-import ru.yandex.practicum.filmorate.enums.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
