@@ -163,6 +163,51 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         return findMany(sql, params);
     }
 
+    public List<Film> getPopularByGenreAndYear(Integer count,
+                                               Long genreId,
+                                               Integer year) {
+        String sqlTemplate = """
+                             SELECT f.*, mpa.ID, MPA.NAME, COUNT(fl.film_id) AS likes
+                             FROM film f
+                             JOIN mpa mpa ON f.RATING_ID = mpa.id
+                             LEFT JOIN film_likes fl ON f.id = fl.film_id%s%s%s%s
+                             """;
+        String genreFiltration = "";
+        String yearFiltration = "";
+        String groupAndOrderSqlPart = """
+                                      \nGROUP BY f.id, f.name, f.description, f.release_date, f.duration, mpa.ID, mpa.NAME
+                                      ORDER BY likes DESC
+                                      """;
+        String sqlLimit = "";
+
+        Map<String, Object> params = new HashMap<>();
+
+        if (genreId != null) {
+            genreFiltration =  """
+                               \nWHERE f.id IN (SELECT film_id
+                                              FROM film_genre
+                                              WHERE genre_id = :genreId)
+                               """;
+            params.put("genreId", genreId);
+
+            if (year != null) {
+                yearFiltration = "AND EXTRACT(YEAR FROM f.release_date)  = :year";
+                params.put("year", year);
+            }
+        } else if (year != null) {
+              yearFiltration =  "\nWHERE EXTRACT(YEAR FROM f.release_date)  = :year";
+              params.put("year", year);
+
+        }
+
+        if (count != null) {
+            sqlLimit =  "LIMIT :count";
+            params.put("count", count);
+        }
+        String sql = String.format(sqlTemplate, genreFiltration, yearFiltration, groupAndOrderSqlPart, sqlLimit);
+        return findMany(sql, params);
+    }
+
     @Override
     public Collection<Film> searchFilmsByParams(String query, String by) {
         String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id";

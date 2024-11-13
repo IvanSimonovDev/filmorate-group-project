@@ -11,6 +11,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.*;
+
+import ru.yandex.practicum.filmorate.validation.GeneralValidator;
+import ru.yandex.practicum.filmorate.validation.GenreValidator;
+import ru.yandex.practicum.filmorate.validation.ReleaseDateValidator;
 import ru.yandex.practicum.filmorate.validation.SearchParamBy;
 
 import java.util.Collection;
@@ -28,6 +32,9 @@ public class FilmServiceImpl implements FilmService {
     private final MpaRepository mpaRepository;
     private final GenreRepository genreRepository;
     private final DirectorRepository directorRepository;
+    private final ReleaseDateValidator releaseDateValidator;
+    private final GenreValidator genreValidator;
+    private final GeneralValidator generalValidator;
 
     public Film save(Film film) {
         film.setMpa(mpaRepository.getById(film.getMpa().getId())
@@ -115,6 +122,14 @@ public class FilmServiceImpl implements FilmService {
 
     public List<Film> getPopular(long count) {
         return filmRepository.getPopular(count);
+    }
+
+    public List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year) {
+        generalValidator.validateContainerEntryPositiveOrNull(count, "count");
+        genreValidator.validateGenreIdInContainer(genreId);
+        releaseDateValidator.validateYearInContainer(year);
+
+        return filmRepository.getPopularByGenreAndYear(count, genreId, year);
     }
 
     @Override

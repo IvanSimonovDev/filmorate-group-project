@@ -29,6 +29,8 @@ public interface FilmRepository {
 
     List<Film> getPopular(long count);
 
+    List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year);
+
     Collection<Film> searchFilmsByParams(String query, String by);
 
     List<Film> getCommonFilms(Long userId1, Long userId2);
