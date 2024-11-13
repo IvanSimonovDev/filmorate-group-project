@@ -207,6 +207,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String sql = String.format(sqlTemplate, genreFiltration, yearFiltration, groupAndOrderSqlPart, sqlLimit);
         return findMany(sql, params);
     }
+
     @Override
     public Collection<Film> searchFilmsByParams(String query, String by) {
         String sql1 = "SELECT * FROM film f JOIN mpa mpa ON f.RATING_ID = mpa.id";
