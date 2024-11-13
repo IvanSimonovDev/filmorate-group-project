@@ -1,3 +1,17 @@
+-- Удаление таблиц по порядку зависимости
+DROP TABLE IF EXISTS reviews_likes_dislikes;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS film_director;        -- Удаляем лайки фильмов
+DROP TABLE IF EXISTS film_likes;        -- Удаляем лайки фильмов
+DROP TABLE IF EXISTS film_genre;       -- Удаляем жанры фильмов
+DROP TABLE IF EXISTS user_friend;     -- Удаляем дружеские связи пользователей
+DROP TABLE IF EXISTS film;             -- Удаляем фильмы
+DROP TABLE IF EXISTS genre;            -- Удаляем жанры
+DROP TABLE IF EXISTS mpa;           -- Удаляем рейтинги
+DROP TABLE IF EXISTS directors;            -- Удаляем режиссеров
+DROP TABLE IF EXISTS events;            -- Удаляем события
+DROP TABLE IF EXISTS users;            -- Удаляем пользователей
+
 CREATE TABLE IF NOT EXISTS mpa (
                                       id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                       name VARCHAR(255),
@@ -82,9 +96,10 @@ CREATE TABLE IF NOT EXISTS reviews_likes_dislikes (
 
 CREATE TABLE IF NOT EXISTS events (
                                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                                    user_id INTEGER REFERENCES users,
+                                    user_id INTEGER,
                                     timestamp BIGINT,
                                     event_type VARCHAR(255),
                                     operation VARCHAR(255),
-                                    entity_id INTEGER NOT NULL
+                                    entity_id INTEGER NOT NULL,
+                                    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
