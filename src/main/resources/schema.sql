@@ -1,3 +1,17 @@
+-- Удаление таблиц по порядку зависимости
+DROP TABLE IF EXISTS reviews_likes_dislikes;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS film_director;        -- Удаляем лайки фильмов
+DROP TABLE IF EXISTS film_likes;        -- Удаляем лайки фильмов
+DROP TABLE IF EXISTS film_genre;       -- Удаляем жанры фильмов
+DROP TABLE IF EXISTS user_friend;     -- Удаляем дружеские связи пользователей
+DROP TABLE IF EXISTS film;             -- Удаляем фильмы
+DROP TABLE IF EXISTS genre;            -- Удаляем жанры
+DROP TABLE IF EXISTS mpa;           -- Удаляем рейтинги
+DROP TABLE IF EXISTS directors;            -- Удаляем режиссеров
+DROP TABLE IF EXISTS events;            -- Удаляем события
+DROP TABLE IF EXISTS users;            -- Удаляем пользователей
+
 CREATE TABLE IF NOT EXISTS mpa (
                                       id INTEGER PRIMARY KEY AUTO_INCREMENT,
                                       name VARCHAR(255),
@@ -69,22 +83,27 @@ CREATE TABLE IF NOT EXISTS reviews (
                                         reviewId INTEGER PRIMARY KEY AUTO_INCREMENT,
                                         content TEXT NOT NULL,
                                         isPositive BOOLEAN NOT NULL,
-                                        userId INTEGER REFERENCES users ON DELETE CASCADE,
-                                        filmId INTEGER REFERENCES film ON DELETE CASCADE
+                                        userId INTEGER,
+                                        filmId INTEGER,
+                                        CONSTRAINT fk_user_review FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_film_review FOREIGN KEY (filmId) REFERENCES film (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS reviews_likes_dislikes (
                                                        id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                                                       reviewId INTEGER REFERENCES reviews ON DELETE CASCADE,
-                                                       userId INTEGER REFERENCES users ON DELETE CASCADE,
-                                                       val INTEGER NOT NULL
+                                                       reviewId INTEGER,
+                                                       userId INTEGER,
+                                                       val INTEGER NOT NULL,
+                                                       CONSTRAINT fk_user_ld FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+                                                       CONSTRAINT fk_review_ld FOREIGN KEY (reviewId) REFERENCES reviews(reviewId) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS events (
                                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                                    user_id INTEGER REFERENCES users,
+                                    user_id INTEGER,
                                     timestamp BIGINT,
                                     event_type VARCHAR(255),
                                     operation VARCHAR(255),
-                                    entity_id INTEGER NOT NULL
+                                    entity_id INTEGER NOT NULL,
+                                    CONSTRAINT fk_user_events FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

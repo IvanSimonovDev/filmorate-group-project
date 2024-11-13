@@ -1,14 +1,3 @@
--- Очистка таблиц по порядку зависимости
-DELETE FROM film_likes;        -- Удаляем лайки фильмов
-DELETE FROM film_genre;       -- Удаляем жанры фильмов
-DELETE FROM user_friend;     -- Удаляем дружеские связи пользователей
-DELETE FROM film;             -- Удаляем фильмы
-DELETE FROM genre;            -- Удаляем жанры
-DELETE FROM mpa;           -- Удаляем рейтинги
-DELETE FROM users;            -- Удаляем пользователей
-DELETE FROM directors;            -- Удаляем режиссеров
-DELETE FROM events;            -- Удаляем события
-
 -- Сбрасываем счетчики автоинкремента для таблиц с полем id
 ALTER TABLE users ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE film ALTER COLUMN id RESTART WITH 1;
