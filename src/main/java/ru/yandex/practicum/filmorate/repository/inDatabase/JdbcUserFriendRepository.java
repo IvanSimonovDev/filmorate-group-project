@@ -7,8 +7,8 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Map;
 
-@Repository
 @Slf4j
+@Repository
 public class JdbcUserFriendRepository extends JdbcBaseRepository<Object> {
 
     public JdbcUserFriendRepository(NamedParameterJdbcOperations jdbc) {

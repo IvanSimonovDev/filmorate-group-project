@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.FkConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
+import ru.yandex.practicum.filmorate.validation.FieldNotSetException;
 import ru.yandex.practicum.filmorate.validation.ValidationErrorResponse;
 import ru.yandex.practicum.filmorate.validation.ValidationViolation;
 
@@ -64,10 +65,10 @@ public class ErrorHandlingControllerAdvice {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(FkConstraintViolationException.class)
+    @ExceptionHandler({FkConstraintViolationException.class, FieldNotSetException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse onFkConstraintViolationException(final FkConstraintViolationException e) {
-        log.error("FKConstraintViolationException: {}", e.getMessage());
+    public ErrorResponse onFkConstraintViolationAndFieldNotSetException(final RuntimeException e) {
+        log.error("FKConstraintViolationException | FieldNotSetException: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 

@@ -4,12 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-@Repository
 @Slf4j
+@Repository
 public class JdbcFilmGenreRepository extends JdbcBaseRepository<Object> {
 
     public JdbcFilmGenreRepository(NamedParameterJdbcOperations jdbc) {
@@ -21,7 +22,8 @@ public class JdbcFilmGenreRepository extends JdbcBaseRepository<Object> {
 
         return batchInsert(sql,
                 film.getId(),
-                new ArrayList<>(film.getGenres())
+                new ArrayList<>(film.getGenres()),
+                Genre::getId, "genre_id"
         );
     }
 

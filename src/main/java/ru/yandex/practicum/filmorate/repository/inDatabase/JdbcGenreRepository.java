@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
 @Slf4j
+@Repository
 public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements GenreRepository {
 
     public JdbcGenreRepository(NamedParameterJdbcOperations jdbc, RowMapper<Genre> mapper) {
@@ -40,4 +40,15 @@ public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements Ge
         return findMany(sql, Collections.emptyMap());
     }
 
+    public List<Genre> getAllGenresByFilmId(long filmId) {
+        return findMany(
+                "SELECT g.* " +
+                        "FROM genre AS g " +
+                        "JOIN film_genre AS fg ON g.id = fg.genre_id " +
+                        "WHERE fg.film_id = :id " +
+                        "GROUP BY g.id " +
+                        "ORDER BY g.id ASC",
+                Map.of("id", filmId)
+        );
+    }
 }

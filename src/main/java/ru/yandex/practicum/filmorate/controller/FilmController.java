@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController()
@@ -70,14 +73,62 @@ public class FilmController {
     }
 
     //    возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано, верните первые 10.
-    @GetMapping("/popular")
+    @GetMapping(path = "/popular", params = {"!year", "!genreId"})
     public List<Film> getPopular(@Positive @RequestParam(defaultValue = "10") long count) {
 
         log.info("GET /films/popular?count --> getting {} popular Films - started", count);
         List<Film> popularFilms = service.getPopular(count);
         log.info("GET /films/popular?count --> getting {} popular Films - ended", count);
-
         return popularFilms;
     }
 
+    @GetMapping("/popular")
+    public Collection<Film> getPopularWhenYearPresents(@RequestParam Optional<Integer> count, @RequestParam Optional<Long> genreId, @RequestParam Optional<Integer> year) {
+        log.info("GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - started", count, genreId, year);
+        List<Film> films = service.getPopularByGenreAndYear(count.orElse(null), genreId.orElse(null), year.orElse(null));
+        log.info("GET /films/popular?count&genreId&year --> getting {} popular Films with genreId {} and year {} - ended", count, genreId, year);
+        return films;
+    }
+
+    // GET /films/common?userId={userId}&friendId={friendId}
+    @GetMapping("/common")
+    public Collection<Film> getCommonFilms(@Positive @RequestParam Long userId, @Positive @RequestParam Long friendId) {
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - started", userId, friendId);
+
+        Collection<Film> commonFilms = service.getCommonFilms(userId, friendId);
+
+        log.info("GET /films/common?userId&friendId --> " +
+                "getting movies between the user[id={}] and the user[id={}] - ended", userId, friendId);
+        return commonFilms;
+    }
+
+    //    удаления фильма по идентификатору.
+    //    DELETE /films/{filmId}
+    @DeleteMapping("{filmId}")
+    public void delete(@PathVariable("filmId") long filmId) {
+        log.info("DELETE /films/filmId --> deleting Film {} - started", filmId);
+        service.delete(filmId);
+        log.info("DELETE /films/filmId <-- deleting Film {} - ended", filmId);
+    }
+
+    //    GET /films/director/{directorId}?sortBy=[year,likes]
+    //    Возвращает список фильмов режиссера отсортированных по количеству лайков или году выпуска.
+    @GetMapping("/director/{directorId}")
+    public List<Film> getSortedDirectorsFilms(@NotEmpty @RequestParam String sortBy, @PathVariable("directorId") long directorId) {
+        log.info("GET /films/director/{directorId}?sortBy --> getting Director {} Films sorted by {}  - started", directorId, sortBy);
+        List<Film> directorsFilms = service.getSortedDirectorsFilms(directorId, sortBy);
+        log.info("GET /films/director/{directorId}?sortBy <-- getting Director {} Films sorted by {}  - ended", directorId, sortBy);
+
+        return directorsFilms;
+    }
+
+    @GetMapping("/search")
+    public Collection<Film> search(@RequestParam String query, @RequestParam String by) {
+        log.info("GET /films/search/?query&by --> getting Films by={} query={} - started", by, query);
+
+        Collection<Film> foundFilms = service.search(query, by.toLowerCase());
+        log.info("GET /films/search/?query&by --> getting Films by={} query={} - ended", by, query);
+        return foundFilms;
+    }
 }
