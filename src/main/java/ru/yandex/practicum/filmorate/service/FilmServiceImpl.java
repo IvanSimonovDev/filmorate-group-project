@@ -6,12 +6,12 @@ import ru.yandex.practicum.filmorate.enums.EventType;
 import ru.yandex.practicum.filmorate.enums.Operation;
 import ru.yandex.practicum.filmorate.exception.FkConstraintViolationException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.*;
-
+import ru.yandex.practicum.filmorate.repository.DirectorRepository;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.MpaRepository;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 import ru.yandex.practicum.filmorate.validation.GeneralValidator;
 import ru.yandex.practicum.filmorate.validation.GenreValidator;
 import ru.yandex.practicum.filmorate.validation.ReleaseDateValidator;
@@ -30,7 +30,6 @@ public class FilmServiceImpl implements FilmService {
     private final FilmRepository filmRepository;
     private final UserRepository userRepository;
     private final MpaRepository mpaRepository;
-    private final GenreRepository genreRepository;
     private final DirectorRepository directorRepository;
     private final ReleaseDateValidator releaseDateValidator;
     private final GenreValidator genreValidator;
@@ -40,10 +39,9 @@ public class FilmServiceImpl implements FilmService {
         film.setMpa(mpaRepository.getById(film.getMpa().getId())
                 .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."))
         );
-
-        fillUpGenres(film);
-        fillUpDirectors(film);
-        return filmRepository.save(film);
+        Film savedFilm = filmRepository.save(film);
+        filmRepository.fillUp(savedFilm);
+        return savedFilm;
     }
 
     public Film update(final Film film) {
@@ -54,22 +52,21 @@ public class FilmServiceImpl implements FilmService {
         mpaRepository.getById(film.getMpa().getId())
                 .orElseThrow(() -> new FkConstraintViolationException("Рейтинг вне диапазона."));
 
-        fillUpGenres(film);
-        fillUpDirectors(film);
-
-        return filmRepository.update(film);
+        Film updatedFilm = filmRepository.update(film);
+        filmRepository.fillUp(updatedFilm);
+        return updatedFilm;
     }
 
     public Film getById(long filmId) {
-        return filmRepository.get(filmId)
+        Film film = filmRepository.get(filmId)
                 .orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
+        filmRepository.fillUp(film);
+        return film;
     }
 
     public void delete(final long filmId) {
-
         filmRepository.get(filmId)
                 .orElseThrow(() -> new ValidationException("Фильм c ID - " + filmId + ", не найден."));
-
         filmRepository.delete(filmId);
     }
 
@@ -95,11 +92,10 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new ValidationException("Режиссер c ID - " + directorId + ", не найден."));
 
         String order = SortOrder.from(sortBy);
-
         if (order.equals("null")) {
             throw new ValidationException("Получено: " + sortBy + " Должно быть year или likes");
         }
-        return filmRepository.getSortedDirectorsFilms(directorId, SortOrder.from(sortBy));
+        return filmRepository.getSortedDirectorsFilms(directorId, order);
     }
 
     public void deleteLike(long filmId, long userId) {
@@ -117,7 +113,9 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> recommendations(Long userId) {
         userRepository.get(userId)
                 .orElseThrow(() -> new ValidationException("Пользователь c id: " + userId + " не найден"));
-        return filmRepository.recommendations(userId);
+        List<Film> films = filmRepository.recommendations(userId);
+        filmRepository.fillUpGenres(films);
+        return films;
     }
 
     public List<Film> getPopular(long count) {
@@ -135,8 +133,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Collection<Film> search(String query, String by) {
         if (!SearchParamBy.isValidOption(by))
-            throw new ValidationException(
-                    "Неверное значение параметра 'by'. Доступные варианты: 'director,title' ; 'director' ; 'title'");
+            throw new ValidationException("Неверное значение параметра 'by'. Доступные варианты: 'director,title' ; 'director' ; 'title'");
         return filmRepository.searchFilmsByParams(query, by);
     }
 
@@ -149,31 +146,5 @@ public class FilmServiceImpl implements FilmService {
                 .orElseThrow(() -> new ValidationException(format("Пользователь c id: %d не найден", userId2)));
 
         return filmRepository.getCommonFilms(userId1, userId2);
-    }
-
-    private void fillUpGenres(Film film) {
-        if (null != film.getGenres()) {
-            List<Long> ids = film.getGenres().stream()
-                    .map(Genre::getId)
-                    .toList();
-            List<Genre> genres = genreRepository.getByIds(ids);
-
-            if (ids.size() != genres.size()) {
-                throw new FkConstraintViolationException("Жанр вне диапазона.");
-            }
-        }
-    }
-
-    private void fillUpDirectors(Film film) {
-        if (null != film.getDirectors()) {
-            List<Long> ids = film.getDirectors().stream()
-                    .map(Director::getId)
-                    .toList();
-            List<Director> directors = directorRepository.getByIds(ids);
-
-            if (ids.size() != directors.size()) {
-                throw new FkConstraintViolationException("Режиссер вне диапазона.");
-            }
-        }
     }
 }

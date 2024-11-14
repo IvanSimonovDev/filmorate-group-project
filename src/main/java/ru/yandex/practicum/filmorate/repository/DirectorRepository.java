@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DirectorRepository {
-
     List<Director> getAll();
 
     Optional<Director> getById(long id);
@@ -19,6 +18,7 @@ public interface DirectorRepository {
 
     void delete(final long directorId);
 
+    List<Director> getAllDirectorsByFilmId(long filmId);
 }
 
 

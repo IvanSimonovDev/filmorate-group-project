@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FilmRepository {
-
     Optional<Film> get(long filmId);
 
     List<Film> getAll();
@@ -35,4 +34,9 @@ public interface FilmRepository {
 
     List<Film> getCommonFilms(Long userId1, Long userId2);
 
+    List<Film> fillUpDirectors(List<Film> films);
+
+    void fillUpGenres(List<Film> films);
+
+    Film fillUp(Film film);
 }

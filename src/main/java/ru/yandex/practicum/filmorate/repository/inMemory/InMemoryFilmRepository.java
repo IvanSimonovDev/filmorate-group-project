@@ -73,6 +73,18 @@ public class InMemoryFilmRepository implements FilmRepository {
     }
 
     //заглушка
+    public Film fillUp(Film film) {
+        return null;
+    }
+
+    public List<Film> fillUpDirectors(List<Film> films) {
+        return null;
+    }
+
+    public void fillUpGenres(List<Film> films) {
+        return;
+    }
+
     public List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year) {
         return null;
     }

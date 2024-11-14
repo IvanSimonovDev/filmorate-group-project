@@ -68,9 +68,14 @@ public class JdbcDirectorRepository extends JdbcBaseRepository<Director> impleme
         delete(sql, params);
     }
 
-    public List<Director> findBySubstringName(String substring) {
-        String sql = "SELECT * FROM directors d WHERE d.name LIKE '%" + substring + "%'";
-        return findMany(sql, Collections.emptyMap());
+    public List<Director> getAllDirectorsByFilmId(long filmId) {
+        return findMany("SELECT d.* " +
+                        "FROM directors AS d " +
+                        "JOIN film_director AS fd ON d.id = fd.director_id " +
+                        "WHERE fd.film_id = :id " +
+                        "GROUP BY d.id " +
+                        "ORDER BY d.id ASC",
+                Map.of("id", filmId)
+        );
     }
-
 }

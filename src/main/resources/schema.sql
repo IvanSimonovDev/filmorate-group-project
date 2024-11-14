@@ -1,16 +1,16 @@
 -- Удаление таблиц по порядку зависимости
 DROP TABLE IF EXISTS reviews_likes_dislikes;
 DROP TABLE IF EXISTS reviews;
-DROP TABLE IF EXISTS film_director;        -- Удаляем лайки фильмов
-DROP TABLE IF EXISTS film_likes;        -- Удаляем лайки фильмов
-DROP TABLE IF EXISTS film_genre;       -- Удаляем жанры фильмов
+DROP TABLE IF EXISTS film_director;   -- Удаляем связи фильмов и режиссеров
+DROP TABLE IF EXISTS film_likes;      -- Удаляем лайки фильмов
+DROP TABLE IF EXISTS film_genre;      -- Удаляем жанры фильмов
 DROP TABLE IF EXISTS user_friend;     -- Удаляем дружеские связи пользователей
-DROP TABLE IF EXISTS film;             -- Удаляем фильмы
-DROP TABLE IF EXISTS genre;            -- Удаляем жанры
-DROP TABLE IF EXISTS mpa;           -- Удаляем рейтинги
-DROP TABLE IF EXISTS directors;            -- Удаляем режиссеров
-DROP TABLE IF EXISTS events;            -- Удаляем события
-DROP TABLE IF EXISTS users;            -- Удаляем пользователей
+DROP TABLE IF EXISTS film;            -- Удаляем фильмы
+DROP TABLE IF EXISTS genre;           -- Удаляем жанры
+DROP TABLE IF EXISTS mpa;             -- Удаляем рейтинги
+DROP TABLE IF EXISTS directors;       -- Удаляем режиссеров
+DROP TABLE IF EXISTS events;          -- Удаляем события
+DROP TABLE IF EXISTS users;           -- Удаляем пользователей
 
 CREATE TABLE IF NOT EXISTS mpa (
                                       id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS film_genre (
                                           genre_id INTEGER,
                                           PRIMARY KEY (film_id, genre_id),
                                           CONSTRAINT fk_film_id FOREIGN KEY (film_id) REFERENCES film (id)  ON DELETE CASCADE,
-                                          CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genre (id)
+                                          CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genre (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS film_director (
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS film_director (
                                           director_id INTEGER,
                                           PRIMARY KEY (film_id, director_id),
                                           CONSTRAINT fk_fd_film_id FOREIGN KEY (film_id) REFERENCES film (id)  ON DELETE CASCADE,
-                                          CONSTRAINT fk_director_id FOREIGN KEY (director_id) REFERENCES directors (id)
+                                          CONSTRAINT fk_director_id FOREIGN KEY (director_id) REFERENCES directors (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS film_likes (
                                           film_id INTEGER,
                                           user_id INTEGER,
-                                          PRIMARY KEY (film_id, user_id),
                                           CONSTRAINT fk_film_likes_id FOREIGN KEY (film_id) REFERENCES film (id) ON DELETE CASCADE,
                                           CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id)
 );

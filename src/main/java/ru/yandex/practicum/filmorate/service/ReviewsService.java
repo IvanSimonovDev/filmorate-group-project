@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.repository.ReviewsLikesDislikesRepository;
 import ru.yandex.practicum.filmorate.repository.ReviewsRepository;
 import ru.yandex.practicum.filmorate.validation.ReviewsValidator;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,9 @@ public class ReviewsService {
 
     public Review updateReview(Review review) {
         reviewsValidator.validateUpdated(review);
-        eventService.createEvent(review.getUserId(), review.getReviewId(), EventType.REVIEW, Operation.UPDATE);
-        return setReviewRatingAndReturn(reviewsRepository.update(review));
+        Review updatedReview = setReviewRatingAndReturn(reviewsRepository.update(review));
+        eventService.createEvent(updatedReview.getUserId(), updatedReview.getReviewId(), EventType.REVIEW, Operation.UPDATE);
+        return updatedReview;
     }
 
     public void deleteReview(long reviewId) {
@@ -53,7 +55,9 @@ public class ReviewsService {
         long correctCountValue = 5;
         reviewsValidator.validateCount(count.orElse(correctCountValue));
         List<Review> listOfReviews = reviewsRepository.getSome(filmId, count);
-        listOfReviews = listOfReviews.stream().map(this::setReviewRatingAndReturn).toList();
+        listOfReviews = listOfReviews.stream().map(this::setReviewRatingAndReturn)
+                .sorted(Comparator.comparing(Review::getUseful).reversed())
+                .toList();
         return listOfReviews;
     }
 
@@ -89,11 +93,8 @@ public class ReviewsService {
         return getReview(reviewId);
     }
 
-
     private Review setReviewRatingAndReturn(Review review) {
         review.setUseful(reviewsLikesDislikesRepository.getReviewRating(review.getReviewId()));
         return review;
     }
-
-
 }

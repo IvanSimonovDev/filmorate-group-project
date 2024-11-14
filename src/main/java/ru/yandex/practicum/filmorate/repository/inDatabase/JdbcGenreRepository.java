@@ -40,4 +40,15 @@ public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements Ge
         return findMany(sql, Collections.emptyMap());
     }
 
+    public List<Genre> getAllGenresByFilmId(long filmId) {
+        return findMany(
+                "SELECT g.* " +
+                        "FROM genre AS g " +
+                        "JOIN film_genre AS fg ON g.id = fg.genre_id " +
+                        "WHERE fg.film_id = :id " +
+                        "GROUP BY g.id " +
+                        "ORDER BY g.id ASC",
+                Map.of("id", filmId)
+        );
+    }
 }

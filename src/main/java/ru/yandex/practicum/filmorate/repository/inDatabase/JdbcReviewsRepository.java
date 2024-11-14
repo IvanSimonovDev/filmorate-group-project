@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.repository.inDatabase;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
@@ -16,8 +15,7 @@ import java.util.Optional;
 public class JdbcReviewsRepository extends JdbcBaseRepository<Review> implements ReviewsRepository {
 
     public JdbcReviewsRepository(NamedParameterJdbcOperations jdbc,
-                                 RowMapper<Review> mapper,
-                                 JdbcTemplate jdbcTemplate) {
+                                 RowMapper<Review> mapper) {
         super(jdbc, mapper);
     }
 
@@ -57,19 +55,15 @@ public class JdbcReviewsRepository extends JdbcBaseRepository<Review> implements
     public Review update(Review review) {
         String sql = """
                 UPDATE reviews SET content = :content,
-                                   isPositive = :isPositive,
-                                   userId = :userId,
-                                   filmId = :filmId
+                                   isPositive = :isPositive
                 WHERE reviewId = :reviewId;
                 """;
+
         Map<String, Object> params = Map.of("content", review.getContent(),
                 "isPositive", review.getIsPositive(),
-                "userId", review.getUserId(),
-                "filmId", review.getFilmId(),
                 "reviewId", review.getReviewId());
 
         update(sql, params);
-
         return get(review.getReviewId()).get();
     }
 
@@ -84,27 +78,23 @@ public class JdbcReviewsRepository extends JdbcBaseRepository<Review> implements
     }
 
     public List<Review> getSome(Optional<Long> filmId, Optional<Long> count) {
-        String sql = """
-                SELECT reviewId,
-                       content,
-                       isPositive,
-                       userId,
-                       filmId
-                FROM reviews
-                """;
+        StringBuilder sqlTemplate = new StringBuilder("""
+                SELECT reviewId, content, isPositive, userId, filmId FROM reviews
+                """);
         Map<String, Object> params = new HashMap<>();
+
         if (filmId.isPresent()) {
-            sql = sql + "\nWHERE filmId = :filmId";
+            sqlTemplate.append("""
+                    \nWHERE filmId = :filmId
+                    """);
             params.put("filmId", filmId.get());
         }
         if (count.isPresent()) {
-            sql = sql + "\nLIMIT :count";
+            sqlTemplate.append("""
+                    \nLIMIT :count
+                    """);
             params.put("count", count.get());
         }
-        sql = sql + ";";
-
-        return findMany(sql, params);
+        return findMany(sqlTemplate.toString(), params);
     }
-
-
 }

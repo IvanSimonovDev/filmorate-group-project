@@ -59,10 +59,8 @@ public class JdbcBaseRepository<T> {
         // Возвращаем id нового пользователя
         if (id != null) {
             return id;
-        } else if (keyHolder.getKeys().size() > 1) {
-            return null;
         } else {
-            throw new ValidationException("Не удалось сохранить данные: " + params);
+            return null;
         }
     }
 
@@ -78,5 +76,4 @@ public class JdbcBaseRepository<T> {
 
         return jdbc.batchUpdate(query, batchParams);
     }
-
 }

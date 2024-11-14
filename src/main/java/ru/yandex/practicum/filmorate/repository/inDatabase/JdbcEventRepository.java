@@ -28,7 +28,7 @@ public class JdbcEventRepository extends JdbcBaseRepository<Event> implements Ev
                 "operation", newEvent.getOperation().name(),
                 "entity_id", newEvent.getEntityId());
         long id = insert(sql, params);
-        newEvent.setId(id);
+        newEvent.setEventId(id);
         log.info("Insert event: {}", newEvent);
     }
 

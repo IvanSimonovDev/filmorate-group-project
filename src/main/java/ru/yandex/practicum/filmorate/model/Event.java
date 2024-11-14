@@ -9,9 +9,8 @@ import ru.yandex.practicum.filmorate.enums.Operation;
 @Data
 @Builder
 public class Event {
-    Long id;
-    @NotNull(message = "Пользователь должен быть указан")
-    @NotNull(message = "id должен быть указан")
+    Long eventId;
+    @NotNull(message = "id Пользователя должен быть указан")
     Long userId;
     @NotNull(message = "Временная метка не может быть пустой")
     Long timestamp;
