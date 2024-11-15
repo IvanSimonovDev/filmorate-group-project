@@ -18,7 +18,10 @@ public class JdbcFilmGenreRepository extends JdbcBaseRepository<Object> {
     }
 
     public int[] save(Film film) {
-        String sql = "INSERT INTO film_genre (film_id, genre_id) VALUES (:film_id, :genre_id)";
+        String sql = """
+                     INSERT INTO film_genre (film_id, genre_id)
+                     VALUES (:film_id, :genre_id)
+                     """;
 
         return batchInsert(sql,
                 film.getId(),
@@ -28,7 +31,10 @@ public class JdbcFilmGenreRepository extends JdbcBaseRepository<Object> {
     }
 
     public boolean delete(Film film) {
-        String sql = "delete from film_genre where film_id = :film_id";
+        String sql = """
+                     DELETE FROM film_genre
+                     WHERE film_id = :film_id
+                     """;
         Map<String, Long> params = Map.of("film_id", film.getId());
 
         return delete(sql, params);

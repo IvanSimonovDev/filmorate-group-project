@@ -16,14 +16,21 @@ public class JdbcUserFriendRepository extends JdbcBaseRepository<Object> {
     }
 
     public void add(User user, User friend, boolean isConfirmed) {
-        String sql = "INSERT INTO user_friend (user_id, friend_id, isConfirmed) VALUES (:user_id, :friend_id, :isConfirmed)";
+        String sql = """
+                     INSERT INTO user_friend (user_id, friend_id, isConfirmed)
+                     VALUES (:user_id, :friend_id, :isConfirmed)
+                     """;
         Map<String, Object> params = Map.of("user_id", user.getId(), "friend_id", friend.getId(), "isConfirmed", isConfirmed);
 
         insert(sql, params);
     }
 
     public void delete(User user, User friend) {
-        String sql = "DELETE from user_friend WHERE  user_id = :user_Id AND friend_id = :friend_id";
+        String sql = """
+                     DELETE FROM user_friend
+                     WHERE user_id = :user_Id
+                     AND friend_id = :friend_id
+                     """;
         Map<String, Long> params = Map.of("user_Id", user.getId(), "friend_id", friend.getId());
 
         delete(sql, params);

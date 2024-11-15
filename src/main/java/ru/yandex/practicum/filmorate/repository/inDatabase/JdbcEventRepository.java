@@ -19,8 +19,10 @@ public class JdbcEventRepository extends JdbcBaseRepository<Event> implements Ev
     }
 
     public void addEvent(Event newEvent) {
-        String sql = "INSERT INTO events (user_id, timestamp, event_type, operation, entity_id) " +
-                "VALUES (:user_id, :timestamp, :event_type, :operation, :entity_id)";
+        String sql = """
+                     INSERT INTO events (user_id, timestamp, event_type, operation, entity_id)
+                     VALUES (:user_id, :timestamp, :event_type, :operation, :entity_id)
+                     """;
         Map<String, Object> params = Map.of(
                 "user_id", newEvent.getUserId(),
                 "timestamp", newEvent.getTimestamp(),
@@ -33,7 +35,9 @@ public class JdbcEventRepository extends JdbcBaseRepository<Event> implements Ev
     }
 
     public List<Event> getEvents(long userId) {
-        String sql = "SELECT * FROM events WHERE user_id = :user_id";
+        String sql = """
+                     SELECT * FROM events WHERE user_id = :user_id
+                     """;
         Map<String, Long> params = Map.of("user_id", userId);
         return findMany(sql, params);
     }

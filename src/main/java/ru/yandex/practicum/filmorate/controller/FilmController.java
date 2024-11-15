@@ -90,7 +90,6 @@ public class FilmController {
         return films;
     }
 
-    // GET /films/common?userId={userId}&friendId={friendId}
     @GetMapping("/common")
     public Collection<Film> getCommonFilms(@Positive @RequestParam Long userId, @Positive @RequestParam Long friendId) {
         log.info("GET /films/common?userId&friendId --> " +
@@ -104,7 +103,6 @@ public class FilmController {
     }
 
     //    удаления фильма по идентификатору.
-    //    DELETE /films/{filmId}
     @DeleteMapping("{filmId}")
     public void delete(@PathVariable("filmId") long filmId) {
         log.info("DELETE /films/filmId --> deleting Film {} - started", filmId);
@@ -112,7 +110,6 @@ public class FilmController {
         log.info("DELETE /films/filmId <-- deleting Film {} - ended", filmId);
     }
 
-    //    GET /films/director/{directorId}?sortBy=[year,likes]
     //    Возвращает список фильмов режиссера отсортированных по количеству лайков или году выпуска.
     @GetMapping("/director/{directorId}")
     public List<Film> getSortedDirectorsFilms(@NotEmpty @RequestParam String sortBy, @PathVariable("directorId") long directorId) {

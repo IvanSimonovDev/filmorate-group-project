@@ -22,13 +22,17 @@ public class JdbcDirectorRepository extends JdbcBaseRepository<Director> impleme
     }
 
     public List<Director> getAll() {
-        String sql = "SELECT * FROM directors";
+        String sql = """
+                     SELECT * FROM directors
+                     """;
 
         return findMany(sql, Map.of());
     }
 
     public Optional<Director> getById(long id) {
-        String sql = "SELECT * FROM directors WHERE id = :id";
+        String sql = """
+                     SELECT * FROM directors WHERE id = :id
+                     """;
         Map<String, Long> params = Map.of("id", id);
 
         return findOne(sql, params);
@@ -38,13 +42,19 @@ public class JdbcDirectorRepository extends JdbcBaseRepository<Director> impleme
         String list = ids.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
-        String sql = "SELECT * FROM directors WHERE id in (" + list + ")";
+
+        String sqlTemplate = """
+                             SELECT * FROM directors WHERE id in ( %s )
+                             """;
+        String sql = String.format(sqlTemplate, list);
 
         return findMany(sql, Collections.emptyMap());
     }
 
     public Director save(Director director) {
-        String sql = "INSERT INTO directors (name) VALUES (:name)";
+        String sql = """
+                     INSERT INTO directors (name) VALUES (:name)
+                     """;
         Map<String, Object> params = Map.of("name", director.getName());
 
         long id = insert(sql, params);
@@ -54,7 +64,9 @@ public class JdbcDirectorRepository extends JdbcBaseRepository<Director> impleme
     }
 
     public Director update(Director director) {
-        String sql = "UPDATE directors SET name = :name WHERE id = :id";
+        String sql = """
+                     UPDATE directors SET name = :name WHERE id = :id
+                     """;
         Map<String, Object> params = Map.of("name", director.getName(), "id", director.getId());
         update(sql, params);
 
@@ -62,20 +74,23 @@ public class JdbcDirectorRepository extends JdbcBaseRepository<Director> impleme
     }
 
     public void delete(final long id) {
-        String sql = "DELETE from directors WHERE id = :id";
+        String sql = """
+                     DELETE from directors WHERE id = :id
+                     """;
         Map<String, Object> params = Map.of("id", id);
 
         delete(sql, params);
     }
 
     public List<Director> getAllDirectorsByFilmId(long filmId) {
-        return findMany("SELECT d.* " +
-                        "FROM directors AS d " +
-                        "JOIN film_director AS fd ON d.id = fd.director_id " +
-                        "WHERE fd.film_id = :id " +
-                        "GROUP BY d.id " +
-                        "ORDER BY d.id ASC",
-                Map.of("id", filmId)
-        );
+        String sql = """
+                     SELECT d.*
+                     FROM directors AS d
+                     JOIN film_director AS fd ON d.id = fd.director_id
+                     WHERE fd.film_id = :id
+                     GROUP BY d.id
+                     ORDER BY d.id ASC
+                     """;
+        return findMany(sql, Map.of("id", filmId));
     }
 }

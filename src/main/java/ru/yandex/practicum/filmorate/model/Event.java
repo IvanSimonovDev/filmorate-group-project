@@ -9,15 +9,15 @@ import ru.yandex.practicum.filmorate.enums.Operation;
 @Data
 @Builder
 public class Event {
-    Long eventId;
+    private Long eventId;
     @NotNull(message = "id Пользователя должен быть указан")
-    Long userId;
+    private Long userId;
     @NotNull(message = "Временная метка не может быть пустой")
-    Long timestamp;
+    private Long timestamp;
     @NotNull(message = "Тип события должен быть указан. Укажите LIKE, REVIEW или FRIEND")
-    EventType eventType;
+    private EventType eventType;
     @NotNull(message = "Тип операции должен быть указан. Укажите ADD,REMOVE или UPDATE")
-    Operation operation;
+    private Operation operation;
     @NotNull(message = "id сущности, с которой произошло событие, не может быть пустым")
-    Long entityId;
+    private Long entityId;
 }

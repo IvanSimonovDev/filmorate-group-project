@@ -20,10 +20,3 @@ public interface DirectorRepository {
 
     List<Director> getAllDirectorsByFilmId(long filmId);
 }
-
-
-
-
-
-
-

@@ -21,12 +21,19 @@ public class JdbcMpaRepository extends JdbcBaseRepository<Mpa> implements MpaRep
     }
 
     public List<Mpa> getAll() {
-        String sql = "SELECT * FROM mpa";
+        String sql = """
+                     SELECT *
+                     FROM mpa
+                     """;
         return findMany(sql, Collections.emptyMap());
     }
 
     public Optional<Mpa> getById(long id) {
-        String sql = "SELECT * FROM mpa WHERE id = :id";
+        String sql = """
+                     SELECT *
+                     FROM mpa
+                     WHERE id = :id
+                     """;
         Map<String, Long> params = Map.of("id", id);
         return findOne(sql, params);
     }

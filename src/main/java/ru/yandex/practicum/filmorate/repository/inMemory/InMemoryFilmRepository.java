@@ -78,7 +78,7 @@ public class InMemoryFilmRepository implements FilmRepository {
     }
 
     public List<Film> fillUpDirectors(List<Film> films) {
-        return null;
+        return List.of();
     }
 
     public void fillUpGenres(List<Film> films) {
@@ -86,28 +86,28 @@ public class InMemoryFilmRepository implements FilmRepository {
     }
 
     public List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year) {
-        return null;
+        return List.of();
     }
 
     @Override
     public Collection<Film> searchFilmsByParams(String query, String by) {
-        return null;
+        return List.of();
     }
 
     public List<Film> getCommonFilms(Long userId1, Long userId2) {
-        return null;
+        return List.of();
     }
 
     public void delete(final long filmId) {
     }
 
     public List<Film> getSortedDirectorsFilms(long directorId, String sortBy) {
-        return null;
+        return List.of();
     }
 
     @Override
     public List<Film> recommendations(Long userId) {
-        return null;
+        return List.of();
     }
 
     private long generateFilmId() {
