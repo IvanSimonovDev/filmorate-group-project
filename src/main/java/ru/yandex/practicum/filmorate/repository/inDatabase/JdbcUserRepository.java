@@ -9,8 +9,8 @@ import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import java.util.*;
 
-@Repository
 @Primary
+@Repository
 public class JdbcUserRepository extends JdbcBaseRepository<User> implements UserRepository {
 
     public JdbcUserRepository(NamedParameterJdbcOperations jdbc, RowMapper<User> mapper) {
@@ -18,20 +18,29 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
     }
 
     public Optional<User> get(long userId) {
-        String sql = "SELECT * FROM users WHERE id = :userId";
+        String sql = """
+                     SELECT *
+                     FROM users
+                     WHERE id = :userId
+                     """;
         Map<String, Long> params = Map.of("userId", userId);
         return findOne(sql, params);
     }
 
     public List<User> getAll() {
-        String sql = "SELECT * FROM users";
+        String sql = """
+                     SELECT *
+                     FROM users
+                     """;
 
         return findMany(sql, Map.of());
     }
 
     public User save(User user) {
-        String sql = "INSERT INTO users (email, login, name, birthday)" +
-                "VALUES (:email, :login, :name, :birthday)";
+        String sql = """
+                     INSERT INTO users (email, login, name, birthday)
+                     VALUES (:email, :login, :name, :birthday)
+                     """;
         Map<String, Object> params = Map.of("email", user.getEmail(), "login", user.getLogin(),
                 "name", user.getName(), "birthday", user.getBirthday());
         long id = insert(sql, params);
@@ -41,7 +50,13 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
     }
 
     public User update(User user) {
-        String sql = "UPDATE users SET email = :email, login = :login, name = :name, birthday = :birthday WHERE id = :id";
+        String sql = """
+                     UPDATE users SET email = :email,
+                                      login = :login,
+                                      name = :name,
+                                      birthday = :birthday
+                     WHERE id = :id
+                     """;
         Map<String, Object> params = Map.of("email", user.getEmail(), "login", user.getLogin(), "name", user.getName(),
                 "birthday", user.getBirthday(), "id", user.getId());
         update(sql, params);
@@ -49,26 +64,43 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
         return user;
     }
 
+    public void delete(long userId) {
+        String sql = """
+                     DELETE FROM users
+                     WHERE id = :userId
+                     """;
+        Map<String, Object> params = Map.of("userId", userId);
+
+        delete(sql, params);
+    }
+
     public Set<User> getFriends(User user) {
-        String sql = "SELECT * FROM users WHERE id IN " +
-                "(SELECT uf.friend_id FROM users u LEFT JOIN user_friend uf ON u.id = uf.user_id WHERE u.id = :id)";
+        String sql = """
+                     SELECT *
+                     FROM users
+                     WHERE id IN (SELECT uf.friend_id
+                                  FROM users u
+                                  LEFT JOIN user_friend uf ON u.id = uf.user_id
+                                  WHERE u.id = :id)
+                     """;
         Map<String, Long> params = Map.of("id", user.getId());
 
         return new HashSet<>(findMany(sql, params));
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
-        String sql = "WITH cte AS " +
-                "(SELECT uf.friend_id " +
-                " FROM users u " +
-                " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
-                " WHERE u.id = :userId) " +
-                "SELECT u1.* " +
-                "FROM users u " +
-                " LEFT JOIN user_friend uf ON u.id = uf.user_id " +
-                " INNER JOIN cte ON uf.friend_id = cte.friend_id " +
-                " INNER JOIN users u1 ON u1.id = uf.friend_id " +
-                "WHERE u.id = :otherId";
+        String sql = """
+                     WITH cte AS (SELECT uf.friend_id
+                                  FROM users u
+                                  LEFT JOIN user_friend uf ON u.id = uf.user_id
+                                  WHERE u.id = :userId)
+                     SELECT u1.*
+                     FROM users u
+                     LEFT JOIN user_friend uf ON u.id = uf.user_id
+                     JOIN cte ON uf.friend_id = cte.friend_id
+                     JOIN users u1 ON u1.id = uf.friend_id
+                     WHERE u.id = :otherId
+                     """;
 
         Map<String, Long> params = Map.of("userId", userId,
                 "otherId", otherId);

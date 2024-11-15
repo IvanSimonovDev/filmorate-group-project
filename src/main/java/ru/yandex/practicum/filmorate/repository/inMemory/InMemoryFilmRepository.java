@@ -72,6 +72,44 @@ public class InMemoryFilmRepository implements FilmRepository {
                 .toList());
     }
 
+    //заглушка
+    public Film fillUp(Film film) {
+        return null;
+    }
+
+    public List<Film> fillUpDirectors(List<Film> films) {
+        return List.of();
+    }
+
+    public void fillUpGenres(List<Film> films) {
+        return;
+    }
+
+    public List<Film> getPopularByGenreAndYear(Integer count, Long genreId, Integer year) {
+        return List.of();
+    }
+
+    @Override
+    public Collection<Film> searchFilmsByParams(String query, String by) {
+        return List.of();
+    }
+
+    public List<Film> getCommonFilms(Long userId1, Long userId2) {
+        return List.of();
+    }
+
+    public void delete(final long filmId) {
+    }
+
+    public List<Film> getSortedDirectorsFilms(long directorId, String sortBy) {
+        return List.of();
+    }
+
+    @Override
+    public List<Film> recommendations(Long userId) {
+        return List.of();
+    }
+
     private long generateFilmId() {
         return ++filmId;
     }

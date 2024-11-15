@@ -7,12 +7,12 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class JdbcBaseRepository<T> {
@@ -59,24 +59,21 @@ public class JdbcBaseRepository<T> {
         // Возвращаем id нового пользователя
         if (id != null) {
             return id;
-        } else if (keyHolder.getKeys().size() > 1) {
-            return null;
         } else {
-            throw new ValidationException("Не удалось сохранить данные: " + params);
+            return null;
         }
     }
 
-    protected int[] batchInsert(String query, Long filmId, List<Genre> genres) {
-        MapSqlParameterSource[] batchParams = new MapSqlParameterSource[genres.size()];
+    protected <T> int[] batchInsert(String query, Long filmId, List<T> items, Function<T, Long> idExtractor, String idParam) {
+        MapSqlParameterSource[] batchParams = new MapSqlParameterSource[items.size()];
 
-        for (int i = 0; i < genres.size(); i++) {
+        for (int i = 0; i < items.size(); i++) {
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("film_id", filmId);
-            params.addValue("genre_id", genres.get(i).getId());
+            params.addValue(idParam, idExtractor.apply(items.get(i))); // Используем переданный параметр idParam для id
             batchParams[i] = params;
         }
 
         return jdbc.batchUpdate(query, batchParams);
     }
-
 }

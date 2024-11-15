@@ -137,12 +137,11 @@ public class UserRepositoryTests {
     @DisplayName("Проверяем получение общих друзей пользователя")
     @Test
     public void shouldGetCommonFriends() {
-        User commonFriends = userRepository.getCommonFriends(getTestUser().getId(), getTestUser2().getId()).getFirst();
+        User commonFriends = userRepository.getCommonFriends(getTestUser().getId(), getTestUser2().getId()).get(0);
 
         assertThat(commonFriends)
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
                 .isEqualTo(getTestUser3());
     }
-
 }

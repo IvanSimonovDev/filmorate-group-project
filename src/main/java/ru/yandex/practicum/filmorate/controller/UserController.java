@@ -7,7 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.EventService;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validation.OnUpdate;
 
@@ -18,11 +22,13 @@ import java.util.Set;
 @RequestMapping("/users")
 @Slf4j
 @Validated // необходимо добавить @Validated в контроллер на уровне класса, чтобы проверять параметры метода.
-            // В этом случае аннотация @Validated устанавливается на уровне класса, даже если она присутствует на методах.
+// В этом случае аннотация @Validated устанавливается на уровне класса, даже если она присутствует на методах.
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService service;
+    private final FilmService filmService;
+    private final EventService eventService;
 
     @GetMapping
     public List<User> getAll() {
@@ -90,5 +96,29 @@ public class UserController {
         log.info("GET /users/userId/friends <-- Getting common friends list for user {} with other user {} - ended", userId, otherId);
         return commonFriendsList;
     }
-}
 
+    //    удаления пользователя по идентификатору /users/{userId}
+    @DeleteMapping("{userId}")
+    public void delete(@PathVariable("userId") long userId) {
+        log.info("DELETE /users/userId --> Deleting user {} - started", userId);
+        service.delete(userId);
+        log.info("DELETE /users/userId <-- Deleting user {} - ended", userId);
+    }
+
+    @GetMapping("/{userId}/recommendations")
+    public List<Film> recommendations(@PathVariable Long userId) {
+        log.info("GET /users/{userId}/recommendations --> Getting user {} - started", userId);
+        List<Film> recommendations = filmService.recommendations(userId);
+        log.info("GET /users/{userId}/recommendations --> Getting user {} - ended", userId);
+        return recommendations;
+    }
+
+    // просмотр последних событий пользователя на платформе
+    @GetMapping("{id}/feed")
+    public List<Event> getEvents(@PathVariable("id") long userId) {
+        log.info("GET /users/userId/feed --> Getting events list for user {} - started", userId);
+        List<Event> eventList = eventService.getEvents(userId);
+        log.info("GET /users/userId/feed --> Getting events list for user {} - ended", userId);
+        return eventList;
+    }
+}
